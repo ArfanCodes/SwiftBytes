@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="output.css">
+    
+    <title>TakeawayNest</title>
+    <style>
+      /* This keeps cart icons black in dark mode but allows hover effects to work */
+      .dark-mode-cart-icon {
+          color: #000000 !important;
+      }
+
+      /* This ensures the hover effect still works */
+      .dark button:hover .dark-mode-cart-icon {
+          color: #ffffff !important;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            bebas: ['"Bebas Neue"', 'sans-serif'],
+            inter: ['"Inter"', 'sans-serif'],
+          },
+          colors: {
+            primary: {
+              light: '#FACC15', // Yellow-400
+              dark: '#111827',  // Gray-900
+            },
+            secondary: {
+              light: '#F9FAFB', // Gray-50
+              dark: '#1F2937',  // Gray-800
+            },
+            text: {
+              light: '#191919', // Near black
+              dark: '#F9FAFB',  // Near white
+            },
+          },
+        },
+      },
+    };
+  </script> 
+</head>
+<body class="cursor-pointer bg-secondary-light dark:bg-secondary-dark transition-colors duration-300">
+    <nav class="bg-primary-light dark:bg-primary-dark transition-colors duration-300">
+  <div class='w-full py-0.5 border-b dark:border-gray-700'>
+    <div class='flex justify-between px-20 items-center font-semibold'>
+      <div>
+        <img src="./images/logo.png" alt="logo" class="rounded-full w-32 h-32  object-cover border-0 bg-transparent">
+      </div>
+      
+      <!-- Navigation Links -->
+      <div class='flex xl:gap-10 md:gap-8 font-bebas font-4xl gap-2'>
+        <a href="#about" class="text-3xl text-text-light dark:text-text-dark relative group transition-colors duration-300">
+          About Us
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-black dark:bg-white transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a href="#Menu1" class="text-3xl text-text-light dark:text-text-dark relative group transition-colors duration-300">
+          Menu
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-black dark:bg-white transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a href="#Contact" class="text-3xl text-text-light dark:text-text-dark relative group transition-colors duration-300">
+          Contact Us
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-black dark:bg-white transition-all duration-300 group-hover:w-full"></span>
+        </a>
+      </div>
+      
+      <!-- Buttons -->
+      <div class="flex space-x-4">
+        <button onclick="window.location.href='/login'" class=' py-2 px-3 bg-black dark:bg-white text-white dark:text-black rounded-3xl font-semibold transition-all duration-300 hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white hover:border hover:border-black dark:hover:border-white'>
+          <i class="fa-solid fa-circle-user transition-all duration-300"></i>
+        </button>
+        <button class='py-2 px-3 bg-black dark:bg-white text-white dark:text-black rounded-3xl font-semibold transition-all duration-300 hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white hover:border hover:border-black dark:hover:border-white group'>
+          <i class="fa-solid fa-cart-shopping cart-icon transition-all duration-300"></i>
+        </button>
+        <!-- Dark Mode Toggle -->
+        <button id="theme-toggle" class='py-2 px-3 bg-black dark:bg-white text-white dark:text-black rounded-3xl font-semibold transition-all duration-300 hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white hover:border hover:border-black dark:hover:border-white'>
+          <i id="theme-toggle-dark-icon" class="fa-solid fa-moon hidden transition-all duration-300"></i>
+          <i id="theme-toggle-light-icon" class="fa-solid fa-sun text-yellow-400 transition-all duration-300"></i>
+        </button>
+      </div>
+      </div>
+    </div>
+  </div>
+</nav>
+    <!-- source: https://github.com/mfg888/Responsive-Tailwind-CSS-Grid/blob/main/index.html -->
+      <button id="back-to-top" class="fixed bottom-8 right-8 p-3 bg-yellow-400 dark:bg-blue-500 text-blue-600 dark:text-yellow-500 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 transform translate-y-4 hover:scale-110 z-50">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+  
+    <main class="bg-white dark:bg-gray-900 transition-colors duration-300 pb-56">
+<div class="flex flex-col items-center justify-center p-4 text-center">
+  <h1 class="font-bold font-bebas text-8xl mt-10 mb-0 text-text-light dark:text-text-dark transition-colors duration-300">WELCOME TO</h1>
+  
+</div>
+<img id="about" src="images/logo.png" alt="SwiftBytes Logo" class="max-w-full h-64 mb-10 mx-auto mt-10">
+<div id="intropara" class="flex mt-0 mx-auto justify-center items-center text-center w-11/12">
+  <p id="typewriter"class="max-w-6xl font-inter font-bold text-2xl px-1 text-text-light dark:text-text-dark transition-colors duration-300">
+    With SwiftBytes, enjoy hassle-free dining on campus! Pre-order your favorite meals, customize them just the way you like, and pick them up at your convenience no more waiting in long queues. For canteen staff, our platform simplifies order management, reduces workload, and keeps service smooth. Eat smart. Serve smarter.
+
+    Whether you're in a rush between classes or just want a smoother mealtime experience, SwiftBytes has you covered. Stay updated with real-time order tracking, receive instant notifications, and manage your dietary preferences with ease. Designed for students, loved by staff SwiftBytes is the future of campus dining.
+  </p> 
+</div>
+<div class="h-80"></div>
+<div class="h-80"></div>
+<div id="Menu1" class="mx-auto flex justify-center text-8xl bold font-bebas mt-10 text-text-light dark:text-text-dark transition-colors duration-300">MENU</div>
+<!-- ✅ Grid Section - Starts Here 👇 -->
+<section id="Projects"
+    class="w-fit mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10 mb-5">
+  
+    <!--   ✅ Product card 1 - Starts Here 👇 -->
+
+</section>
+</main>
+
+
+<footer id="Contact" class="mt-20 xl:mt-32 mx-auto w-full relative text-center bg-gray-800 text-white transition-colors duration-300">
+    <div class="px-6 py-8 md:py-14 xl:pt-20 xl:pb-12">
+        <h2 class="font-bold text-3xl xl:text-4xl leading-snug">
+            Ready to skip the queue?<br>Place your order now!
+        </h2>
+        <a class="mt-8 xl:mt-12 px-12 py-5 text-lg font-medium leading-tight inline-block bg-yellow-500 dark:bg-yellow-600 rounded-full shadow-xl border border-transparent hover:bg-yellow-400 dark:hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-sky-999 focus:ring-sky-500 transition-colors duration-300"
+            href="#">Get
+            started</a>
+        <div class="mt-14 xl:mt-20">
+            <nav class="flex flex-wrap justify-center text-lg font-medium">
+                <div class="px-5 py-2 hover:text-yellow-500"><i class="fab fa-linkedin"></i></div>
+                <div class="px-5 py-2 hover:text-yellow-500"><i class="fas fa-envelope"></i></div>
+                <div class="px-5 py-2 hover:text-yellow-500"><i class="fab fa-twitter"></i></div>
+                <div class="px-5 py-2 hover:text-yellow-500"><i class="fab fa-instagram"></i></div>
+                <div class="px-5 py-2 hover:text-yellow-500"><i class="fab fa-github"></i></div>
+            </nav>
+            <p class="mt-7 text-base text-stone-400 dark:text-stone-500 transition-colors duration-300">© 2025 ByteForce,MJCET</p>
+        </div>
+    </div>
+</footer>
+<script src="index.js"></script>
+
+  <script>
+        // Back to Top Button
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible', 'translate-y-4');
+                backToTopButton.classList.add('opacity-100', 'visible', 'translate-y-0');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                backToTopButton.classList.add('opacity-0', 'invisible', 'translate-y-4');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+ 
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "your-project-name",
+  "version": "1.0.0",
+  "scripts": {
+    "watch": "tailwindcss -i ./input.css -o ./output.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@vonage/server-sdk": "^3.21.0",
+    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.0",
+    "crypto": "^1.0.1",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "pg": "^8.16.0",
+    "sqlite3": "^5.1.7"
+  }
+}
