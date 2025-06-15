@@ -51,13 +51,25 @@
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-6 transition-colors duration-300">
   <header class="mb-6 flex justify-between items-center">
     <div>
-      <h1 class="font-bebas tracking-wider text-4xl font-bold mb-2">Orders Dashboard</h1>
-      <nav class="flex space-x-4 text-yellow-600 dark:text-yellow-400">
-        <a href="/orders" class="font-bebas text-2xl tracking-wider hover:underline font-bold">Orders</a>
-        <a href="/insights" class="font-bebas text-2xl tracking-wider hover:underline font-bold">Insights</a>
-        <a href="/menued" class="font-bebas text-2xl tracking-wider hover:underline font-bold">Menu</a>
-        <a href="/inventory" class="font-bebas text-2xl tracking-wider hover:underline font-bold">Inventory</a>
-      </nav>
+     <h1 class="font-bebas tracking-wider  text-gray-800 dark:text-yellow-500 text-4xl font-bold mb-2">Orders Dashboard</h1>
+      <nav class="flex space-x-4 text-gray-800 dark:text-yellow-500">
+    <a href="/orders" class="font-bebas text-2xl tracking-wider font-bold relative group">
+        Orders
+        <span class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
+    </a>
+    <a href="/insights" class="font-bebas text-2xl tracking-wider font-bold relative group">
+        Insights
+        <span class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
+    </a>
+    <a href="/menued" class="font-bebas text-2xl tracking-wider font-bold relative group">
+        Menu
+        <span class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
+    </a>
+    <a href="/inventory" class="font-bebas text-2xl tracking-wider font-bold relative group">
+        Inventory
+        <span class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
+    </a>
+</nav>
     </div>
     <div class="flex items-center gap-4">
 
@@ -145,140 +157,114 @@
     }
 
     function loadOrders() {
-      fetch('/api/orders')
-        .then(res => res.json())
-        .then(data => {
-          const pendingContainer = document.getElementById('pendingOrders');
-          const preparedContainer = document.getElementById('preparedOrders');
-          const completedContainer = document.getElementById('completedOrders');
+  fetch('/api/orders')
+    .then(res => res.json())
+    .then(data => {
+      const pendingContainer = document.getElementById('pendingOrders');
+      const preparedContainer = document.getElementById('preparedOrders');
+      const completedContainer = document.getElementById('completedOrders');
 
-          pendingContainer.innerHTML = '';
-          preparedContainer.innerHTML = '';
-          completedContainer.innerHTML = '';
+      pendingContainer.innerHTML = '';
+      preparedContainer.innerHTML = '';
+      completedContainer.innerHTML = '';
 
-          if (data.filter(order => order.status === 'pending').length === 0) {
-            pendingContainer.innerHTML = '<div class="bg-gray-100 dark:bg-gray-800 p-4 rounded text-gray-600 dark:text-gray-400">No pending orders</div>';
-          }
+      if (data.filter(order => order.status === 'pending').length === 0) {
+        pendingContainer.innerHTML = '<div class="bg-gray-100 dark:bg-gray-800 p-4 rounded text-gray-600 dark:text-gray-400">No pending orders</div>';
+      }
 
-          if (data.filter(order => order.status === 'prepared').length === 0) {
-            preparedContainer.innerHTML = '<div class="bg-gray-100 dark:bg-gray-800 p-4 rounded text-gray-600 dark:text-gray-400">No prepared orders</div>';
-          }
+      if (data.filter(order => order.status === 'prepared').length === 0) {
+        preparedContainer.innerHTML = '<div class="bg-gray-100 dark:bg-gray-800 p-4 rounded text-gray-600 dark:text-gray-400">No prepared orders</div>';
+      }
 
-          const completedOrders = data.filter(order => order.status === 'pickedup');
-          if (completedOrders.length === 0) {
-            completedContainer.innerHTML = '<div class="bg-gray-100 dark:bg-gray-800 p-4 rounded text-gray-600 dark:text-gray-400">No completed orders</div>';
-          }
+      const completedOrders = data.filter(order => order.status === 'pickedup');
+      if (completedOrders.length === 0) {
+        completedContainer.innerHTML = '<div class="bg-gray-100 dark:bg-gray-800 p-4 rounded text-gray-600 dark:text-gray-400">No completed orders</div>';
+      }
 
-          data.forEach(order => {
-            // Create order card
-            const div = document.createElement('div');
-            div.className = `order bg-gray-100 dark:bg-gray-800 p-4 rounded shadow border-l-4 ${order.status === 'pending' ? 'border-red-500' :
-              order.status === 'prepared' ? 'border-blue-500' : 'border-green-500'
-              } transition-colors duration-300`;
+      // Sort by status and then by priority_level
+      data.sort((a, b) => {
+        if (a.status === b.status) {
+          return (b.priority_level || 0) - (a.priority_level || 0);
+        }
+        return 0;
+      });
 
-            // Token display with copy functionality
-            const tokenDisplay = order.token ?
-              `<div class="flex items-center mt-1 mb-2">
-                <span class="bg-gray-200 dark:bg-gray-700 text-yellow-600 dark:text-yellow-300 px-2 py-1 rounded font-mono tracking-wider">#${order.token}</span>
-                <button class="ml-2 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" onclick="copyToClipboard('${order.token}')">
-                  Copy
-                </button>
-              </div>` : '';
+      const priorityMap = {
+        50: 'Platinum',
+        30: 'Gold',
+        10: 'Silver',
+        0: 'Default'
+      };
 
-            div.innerHTML = `
-              <div class="flex justify-between items-start">
-                <div>
-                  <h3 class="font-semibold text-lg">${order.item}</h3>
-                  ${tokenDisplay}
-                </div>
-                <span class="text-sm text-gray-500 dark:text-gray-400">${order.time}</span>
-              </div>
-              <div class="mt-2 grid grid-cols-2 gap-x-4 text-sm">
-                <div><span class="text-gray-500 dark:text-gray-400">Phone:</span> ${order.phone}</div>
-                <div><span class="text-gray-500 dark:text-gray-400">Amount:</span> ₹${order.amount}</div>
-                <div><span class="text-gray-500 dark:text-gray-400">Date:</span> ${order.date}</div>
-                <div><span class="text-gray-500 dark:text-gray-400">Status:</span> 
-                  <span class="${order.status === 'pending' ? 'text-red-500' :
-                order.status === 'prepared' ? 'text-blue-500 dark:text-blue-400' : 'text-green-500 dark:text-green-400'
-              }">${order.status}</span>
-                </div>
-              </div>
-              <div class="mt-4 flex space-x-2">
-                ${order.status === 'pending' ?
-                `<button class="mark-prepared-btn bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white text-sm" data-id="${order.id}">
-                    Mark Prepared & Notify
-                  </button>` : ''}
-                ${order.status === 'prepared' ?
-                `<button class="mark-pickedup-btn bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-white text-sm" data-id="${order.id}">
-                    Mark as Picked Up
-                  </button>` : ''}
-              </div>
-            `;
+      const priorityColorMap = {
+        Platinum: 'text-purple-600 dark:text-purple-400',
+        Gold: 'text-yellow-600 dark:text-yellow-300',
+        Silver: 'text-gray-500 dark:text-gray-300',
+        Default: 'text-gray-400 dark:text-gray-500'
+      };
 
-            if (order.status === 'pending') {
-              pendingContainer.appendChild(div);
-            } else if (order.status === 'prepared') {
-              preparedContainer.appendChild(div);
-            } else if (order.status === 'pickedup') {
-              completedContainer.appendChild(div);
-            }
-          });
+      data.forEach(order => {
+        const priorityLabel = priorityMap[order.priority_level] || 'Default';
+        const priorityColor = priorityColorMap[priorityLabel];
 
-          // Attach event listeners for buttons
-          document.querySelectorAll('.mark-prepared-btn').forEach(button => {
-            button.addEventListener('click', () => {
-              const id = button.dataset.id;
-              button.disabled = true;
-              button.textContent = 'Processing...';
-              button.classList.add('opacity-75');
+        const div = document.createElement('div');
+        div.className = `order bg-gray-100 dark:bg-gray-800 p-4 rounded shadow border-l-4 ${order.status === 'pending' ? 'border-red-500' :
+          order.status === 'prepared' ? 'border-blue-500' : 'border-green-500'
+          } transition-colors duration-300`;
 
-              fetch(`/mark-prepared/${id}`, { method: 'POST' })
-                .then(res => {
-                  if (!res.ok) throw new Error('Failed to mark prepared');
-                  return res.text();
-                })
-                .then(msg => {
-                  showMessage(msg);
-                  loadOrders();
-                })
-                .catch(err => {
-                  showMessage(err.message);
-                  button.disabled = false;
-                  button.textContent = 'Mark Prepared & Notify';
-                  button.classList.remove('opacity-75');
-                });
-            });
-          });
+        const tokenDisplay = order.token ?
+          `<div class="flex items-center mt-1 mb-2">
+              <span class="bg-gray-200 dark:bg-gray-700 text-yellow-600 dark:text-yellow-300 px-2 py-1 rounded font-mono tracking-wider">#${order.token}</span>
+              <button class="ml-2 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" onclick="copyToClipboard('${order.token}')">
+                Copy
+              </button>
+            </div>` : '';
 
-          document.querySelectorAll('.mark-pickedup-btn').forEach(button => {
-            button.addEventListener('click', () => {
-              const id = button.dataset.id;
-              button.disabled = true;
-              button.textContent = 'Processing...';
-              button.classList.add('opacity-75');
+        div.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-semibold text-lg">${order.item}</h3>
+              ${tokenDisplay}
+            </div>
+            <span class="text-sm text-gray-500 dark:text-gray-400">${order.time}</span>
+          </div>
+          <div class="mt-2 grid grid-cols-2 gap-x-4 text-sm">
+            <div><span class="text-gray-500 dark:text-gray-400">Phone:</span> ${order.phone}</div>
+            <div><span class="text-gray-500 dark:text-gray-400">Amount:</span> ₹${order.amount}</div>
+            <div><span class="text-gray-500 dark:text-gray-400">Date:</span> ${order.date}</div>
+            <div><span class="text-gray-500 dark:text-gray-400">Status:</span> 
+              <span class="${order.status === 'pending' ? 'text-red-500' :
+          order.status === 'prepared' ? 'text-blue-500 dark:text-blue-400' : 'text-green-500 dark:text-green-400'
+        }">${order.status}</span>
+            </div>
+            <div><span class="text-gray-500 dark:text-gray-400">Priority:</span> <span class="font-semibold ${priorityColor}">${priorityLabel}</span></div>
+          </div>
+          <div class="mt-4 flex space-x-2">
+            ${order.status === 'pending' ?
+            `<button class="mark-prepared-btn bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white text-sm" data-id="${order.id}">
+                Mark Prepared & Notify
+              </button>` : ''}
+            ${order.status === 'prepared' ?
+            `<button class="mark-pickedup-btn bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-white text-sm" data-id="${order.id}">
+                Mark as Picked Up
+              </button>` : ''}
+          </div>
+        `;
 
-              fetch(`/mark-pickedup/${id}`, { method: 'POST' })
-                .then(res => {
-                  if (!res.ok) throw new Error('Failed to mark picked up');
-                  return res.text();
-                })
-                .then(msg => {
-                  showMessage(msg);
-                  loadOrders();
-                })
-                .catch(err => {
-                  showMessage(err.message);
-                  button.disabled = false;
-                  button.textContent = 'Mark as Picked Up';
-                  button.classList.remove('opacity-75');
-                });
-            });
-          });
-        })
-        .catch(err => {
-          console.error('Failed to load orders:', err);
-        });
-    }
+        if (order.status === 'pending') {
+          pendingContainer.appendChild(div);
+        } else if (order.status === 'prepared') {
+          preparedContainer.appendChild(div);
+        } else if (order.status === 'pickedup') {
+          completedContainer.appendChild(div);
+        }
+      });
+    })
+    .catch(err => {
+      console.error('Error loading orders:', err);
+    });
+}
+
 
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(() => {
@@ -290,6 +276,41 @@
 
     // Load orders initially and refresh every 30 seconds
     loadOrders();
+
+    document.addEventListener('click', function (e) {
+  if (e.target.classList.contains('mark-prepared-btn')) {
+    const id = e.target.getAttribute('data-id');
+    fetch(`/mark-prepared/${id}`, {
+      method: 'POST'
+    })
+      .then(res => res.json())
+      .then(data => {
+        showMessage(data.message || 'Marked as prepared');
+        loadOrders();
+      })
+      .catch(err => {
+        console.error('Error marking as prepared:', err);
+        showMessage('Something went wrong while marking as prepared');
+      });
+  }
+
+  if (e.target.classList.contains('mark-pickedup-btn')) {
+    const id = e.target.getAttribute('data-id');
+    fetch(`/mark-pickedup/${id}`, {
+      method: 'POST'
+    })
+      .then(res => res.json())
+      .then(data => {
+        showMessage(data.message || 'Marked as picked up');
+        loadOrders();
+      })
+      .catch(err => {
+        console.error('Error marking as picked up:', err);
+        showMessage('Something went wrong while marking as picked up');
+      });
+  }
+});
+
     setInterval(loadOrders, 30000);
   </script>
 </body>

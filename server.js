@@ -119,7 +119,7 @@ const adminuser = 'admin@site.com';
 const adminPasswordHash = bcrypt.hashSync('admin123', 10); 
 
 app.get('/login', (req, res) => {
-  res.render('login', { error: null, username: '' });
+    res.render('login.ejs', { error: null, username: ''});
 });
 
 app.get('/home', (req, res) => {
@@ -208,7 +208,7 @@ function generateToken() {
 
 
 app.post('/place-order', async (req, res) => {
-  const { cart, phone, payment_id } = req.body;
+  let { cart, phone, payment_id, priority_level } = req.body; // added priority_level
 
   if (!cart || !phone || !payment_id) {
     return res.status(400).json({ error: 'Invalid request' });
@@ -223,8 +223,8 @@ app.post('/place-order', async (req, res) => {
   const totalAmount = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
 
   const query = `
-    INSERT INTO orders (item, phone, amount, date, time, token, payment_id, payment_status)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    INSERT INTO orders (item, phone, amount, date, time, token, payment_id, payment_status, priority_level)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
     RETURNING id;
   `;
 
@@ -237,7 +237,8 @@ app.post('/place-order', async (req, res) => {
       time,
       token,
       payment_id,
-      'paid'
+      'paid',
+      priority_level // insert priority
     ]);
 
     const orderId = result.rows[0].id;
@@ -265,16 +266,23 @@ app.post('/place-order', async (req, res) => {
 
 
 
+
 // Fetch all orders
 app.get('/api/orders', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM orders ORDER BY id DESC');
+    const result = await pool.query(`
+      SELECT * FROM orders 
+      ORDER BY 
+        status = 'pending' DESC,
+        priority_level DESC
+    `);
     res.json(result.rows);
   } catch (err) {
     console.error('Error fetching orders:', err);
     res.status(500).json({ error: 'Failed to fetch orders' });
   }
 });
+
 
 
 // AI Insights API
@@ -406,6 +414,7 @@ app.get('/insights', (req, res) => {
 
 
 
+// Mark as Prepared
 app.post('/mark-prepared/:id', async (req, res) => {
   const id = req.params.id;
 
@@ -416,41 +425,42 @@ app.post('/mark-prepared/:id', async (req, res) => {
     );
 
     if (result.rowCount === 0) {
-      return res.status(404).send('Order not found.');
+      return res.status(404).json({ message: 'Order not found.' });
     }
 
-    // Update the status to 'prepared'
-    await pool.query(`UPDATE orders SET status = 'prepared' WHERE id = $1`, [id]);
+    await pool.query(
+      `UPDATE orders SET status = 'prepared' WHERE id = $1`,
+      [id]
+    );
 
-    res.send('Order marked as prepared.');
+    res.json({ message: 'Order marked as prepared.', order: result.rows[0] });
   } catch (err) {
     console.error("Database error:", err);
-    res.status(500).send('Failed to mark order as prepared.');
+    res.status(500).json({ message: 'Failed to mark order as prepared.' });
   }
 });
 
-
-
-
+// Mark as Picked Up
 app.post('/mark-pickedup/:id', async (req, res) => {
   const id = req.params.id;
 
   try {
     const result = await pool.query(
-      `UPDATE orders SET status = 'pickedup' WHERE id = $1`,
+      `UPDATE orders SET status = 'pickedup' WHERE id = $1 RETURNING *`,
       [id]
     );
 
     if (result.rowCount === 0) {
-      return res.status(404).send('Order not found.');
+      return res.status(404).json({ message: 'Order not found.' });
     }
 
-    res.send('Order marked as picked up.');
+    res.json({ message: 'Order marked as picked up.', order: result.rows[0] });
   } catch (err) {
     console.error('Pickedup error:', err);
-    res.status(500).send('Failed to update order.');
+    res.status(500).json({ message: 'Failed to update order.' });
   }
 });
+
 
 app.get('/menu', async (req, res) => {
   try {
