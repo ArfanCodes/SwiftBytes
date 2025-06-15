@@ -1,92 +1,106 @@
 // Add this code to your JavaScript file
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize cart state
-    let cart = {
-        items: [],
-        total: 0
-    };
+    document.addEventListener("DOMContentLoaded", function () {
+  // Initialize cart state
+  let cart = {
+    items: [],
+    total: 0,
+    priorityAmount: 0, // New property for priority amount    priorityAmount: 0, // New property for priority amount
+  };
 
     //Add Razorpay script to the page
     const razorpayScript = document.createElement('script');
     razorpayScript.src = 'https://checkout.razorpay.com/v1/checkout.js';
     document.head.appendChild(razorpayScript);
 
-    // Cart toggle functionality - target both the icon and its parent
-    const cartIcon = document.querySelector('.fa-solid.fa-cart-shopping');
-    const cartButton = cartIcon ? cartIcon.closest('button') || cartIcon.closest('a') || cartIcon.parentElement : null;
-    
-    
-    // FIX 4: Improved cart icon click handling
-    // First, make sure the cart icon itself is clickable
-    if (cartIcon) {
-        cartIcon.style.pointerEvents = 'auto';
-        cartIcon.style.cursor = 'pointer';
-        cartIcon.addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevent event bubbling
-            toggleCart(e);
+     // Cart toggle functionality - target both the icon and its parent
+  const cartIcon = document.querySelector(".fa-solid.fa-cart-shopping");
+  const cartButton = cartIcon
+    ? cartIcon.closest("button") ||
+      cartIcon.closest("a") ||
+      cartIcon.parentElement
+    : null;
+  const addToCartButtons = document.querySelectorAll(".bi.bi-bag-plus");
+
+  // FIX 4: Improved cart icon click handling
+  // First, make sure the cart icon itself is clickable
+  if (cartIcon) {
+    cartIcon.style.pointerEvents = "auto";
+    cartIcon.style.cursor = "pointer";
+    cartIcon.addEventListener("click", function (e) {
+      e.stopPropagation(); // Prevent event bubbling
+      toggleCart(e);
+    });
+  }
+
+  // Make the entire cart button area clickable
+  if (cartButton && cartButton !== cartIcon) {
+    cartButton.addEventListener("click", toggleCart);
+  }
+  // FIX 1: Improved event handling for product cards to prevent page jumps
+  document
+    .querySelectorAll(".product-card, .product-item, .menu-item")
+    .forEach((card) => {
+      // Prevent clicks on the entire card and its images from causing page jumps
+      card.addEventListener("click", function (e) {
+        // Prevent default action on the entire card, images, and non-interactive elements
+        const isInteractiveElement = e.target.closest(
+          'a[href]:not([href="#"]), button, input, .bi-bag-plus, svg[role="button"]'
+        );
+        if (!isInteractiveElement) {
+          e.preventDefault();
+        }
+      });
+
+      // Also explicitly handle clicks on any images within the card
+      const cardImages = card.querySelectorAll("img");
+      cardImages.forEach((img) => {
+        img.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
         });
-    }
-    
-    // Make the entire cart button area clickable
-    if (cartButton && cartButton !== cartIcon) {
-        cartButton.addEventListener('click', toggleCart);
-    }
-    // FIX 1: Improved event handling for product cards to prevent page jumps
-    document.querySelectorAll('.product-card, .product-item, .menu-item').forEach(card => {
-        // Prevent clicks on the entire card and its images from causing page jumps
-        card.addEventListener('click', function(e) {
-            // Prevent default action on the entire card, images, and non-interactive elements
-            const isInteractiveElement = e.target.closest('a[href]:not([href="#"]), button, input, .bi-bag-plus, svg[role="button"]');
-            if (!isInteractiveElement) {
-                e.preventDefault();
-            }
-        });
-        
-        // Also explicitly handle clicks on any images within the card
-        const cardImages = card.querySelectorAll('img');
-        cardImages.forEach(img => {
-            img.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            });
-        });
+      });
     });
     
-    // Create cart sidebar elements
-    const cartSidebar = document.createElement('div');
-    cartSidebar.className = 'fixed top-0 right-0 h-full w-0 bg-white dark:bg-gray-900 shadow-lg transform transition-all duration-300 ease-in-out z-50 overflow-hidden';
-    cartSidebar.id = 'cart-sidebar';
-    
-    // Cart header
-    const cartHeader = document.createElement('div');
-    cartHeader.className = 'flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800';
-    
-    const cartTitle = document.createElement('h2');
-    cartTitle.className = 'text-xl font-bold dark:text-white';
-    cartTitle.textContent = 'Your Cart';
-    
-    const closeButton = document.createElement('button');
-    closeButton.className = 'text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white focus:outline-none';
-    closeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>';
-    
-    cartHeader.appendChild(cartTitle);
-    cartHeader.appendChild(closeButton);
-    cartSidebar.appendChild(cartHeader);
-    
-    // Cart content
-    const cartContent = document.createElement('div');
-    cartContent.className = 'flex flex-col h-full';
-    
-    // Items container
-    const itemsContainer = document.createElement('div');
-    itemsContainer.className = 'flex-grow overflow-y-auto p-4';
-    itemsContainer.id = 'cart-items';
-    
-    // Empty cart message
-    const emptyCart = document.createElement('div');
-    emptyCart.className = 'text-center text-gray-500 dark:text-gray-400 py-8';
-    emptyCart.id = 'empty-cart';
-    emptyCart.innerHTML = `
+
+  // Create cart sidebar elements
+  const cartSidebar = document.createElement("div");
+  cartSidebar.className =
+    "fixed top-0 right-0 h-full w-0 bg-white dark:bg-gray-900 shadow-lg transform transition-all duration-300 ease-in-out z-50 overflow-hidden";
+  cartSidebar.id = "cart-sidebar";
+
+  // Cart header
+  const cartHeader = document.createElement("div");
+  cartHeader.className =
+    "flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800";
+
+  const cartTitle = document.createElement("h2");
+  cartTitle.className = "text-xl font-bold dark:text-white";
+  cartTitle.textContent = "Your Cart";
+
+  const closeButton = document.createElement("button");
+  closeButton.className =
+    "text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white focus:outline-none";
+  closeButton.innerHTML =
+    '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>';
+
+  cartHeader.appendChild(cartTitle);
+  cartHeader.appendChild(closeButton);
+  cartSidebar.appendChild(cartHeader);
+
+  // Cart content
+  const cartContent = document.createElement("div");
+  cartContent.className = "flex flex-col h-full";
+
+  // Items container
+  const itemsContainer = document.createElement("div");
+  itemsContainer.className = "flex-grow overflow-y-auto p-4";
+  itemsContainer.id = "cart-items";
+
+  // Empty cart message
+  const emptyCart = document.createElement("div");
+  emptyCart.className = "text-center text-gray-500 dark:text-gray-400 py-8";
+  emptyCart.id = "empty-cart";
+  emptyCart.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
         </svg>
@@ -94,105 +108,203 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     itemsContainer.appendChild(emptyCart);
     
-    // Cart footer with total and checkout
-    const cartFooter = document.createElement('div');
-    cartFooter.className = 'border-t border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-800 sticky bottom-0';
-    cartFooter.id = 'cart-footer';
-    
-    const totalContainer = document.createElement('div');
-    totalContainer.className = 'flex justify-between items-center mb-4';
-    
-    const totalLabel = document.createElement('span');
-    totalLabel.className = 'text-lg font-semibold dark:text-white';
-    totalLabel.textContent = 'Total:';
-    
-    const totalAmount = document.createElement('span');
-    totalAmount.className = 'text-lg font-bold dark:text-white';
-    totalAmount.id = 'cart-total';
-    totalAmount.textContent = '₹0';
-    
-    totalContainer.appendChild(totalLabel);
-    totalContainer.appendChild(totalAmount);
-    
-    // Phone number input and validation
-    const phoneWrapper = document.createElement('div');
-    phoneWrapper.className = 'mb-4';
+    // Cart Footer Section
+const cartFooter = document.createElement('div');
+cartFooter.className = 'border-t border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-800 sticky bottom-0';
+cartFooter.id = 'cart-footer';
 
-    const phoneContainer = document.createElement('div');
-    phoneContainer.className = 'flex items-center border border-gray-300 rounded-md overflow-hidden focus-within:ring focus-within:border-blue-500';
+// Total, Priority Fee & Total Amount Display
+const totalContainer = document.createElement('div');
+totalContainer.className = 'space-y-2 mb-4';
 
-    const countryCode = document.createElement('div');
-    countryCode.className = 'bg-gray-100 dark:bg-gray-700 px-3 py-2 text-gray-700 dark:text-gray-300';
-    countryCode.textContent = '+91';
+// Subtotal Row
+const subtotalContainer = document.createElement('div');
+subtotalContainer.className = 'flex justify-between items-center text-sm';
 
-    const phoneInput = document.createElement('input');
-    phoneInput.type = 'tel';
-    phoneInput.placeholder = 'Enter 10-digit phone number';
-    phoneInput.className = 'flex-grow p-2 focus:outline-none dark:bg-gray-800 dark:text-white';
-    phoneInput.maxLength = 10;
-    phoneInput.id = 'phone-input';
+const subtotalLabel = document.createElement('span');
+subtotalLabel.className = 'text-gray-600 dark:text-gray-400';
+subtotalLabel.textContent = 'Subtotal:';
 
-    phoneContainer.appendChild(countryCode);
-    phoneContainer.appendChild(phoneInput);
-    phoneWrapper.appendChild(phoneContainer);
+const subtotalAmount = document.createElement('span');
+subtotalAmount.className = 'text-gray-600 dark:text-gray-400';
+subtotalAmount.id = 'cart-subtotal';
+subtotalAmount.textContent = '₹0';
 
-    const phoneError = document.createElement('p');
-    phoneError.className = 'text-red-500 text-sm mt-1 hidden';
-    phoneError.id = 'phone-error';
-    phoneError.textContent = 'Please enter a valid 10-digit phone number';
-    phoneWrapper.appendChild(phoneError);
+subtotalContainer.appendChild(subtotalLabel);
+subtotalContainer.appendChild(subtotalAmount);
 
-    const checkoutButton = document.createElement('button');
-    checkoutButton.className = 'w-full bg-yellow-500 text-white py-3 rounded-md font-semibold hover:bg-yellow-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
-    checkoutButton.id = 'checkout-button';
-    checkoutButton.textContent = 'Checkout';
-    checkoutButton.disabled = true;
-    
-    cartFooter.appendChild(totalContainer);
-    cartFooter.appendChild(phoneWrapper);
-    cartFooter.appendChild(checkoutButton);
-    
-    cartContent.appendChild(itemsContainer);
-    cartContent.appendChild(cartFooter);
-    cartSidebar.appendChild(cartContent);
-    
-    // Add notification toast
-    const notificationToast = document.createElement('div');
-    notificationToast.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50';
-    notificationToast.id = 'notification-toast';
-    
-    // Add the elements to the DOM
-    document.body.appendChild(cartSidebar);
-    document.body.appendChild(notificationToast);
-    
-    // Cart overlay for closing when clicking outside
-    const cartOverlay = document.createElement('div');
-    cartOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 z-40 hidden transition-opacity duration-300 opacity-0';
-    cartOverlay.id = 'cart-overlay';
-    document.body.appendChild(cartOverlay);
-    
-    // Event Handlers
-    closeButton.addEventListener('click', closeCart);
-    cartOverlay.addEventListener('click', closeCart);
-    checkoutButton.addEventListener('click', handleCheckout);
+// Priority Fee Row (hidden initially)
+const priorityContainer = document.createElement('div');
+priorityContainer.className = 'flex justify-between items-center text-sm hidden';
+priorityContainer.id = 'priority-fee-display';
 
-    let isPhoneValid = false;
+const priorityLabel = document.createElement('span');
+priorityLabel.className = 'text-orange-600 dark:text-orange-400';
+priorityLabel.textContent = 'Priority Fee:';
 
-    phoneInput.addEventListener('input', () => {
-        const phoneValue = phoneInput.value;
-        const phoneRegex = /^\d{10}$/;
-        isPhoneValid = phoneRegex.test(phoneValue);
-        
-        const phoneError = document.getElementById('phone-error');
-        
-        if (phoneValue.length > 0 && !isPhoneValid) {
-            phoneError.classList.remove('hidden');
-            checkoutButton.disabled = true;
-        } else {
-            phoneError.classList.add('hidden');
-            checkoutButton.disabled = !isPhoneValid || cart.items.length === 0;
-        }
+const priorityAmount = document.createElement('span');
+priorityAmount.className = 'text-orange-600 dark:text-orange-400';
+priorityAmount.id = 'priority-amount';
+priorityAmount.textContent = '₹0';
+
+priorityContainer.appendChild(priorityLabel);
+priorityContainer.appendChild(priorityAmount);
+
+// Total Row
+const totalMainContainer = document.createElement('div');
+totalMainContainer.className = 'flex justify-between items-center border-t border-gray-200 dark:border-gray-600 pt-2';
+
+const totalLabel = document.createElement('span');
+totalLabel.className = 'text-lg font-semibold dark:text-white';
+totalLabel.textContent = 'Total:';
+
+const totalAmount = document.createElement('span');
+totalAmount.className = 'text-lg font-bold dark:text-white';
+totalAmount.id = 'cart-total';
+totalAmount.textContent = '₹0';
+
+totalMainContainer.appendChild(totalLabel);
+totalMainContainer.appendChild(totalAmount);
+
+// Append subtotal, priority fee and total to container
+totalContainer.appendChild(subtotalContainer);
+totalContainer.appendChild(priorityContainer);
+totalContainer.appendChild(totalMainContainer);
+
+// Priority Order Section
+const priorityWrapper = document.createElement('div');
+priorityWrapper.className = 'mb-4';
+
+const priorityTitle = document.createElement('h3');
+priorityTitle.className = 'text-sm font-medium text-gray-700 dark:text-gray-300 mb-2';
+priorityTitle.textContent = 'Priority Order (Optional)';
+
+const priorityDescription = document.createElement('p');
+priorityDescription.className = 'text-xs text-gray-500 dark:text-gray-400 mb-3';
+priorityDescription.textContent = 'Pay extra to get your order prepared first';
+
+const priorityOptions = document.createElement('div');
+priorityOptions.className = 'grid grid-cols-4 gap-2';
+
+const priorityValues = [
+  { value: 0, label: 'None', color: 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300' },
+  { value: 10, label: '+₹10', color: 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300' },
+  { value: 30, label: '+₹30', color: 'bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300' },
+  { value: 50, label: '+₹50', color: 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300' },
+];
+
+// Priority Buttons
+priorityValues.forEach((option) => {
+  const priorityButton = document.createElement('button');
+  priorityButton.className = `px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 border-2 border-transparent ${option.color}`;
+  priorityButton.textContent = option.label;
+  priorityButton.dataset.value = option.value;
+  priorityButton.type = 'button';
+
+  // Set default selection
+  if (option.value === 0) {
+    priorityButton.classList.add('ring-2', 'ring-blue-500');
+  }
+
+  // Button Click Handler
+  priorityButton.addEventListener('click', () => {
+    priorityOptions.querySelectorAll('button').forEach(btn => {
+      btn.classList.remove('ring-2', 'ring-blue-500');
     });
+    priorityButton.classList.add('ring-2', 'ring-blue-500');
+
+    cart.priorityAmount = parseInt(priorityButton.dataset.value);
+    updateCart();
+  });
+
+  priorityOptions.appendChild(priorityButton);
+});
+
+// Append priority section components
+priorityWrapper.appendChild(priorityTitle);
+priorityWrapper.appendChild(priorityDescription);
+priorityWrapper.appendChild(priorityOptions);
+
+// Phone Input Section
+const phoneWrapper = document.createElement('div');
+phoneWrapper.className = 'mb-4';
+
+const phoneContainer = document.createElement('div');
+phoneContainer.className = 'flex items-center border border-gray-300 rounded-md overflow-hidden focus-within:ring focus-within:border-blue-500';
+
+const countryCode = document.createElement('div');
+countryCode.className = 'bg-gray-100 dark:bg-gray-700 px-3 py-2 text-gray-700 dark:text-gray-300';
+countryCode.textContent = '+91';
+
+const phoneInput = document.createElement('input');
+phoneInput.type = 'tel';
+phoneInput.placeholder = 'Enter 10-digit phone number';
+phoneInput.className = 'flex-grow p-2 focus:outline-none dark:bg-gray-800 dark:text-white';
+phoneInput.maxLength = 10;
+phoneInput.id = 'phone-input';
+
+phoneContainer.appendChild(countryCode);
+phoneContainer.appendChild(phoneInput);
+phoneWrapper.appendChild(phoneContainer);
+
+const phoneError = document.createElement('p');
+phoneError.className = 'text-red-500 text-sm mt-1 hidden';
+phoneError.id = 'phone-error';
+phoneError.textContent = 'Please enter a valid 10-digit phone number';
+phoneWrapper.appendChild(phoneError);
+
+// Checkout Button
+const checkoutButton = document.createElement('button');
+checkoutButton.className = 'w-full bg-yellow-500 text-white py-3 rounded-md font-semibold hover:bg-yellow-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
+checkoutButton.id = 'checkout-button';
+checkoutButton.textContent = 'Checkout';
+checkoutButton.disabled = true;
+
+// Assemble Footer Sections
+cartFooter.appendChild(totalContainer);
+cartFooter.appendChild(priorityWrapper);
+cartFooter.appendChild(phoneWrapper);
+cartFooter.appendChild(checkoutButton);
+
+// Append to cart content/sidebar
+cartContent.appendChild(itemsContainer);
+cartContent.appendChild(cartFooter);
+cartSidebar.appendChild(cartContent);
+
+// Toast Notification
+const notificationToast = document.createElement('div');
+notificationToast.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50';
+notificationToast.id = 'notification-toast';
+document.body.appendChild(notificationToast);
+
+// Cart Overlay
+const cartOverlay = document.createElement('div');
+cartOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 z-40 hidden transition-opacity duration-300 opacity-0';
+cartOverlay.id = 'cart-overlay';
+document.body.appendChild(cartOverlay);
+
+// Event Handlers
+closeButton.addEventListener('click', closeCart);
+cartOverlay.addEventListener('click', closeCart);
+checkoutButton.addEventListener('click', handleCheckout);
+
+// Phone Validation
+let isPhoneValid = false;
+
+phoneInput.addEventListener('input', () => {
+  const phoneValue = phoneInput.value;
+  const phoneRegex = /^\d{10}$/;
+  isPhoneValid = phoneRegex.test(phoneValue);
+
+  if (phoneValue.length > 0 && !isPhoneValid) {
+    phoneError.classList.remove('hidden');
+    checkoutButton.disabled = true;
+  } else {
+    phoneError.classList.add('hidden');
+    checkoutButton.disabled = !isPhoneValid || cart.items.length === 0;
+  }
+});
+
 
 
 
@@ -569,8 +681,12 @@ function handlePaymentSuccess(response, phoneNumber) {
 
 // Prevent cart opening automatically on load (mobile fix)
 setTimeout(function() {
+    console.log("Subtotal element:", document.getElementById('cart-subtotal'));
+console.log("Total element:", document.getElementById('cart-total'));
+console.log("Items container:", document.getElementById('cart-items'));
+
     updateCart();
-}, 100);
+}, 1000);
 
     
     // Add CSS styles for mobile responsiveness and fixed checkout button
