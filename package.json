@@ -12,6 +12,7 @@
     "@vonage/server-sdk": "^3.21.0",
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
