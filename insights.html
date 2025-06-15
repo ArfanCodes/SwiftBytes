@@ -5,7 +5,7 @@
     <title>AI Insights</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="output.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -37,45 +37,104 @@
     </script>
 </head>
 
-<body class="bg-gray-900 text-white p-6">
+<body class="bg-secondary-dark dark:bg-secondary-light text-text-dark dark:text-text-light transition-colors duration-300 p-6">
     <header class="mb-8 flex justify-between items-center">
         <div>
-            <h1 class="font-bebas tracking-wider text-4xl font-bold mb-2">Order AI Insights</h1>
-            <p class="text-gray-400">AI-powered analysis of your business data</p>
+            <h1 class="font-bebas tracking-wider text-4xl text-yellow-500 dark:text-black font-bold mb-2">Order AI Insights</h1>
+            <p class="text-gray-400 dark:text-gray-600">AI-powered analysis of your business data</p>
         </div>
-        <div>
-            <img src="/images/logo.png" alt="AI Insights Logo" class="h-32 w-32">
+        <div class="flex items-center">
+            <button id="theme-toggle" class="p-2 rounded-full bg-gray-800 dark:bg-gray-200 text-gray-200 dark:text-gray-800 hover:bg-gray-700 dark:hover:bg-gray-300 transition-colors duration-300">
+                <svg id="theme-icon-dark" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+            </button>
+            <img src="/images/logo.png" alt="AI Insights Logo" class="h-32 w-32 ml-4">
         </div>
     </header>
 
     <nav class="mb-6">
         <ul class="flex space-x-4">
-            <li><a href="/orders" class="font-bebas tracking-wider text-yellow-400 hover:underline font-bold text-2xl">View Orders</a></li>
-            <li><a href="/insights" class="font-bebas tracking-wider text-yellow-400 hover:underline font-bold text-2xl">Insights</a></li>
-        </ul>
+    <li>
+        <a href="/orders" class="font-bebas tracking-wider text-primary-light dark:text-primary-dark font-bold text-2xl relative group">
+            View Orders
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
+        </a>
+    </li>
+    <li>
+        <a href="/menued" class="font-bebas tracking-wider text-primary-light dark:text-primary-dark font-bold text-2xl relative group">
+            Menu
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
+        </a>
+    </li>
+    <li>
+        <a href="/inventory" class="font-bebas tracking-wider text-primary-light dark:text-primary-dark font-bold text-2xl relative group">
+            Inventory
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
+        </a>
+    </li>
+</ul>
     </nav>
 
     <div class="flex flex-col space-y-4">
         <button onclick="fetchInsights()" 
-        class="bg-blue-600 hover:bg-blue-700 text-yellow-400 font-bebas tracking-wider text-xl  px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center w-48 relative overflow-hidden">
+        class="bg-primary-light dark:bg-blue-500 text-primary-dark dark:text-yellow-500 font-bebas tracking-wider text-xl px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center w-48 relative overflow-hidden">
         <svg class="w-6 h-6 mr-3 transform transition hover:rotate-6 hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
         </svg>
         <span>Generate Insights</span>
     </button>
 
-        <div id="loading" class="hidden text-gray-400">
+        <div id="loading" class="hidden text-gray-400 dark:text-gray-600">
             Analyzing your order data...
         </div>
     </div>
 
     <div id="insights-container" class="mt-8 hidden">
-        <div class="bg-gray-800 border border-gray-700 rounded-lg p-6">
-            <div id="insights" class="text-gray-300 whitespace-pre-line markdown"></div>
+        <div class="bg-secondary-light dark:bg-secondary-dark border border-gray-300 dark:border-gray-700 rounded-lg p-6">
+            <div id="insights" class="text-gray-700 dark:text-gray-300 whitespace-pre-line markdown"></div>
         </div>
     </div>
 
     <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIconDark = document.getElementById('theme-icon-dark');
+        const themeIconLight = document.getElementById('theme-icon-light');
+        
+        // Check for saved theme preference or use system preference
+        const savedTheme = localStorage.getItem('theme') || 
+                          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        
+        // Apply the saved theme
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+            themeIconDark.classList.add('hidden');
+            themeIconLight.classList.remove('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            themeIconDark.classList.remove('hidden');
+            themeIconLight.classList.add('hidden');
+        }
+        
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                themeIconDark.classList.remove('hidden');
+                themeIconLight.classList.add('hidden');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                themeIconDark.classList.add('hidden');
+                themeIconLight.classList.remove('hidden');
+            }
+        });
+
         // Simple markdown parser for formatting insights
         function parseMarkdown(markdown) {
             if (!markdown) return '';
