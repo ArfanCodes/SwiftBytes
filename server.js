@@ -1,15 +1,14 @@
-const express = require('express');
-const {Pool} = require('pg');
+const express = require("express");
+const { Pool } = require("pg");
 //const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
-const crypto = require('crypto');
-const { Vonage } = require('@vonage/server-sdk');
+const path = require("path");
+const bodyParser = require("body-parser");
+const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+const { Vonage } = require("@vonage/server-sdk");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-require('dotenv').config();
-const cors = require('cors');
-
+require("dotenv").config();
+const cors = require("cors");
 
 const app = express();
 const PORT = 3000;
@@ -26,7 +25,7 @@ const db = new Pool({
 db.connect();
 
 // Add new item
-app.post('/menu', (req, res) => {
+app.post("/menu", (req, res) => {
   const { name, price, image } = req.body;
 
   const sql = `INSERT INTO menu_items (name, price, image) VALUES ($1, $2, $3) RETURNING *`;
@@ -34,69 +33,64 @@ app.post('/menu', (req, res) => {
 
   db.query(sql, values, (err, result) => {
     if (err) {
-      console.error('Error adding item:', err);
-      return res.status(500).json({ error: 'Failed to add item.' });
+      console.error("Error adding item:", err);
+      return res.status(500).json({ error: "Failed to add item." });
     }
     res.status(201).json(result.rows[0]);
   });
 });
 
-
 // Edit item
-app.put('/menu/:id', async (req, res) => {
+app.put("/menu/:id", async (req, res) => {
   const { name, price, image } = req.body;
   const { id } = req.params;
-  await db.query('UPDATE menu_items SET name = $1, price = $2, image = $3 WHERE id = $4', [name, price, image, id]);
+  await db.query(
+    "UPDATE menu_items SET name = $1, price = $2, image = $3 WHERE id = $4",
+    [name, price, image, id]
+  );
   res.sendStatus(200);
 });
 
 // Delete item
-app.delete('/menu/:id', async (req, res) => {
+app.delete("/menu/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    await db.query('DELETE FROM menu_items WHERE id = $1', [id]);
+    await db.query("DELETE FROM menu_items WHERE id = $1", [id]);
     res.sendStatus(200);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Failed to delete item');
+    res.status(500).send("Failed to delete item");
   }
 });
 
-app.put('/menu/:id', (req, res) => {
-    const { id } = req.params;
-    const { name, price, image } = req.body;
+app.put("/menu/:id", (req, res) => {
+  const { id } = req.params;
+  const { name, price, image } = req.body;
 
-    const sql = `UPDATE menu_items SET name = $1, price = $2, image = $3 WHERE id = $4 RETURNING *`;
-    const values = [name, price, image, id];
+  const sql = `UPDATE menu_items SET name = $1, price = $2, image = $3 WHERE id = $4 RETURNING *`;
+  const values = [name, price, image, id];
 
-    db.query(sql, values, (err, result) => {
-        if (err) {
-            console.error('Error updating item:', err);
-            return res.status(500).json({ error: 'Failed to update item.' });
-        }
-        res.json(result.rows[0]);
-    });
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("Error updating item:", err);
+      return res.status(500).json({ error: "Failed to update item." });
+    }
+    res.json(result.rows[0]);
+  });
 });
 
-
-
-app.listen(3000, () => console.log('Server running on port 3000'));
+app.listen(3000, () => console.log("Server running on port 3000"));
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }  // Important for Render hosted DB
+  ssl: { rejectUnauthorized: false }, // Important for Render hosted DB
 });
-
-
-
 
 // ✅ Vonage config (working)
 const vonage = new Vonage({
-  apiKey: '548f47dc',
-  apiSecret: 'LgM4C4j0766tMiN1'
+  apiKey: "548f47dc",
+  apiSecret: "LgM4C4j0766tMiN1",
 });
-
-
 
 // Initialize Google Gemini API with the correct key
 const GEMINI_API_KEY = "AIzaSyB_x5tgrCFdfe-YXFzuFMl5XaeblvbJ9tI";
@@ -106,60 +100,52 @@ const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 app.use(express.json()); // to parse JSON request bodies
 app.use(bodyParser.urlencoded({ extended: true })); // to parse URL-encoded bodies
 
-
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname)); // views folder = current folder
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname)); // views folder = current folder
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
-
 // Hardcoded Admin Credentials
-const adminuser = 'admin@site.com';
-const adminPasswordHash = bcrypt.hashSync('admin123', 10); 
+const adminuser = "admin@site.com";
+const adminPasswordHash = bcrypt.hashSync("admin123", 10);
 
-app.get('/login', (req, res) => {
-    res.render('login.ejs', { error: null, username: ''});
+app.get("/login", (req, res) => {
+  res.render("login.ejs", { error: null, username: "" });
 });
 
-app.get('/home', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+app.get("/home", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.get('/menued', (req, res) => {
-  res.sendFile(path.join(__dirname, 'menued.html'));
+app.get("/menued", (req, res) => {
+  res.sendFile(path.join(__dirname, "menued.html"));
 });
 
-app.get('/inventory', (req, res) => {
-  res.sendFile(path.join(__dirname, 'inventory.html'));
+app.get("/inventory", (req, res) => {
+  res.sendFile(path.join(__dirname, "inventory.html"));
 });
 
-
-
-app.post('/login', (req, res) => {
+app.post("/login", (req, res) => {
   const { username, password } = req.body;
 
   if (username === adminuser) {
     bcrypt.compare(password, adminPasswordHash, (err, result) => {
       if (result) {
         // Password is correct — redirect to orders page
-        res.redirect('/orders');
+        res.redirect("/orders");
       } else {
-        res.render('login', { error: 'Invalid admin credentials.', username });
+        res.render("login", { error: "Invalid admin credentials.", username });
       }
     });
   } else {
-    res.render('login', { error: 'Invalid admin credentials.', username });
+    res.render("login", { error: "Invalid admin credentials.", username });
   }
 });
-
-
-
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
-
 
 // Transaction DB
 
@@ -172,13 +158,14 @@ const orderPool = new Pool({
 
 orderPool.connect((err, client, release) => {
   if (err) {
-    console.error('Error connecting to orders DB:', err.stack);
+    console.error("Error connecting to orders DB:", err.stack);
     return;
   }
 
-  console.log('Connected to PostgreSQL orders database.');
+  console.log("Connected to PostgreSQL orders database.");
 
-  client.query(`
+  client.query(
+    `
     CREATE TABLE IF NOT EXISTS orders (
       id SERIAL PRIMARY KEY,
       item TEXT,
@@ -191,36 +178,42 @@ orderPool.connect((err, client, release) => {
       payment_id TEXT,
       payment_status TEXT DEFAULT 'pending'
     );
-  `, (err, result) => {
-    release(); // always release the client back to the pool
+  `,
+    (err, result) => {
+      release(); // always release the client back to the pool
 
-    if (err) {
-      console.error('Error creating orders table:', err.stack);
-    } else {
-      console.log('Orders table ready.');
+      if (err) {
+        console.error("Error creating orders table:", err.stack);
+      } else {
+        console.log("Orders table ready.");
+      }
     }
-  });
+  );
 });
 
 function generateToken() {
-  return crypto.randomBytes(3).toString('hex').toUpperCase();
+  return crypto.randomBytes(3).toString("hex").toUpperCase();
 }
 
-
-app.post('/place-order', async (req, res) => {
+app.post("/place-order", async (req, res) => {
   let { cart, phone, payment_id, priority_level } = req.body; // added priority_level
 
   if (!cart || !phone || !payment_id) {
-    return res.status(400).json({ error: 'Invalid request' });
+    return res.status(400).json({ error: "Invalid request" });
   }
 
   const now = new Date();
-  const date = now.toLocaleDateString('en-GB');
-  const time = now.toLocaleTimeString('en-GB');
+  const date = now.toLocaleDateString("en-GB");
+  const time = now.toLocaleTimeString("en-GB");
   const token = generateToken();
 
-  const itemsSummary = cart.map(item => `${item.name} X ${item.quantity}`).join('\n');
-  const totalAmount = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const itemsSummary = cart
+    .map((item) => `${item.name} X ${item.quantity}`)
+    .join("\n");
+  const totalAmount = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
   const query = `
     INSERT INTO orders (item, phone, amount, date, time, token, payment_id, payment_status, priority_level)
@@ -237,38 +230,35 @@ app.post('/place-order', async (req, res) => {
       time,
       token,
       payment_id,
-      'paid',
-      priority_level // insert priority
+      "paid",
+      priority_level, // insert priority
     ]);
 
     const orderId = result.rows[0].id;
 
-    const to = phone.startsWith('+') ? phone : `+91${phone}`;
+    const to = phone.startsWith("+") ? phone : `+91${phone}`;
     const from = "SwiftBites";
     const text = `Your order has been placed and payment received! Your order token is: ${token}. We'll notify you when it's ready.`;
 
-    vonage.sms.send({ to, from, text })
+    vonage.sms
+      .send({ to, from, text })
       .then(() => console.log("Confirmation SMS sent"))
-      .catch(error => console.error("Vonage SMS error:", error));
+      .catch((error) => console.error("Vonage SMS error:", error));
 
     res.json({
       success: true,
       token: token,
       message: "Payment verified and order confirmed!",
-      orderId: orderId
+      orderId: orderId,
     });
-
   } catch (err) {
     console.error("PostgreSQL insert error:", err);
-    res.status(500).json({ error: 'Failed to save order' });
+    res.status(500).json({ error: "Failed to save order" });
   }
 });
 
-
-
-
 // Fetch all orders
-app.get('/api/orders', async (req, res) => {
+app.get("/api/orders", async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT * FROM orders 
@@ -278,22 +268,20 @@ app.get('/api/orders', async (req, res) => {
     `);
     res.json(result.rows);
   } catch (err) {
-    console.error('Error fetching orders:', err);
-    res.status(500).json({ error: 'Failed to fetch orders' });
+    console.error("Error fetching orders:", err);
+    res.status(500).json({ error: "Failed to fetch orders" });
   }
 });
 
-
-
 // AI Insights API
-app.get('/api/order-insights', async (req, res) => {
+app.get("/api/order-insights", async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM orders ORDER BY id DESC');
+    const result = await pool.query("SELECT * FROM orders ORDER BY id DESC");
     const orders = result.rows;
 
     if (orders.length === 0) {
       return res.json({
-        insights: "No orders found. Place some orders to generate insights."
+        insights: "No orders found. Place some orders to generate insights.",
       });
     }
 
@@ -301,26 +289,26 @@ app.get('/api/order-insights', async (req, res) => {
       const insights = generateLocalInsights(orders);
       res.json({ insights });
     } catch (error) {
-      console.error('Error generating insights:', error);
+      console.error("Error generating insights:", error);
       const basicInsights = generateBasicStats(orders);
       res.json({ insights: basicInsights });
     }
-
   } catch (err) {
-    console.error('Database error fetching orders:', err);
-    res.status(500).json({ error: 'Failed to fetch orders' });
+    console.error("Database error fetching orders:", err);
+    res.status(500).json({ error: "Failed to fetch orders" });
   }
 });
-
 
 // Function to generate insights locally without API
 function generateLocalInsights(orders) {
   // Calculate total revenue
-  const totalRevenue = orders.reduce((sum, order) => sum + parseFloat(order.amount), 0).toFixed(2);
+  const totalRevenue = orders
+    .reduce((sum, order) => sum + parseFloat(order.amount), 0)
+    .toFixed(2);
 
   // Count items and find top sellers
   const itemCounts = {};
-  orders.forEach(order => {
+  orders.forEach((order) => {
     itemCounts[order.item] = (itemCounts[order.item] || 0) + 1;
   });
 
@@ -337,15 +325,15 @@ function generateLocalInsights(orders) {
 
   // Count orders by status
   const ordersByStatus = {
-    pending: orders.filter(o => o.status === 'pending').length,
-    prepared: orders.filter(o => o.status === 'prepared').length,
-    pickedup: orders.filter(o => o.status === 'pickedup').length
+    pending: orders.filter((o) => o.status === "pending").length,
+    prepared: orders.filter((o) => o.status === "prepared").length,
+    pickedup: orders.filter((o) => o.status === "pickedup").length,
   };
 
   // Count orders by payment status
   const ordersByPayment = {
-    pending: orders.filter(o => o.payment_status === 'pending').length,
-    completed: orders.filter(o => o.payment_status === 'completed').length
+    pending: orders.filter((o) => o.payment_status === "pending").length,
+    completed: orders.filter((o) => o.payment_status === "completed").length,
   };
 
   // Build insights string
@@ -353,8 +341,8 @@ function generateLocalInsights(orders) {
 
   insights += `## Order Summary\n`;
   insights += `- Total Orders: ${orders.length}\n`;
-  insights += `- Total Revenue: $${totalRevenue}\n`;
-  insights += `- Average Order Value: $${averageOrderValue}\n\n`;
+  insights += `- Total Revenue: ₹${totalRevenue}\n`;
+  insights += `- Average Order Value: ₹${averageOrderValue}\n\n`;
 
   insights += `## Top Selling Items\n`;
   topItems.forEach((item, index) => {
@@ -366,7 +354,7 @@ function generateLocalInsights(orders) {
   insights += `- Pending: ${ordersByStatus.pending}\n`;
   insights += `- Prepared: ${ordersByStatus.prepared}\n`;
   insights += `- Picked Up: ${ordersByStatus.pickedup}\n\n`;
-  
+
   insights += `## Payment Status Breakdown\n`;
   insights += `- Payment Pending: ${ordersByPayment.pending}\n`;
   insights += `- Payment Completed: ${ordersByPayment.completed}\n\n`;
@@ -387,7 +375,7 @@ function generateLocalInsights(orders) {
   } else {
     insights += `- Your average order value is good, consider loyalty rewards for repeat customers\n`;
   }
-  
+
   if (ordersByPayment.pending > ordersByPayment.completed * 0.5) {
     insights += `- Review your payment process, many customers are abandoning payment\n`;
   }
@@ -397,25 +385,27 @@ function generateLocalInsights(orders) {
 
 // Fallback function to generate basic stats if even local insights generation fails
 function generateBasicStats(orders) {
-  const totalRevenue = orders.reduce((sum, order) => sum + parseFloat(order.amount), 0).toFixed(2);
-  const completedPayments = orders.filter(o => o.payment_status === 'completed').length;
+  const totalRevenue = orders
+    .reduce((sum, order) => sum + parseFloat(order.amount), 0)
+    .toFixed(2);
+  const completedPayments = orders.filter(
+    (o) => o.payment_status === "completed"
+  ).length;
   return `Total Orders: ${orders.length}\nTotal Revenue: $${totalRevenue}\nCompleted Payments: ${completedPayments}`;
 }
 
 // Orders UI
-app.get('/orders', (req, res) => {
-  res.sendFile(path.join(__dirname, 'orders.html'));
+app.get("/orders", (req, res) => {
+  res.sendFile(path.join(__dirname, "orders.html"));
 });
 
 // Insights UI
-app.get('/insights', (req, res) => {
-  res.sendFile(path.join(__dirname, 'insights.html'));
+app.get("/insights", (req, res) => {
+  res.sendFile(path.join(__dirname, "insights.html"));
 });
 
-
-
 // Mark as Prepared
-app.post('/mark-prepared/:id', async (req, res) => {
+app.post("/mark-prepared/:id", async (req, res) => {
   const id = req.params.id;
 
   try {
@@ -425,23 +415,22 @@ app.post('/mark-prepared/:id', async (req, res) => {
     );
 
     if (result.rowCount === 0) {
-      return res.status(404).json({ message: 'Order not found.' });
+      return res.status(404).json({ message: "Order not found." });
     }
 
-    await pool.query(
-      `UPDATE orders SET status = 'prepared' WHERE id = $1`,
-      [id]
-    );
+    await pool.query(`UPDATE orders SET status = 'prepared' WHERE id = $1`, [
+      id,
+    ]);
 
-    res.json({ message: 'Order marked as prepared.', order: result.rows[0] });
+    res.json({ message: "Order marked as prepared.", order: result.rows[0] });
   } catch (err) {
     console.error("Database error:", err);
-    res.status(500).json({ message: 'Failed to mark order as prepared.' });
+    res.status(500).json({ message: "Failed to mark order as prepared." });
   }
 });
 
 // Mark as Picked Up
-app.post('/mark-pickedup/:id', async (req, res) => {
+app.post("/mark-pickedup/:id", async (req, res) => {
   const id = req.params.id;
 
   try {
@@ -451,24 +440,22 @@ app.post('/mark-pickedup/:id', async (req, res) => {
     );
 
     if (result.rowCount === 0) {
-      return res.status(404).json({ message: 'Order not found.' });
+      return res.status(404).json({ message: "Order not found." });
     }
 
-    res.json({ message: 'Order marked as picked up.', order: result.rows[0] });
+    res.json({ message: "Order marked as picked up.", order: result.rows[0] });
   } catch (err) {
-    console.error('Pickedup error:', err);
-    res.status(500).json({ message: 'Failed to update order.' });
+    console.error("Pickedup error:", err);
+    res.status(500).json({ message: "Failed to update order." });
   }
 });
 
-
-app.get('/menu', async (req, res) => {
+app.get("/menu", async (req, res) => {
   try {
-    const result = await db.query('SELECT * FROM menu_items ORDER BY id');
+    const result = await db.query("SELECT * FROM menu_items ORDER BY id");
     res.json(result.rows);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Failed to fetch menu items');
+    res.status(500).send("Failed to fetch menu items");
   }
 });
-
