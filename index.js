@@ -603,28 +603,42 @@ document.addEventListener("DOMContentLoaded", function () {
         // Convert amount to paise (Razorpay requires amount in smallest currency unit)
         const amountInPaise = Math.round(amount * 100);
 
-        // Create a new instance of Razorpay
-        const options = {
-            key: "rzp_test_VCIn0ydmyceB7m", // Razorpay test Key ID
-            amount: amountInPaise,
-            currency: "INR",
-            name: "Your Store Name",
-            description: "Purchase Order",
-            image: "your-logo-url.png", // Replace with your logo URL
-            handler: function (response) {
-                // This function is called when payment is successful
-                handlePaymentSuccess(response, phoneNumber);
-            },
-            prefill: {
-                contact: "+91" + phoneNumber
-            },
-            notes: {
-                itemCount: cart.items.length
-            },
-            theme: {
-                color: "#3399cc"
-            }
-        };
+// Step 1: Fetch Razorpay Key
+fetch('/get-razorpay-key')
+  .then(res => res.json())
+  .then(data => {
+    // Step 2: Create Razorpay options
+    const options = {
+      key: data.key, // ✅ Razorpay key from backend
+      amount: amountInPaise,
+      currency: "INR",
+      name: "SwiftBytes", // ✅ Your company name here
+      description: "Purchase Order",
+      image: "images/logo.png", // Optional: company logo
+      handler: function (response) {
+        // ✅ Payment succeeded — handle order saving, SMS, etc.
+        handlePaymentSuccess(response, phoneNumber, cart);
+      },
+      prefill: {
+        contact: "+91" + phoneNumber
+      },
+      notes: {
+        itemCount: cart.items.length
+      },
+      theme: {
+        color: "#3399cc"
+      }
+    };
+
+    // Step 3: Open Razorpay modal
+    const rzp = new Razorpay(options);
+    rzp.open();
+  })
+  .catch(error => {
+    console.error("Error fetching Razorpay key:", error);
+    alert("Payment could not be initialized. Please try again.");
+  });
+
 
         const rzp = new Razorpay(options);
         rzp.open();
