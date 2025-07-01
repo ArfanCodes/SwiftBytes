@@ -638,5 +638,23 @@
         // Initial render
         renderInventory();
     </script>
+    <script>
+  setInterval(() => {
+    fetch('/check-auth')
+      .then(res => {
+        if (res.status === 401) {
+          window.location.href = '/login';
+        }
+      });
+  }, 1000);
+
+  // Optional: Fix for back button after logout
+  window.onpageshow = function(event) {
+    if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
+      window.location.reload();
+    }
+  };
+</script>
+
 </body>
 </html>

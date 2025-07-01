@@ -88,10 +88,14 @@
     <div class="flex items-center gap-4">
 
       <!-- Logout Form -->
-      <button type="submit"
-        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-semibold shadow">
-        <a href="/home" class="font-bebas text-2xl tracking-wider hover:underline font-bold">Logout</a>
-      </button>
+<a href="/logout">
+  <button type="button"
+    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-semibold shadow font-bebas text-2xl tracking-wider hover:underline font-bold">
+    Logout
+  </button>
+</a>
+
+
 
       <!-- Theme Toggle Icon -->
       <button id="darkModeToggle" class="theme-toggle p-2 rounded-full bg-gray-200 dark:bg-gray-700 cursor-pointer">
@@ -326,7 +330,30 @@
 });
 
     setInterval(loadOrders, 30000);
+
+    
   </script>
+  <script>
+  setInterval(() => {
+    fetch('/check-auth')
+      .then(res => {
+        if (res.status === 401) {
+          window.location.href = '/login';
+        }
+      });
+  }, 1000); // ⏱️ checks every 5 seconds
+</script>
+
+<script>
+  // Clear forward/back history cache
+  window.onpageshow = function(event) {
+    if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
+      window.location.reload(); // Force session re-check on back
+    }
+  };
+</script>
+
+
 </body>
 
 </html>

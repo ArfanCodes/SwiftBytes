@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const { Pool } = require('pg');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -16,6 +17,25 @@ app.use(cors());
 app.use(express.json());
 
 // Your routes and DB logic here...
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key',
+  resave: false,
+  saveUninitialized: false,
+}));
+
+function isAuthenticated(req, res, next) {
+  if (req.session && req.session.user) {
+    return next(); // ✅ Logged in, allow access
+  } else {
+    return res.redirect('/login'); // ❌ Not logged in, redirect to login
+  }
+}
+
+
+app.get('/get-razorpay-key', (req, res) => {
+  res.send({ key: process.env.RAZORPAY_KEY_ID });
+});
+
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ Server running at http://0.0.0.0:${PORT}`);
@@ -92,16 +112,15 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }, // Important for Render hosted DB
 });
-
-// ✅ Vonage config (working)
 const vonage = new Vonage({
-  apiKey: "548f47dc",
-  apiSecret: "LgM4C4j0766tMiN1",
+  apiKey: process.env.VONAGE_API_KEY,
+  apiSecret: process.env.VONAGE_API_SECRET,
 });
 
+
 // Initialize Google Gemini API with the correct key
-const GEMINI_API_KEY = "AIzaSyB_x5tgrCFdfe-YXFzuFMl5XaeblvbJ9tI";
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
 // Models are listed at: https://ai.google.dev/models/gemini
 
 app.use(express.json()); // to parse JSON request bodies
@@ -117,6 +136,17 @@ app.use(express.static(__dirname));
 const adminuser = "admin@site.com";
 const adminPasswordHash = bcrypt.hashSync("admin123", 10);
 
+app.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.send("Error logging out.");
+    }
+    res.clearCookie('connect.sid'); // Clear the session cookie
+    res.redirect('/login');
+  });
+});
+
+
 app.get("/login", (req, res) => {
   res.render("login.ejs", { error: null, username: "" });
 });
@@ -125,11 +155,12 @@ app.get("/home", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.get("/menued", (req, res) => {
+app.get("/menued", isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, "menued.html"));
 });
 
-app.get("/inventory", (req, res) => {
+
+app.get("/inventory", isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, "inventory.html"));
 });
 
@@ -139,7 +170,9 @@ app.post("/login", (req, res) => {
   if (username === adminuser) {
     bcrypt.compare(password, adminPasswordHash, (err, result) => {
       if (result) {
-        // Password is correct — redirect to orders page
+        // ✅ Set session on successful login
+        req.session.user = username;
+        req.session.isAuthenticated = true; // 👈 Add this line
         res.redirect("/orders");
       } else {
         res.render("login", { error: "Invalid admin credentials.", username });
@@ -149,6 +182,7 @@ app.post("/login", (req, res) => {
     res.render("login", { error: "Invalid admin credentials.", username });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
@@ -401,15 +435,28 @@ function generateBasicStats(orders) {
   return `Total Orders: ${orders.length}\nTotal Revenue: $${totalRevenue}\nCompleted Payments: ${completedPayments}`;
 }
 
-// Orders UI
-app.get("/orders", (req, res) => {
-  res.sendFile(path.join(__dirname, "orders.html"));
+app.get('/check-auth', (req, res) => {
+  if (req.session && req.session.isAuthenticated) {
+    res.sendStatus(200); // ✅ still logged in
+  } else {
+    res.sendStatus(401); // ❌ session expired or logged out
+  }
 });
 
-// Insights UI
-app.get("/insights", (req, res) => {
+
+// Orders UI
+app.get('/orders', isAuthenticated, (req, res) => {
+  res.setHeader('Cache-Control', 'no-store'); // ⛔ don't cache
+  res.sendFile(path.join(__dirname, 'orders.html'));
+});
+
+
+
+
+app.get("/insights", isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, "insights.html"));
 });
+
 
 // Mark as Prepared
 app.post("/mark-prepared/:id", async (req, res) => {
