@@ -1,14 +1,16 @@
-# ⚖️ License & Copyright
+# ⚖️ License & Copyright #
+# © 2025 Phoenix Coders. All rights reserved. #
 
-© 2025 Phoenix Coders. All rights reserved.  
-This codebase is provided strictly for project viewing purposes only.
-**No part of this code may be reused, copied, or distributed without explicit permission.**
+This codebase is the intellectual property of Team Phoenix Coders and is provided strictly for project viewing purposes only.
+No part of this code may be copied, reused, modified, or distributed—in whole or in part—without explicit prior written permission from the creators.
+
+Unauthorized use of this code may result in legal action under applicable copyright and intellectual property laws.
 
 ---
 
 # Visit SwiftBytes 🍽️ 
 
-🔗 [Visit SwiftBytes Live](https://takeawaynest.onrender.com/)
+🔗 [Visit SwiftBytes Live](https://swiftbytes.onrender.com/)
 
 ---
 
