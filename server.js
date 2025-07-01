@@ -21,15 +21,33 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax'
+    // ❌ don't set maxAge here
+  }
 }));
 
+
 function isAuthenticated(req, res, next) {
-  if (req.session && req.session.user) {
-    return next(); // ✅ Logged in, allow access
-  } else {
-    return res.redirect('/login'); // ❌ Not logged in, redirect to login
+  const maxSessionAge = 5 * 60 * 1000; // ⏱️ 5 minutes session expiry
+
+  if (
+    req.session &&
+    req.session.isAuthenticated &&
+    req.session.createdAt &&
+    Date.now() - req.session.createdAt < maxSessionAge
+  ) {
+    return next(); // ✅ Session is still valid
   }
+
+  // ❌ Session expired or invalid
+  req.session.destroy(() => {
+    res.redirect("/login");
+  });
 }
+
+
 
 
 app.get('/get-razorpay-key', (req, res) => {
@@ -169,10 +187,15 @@ app.post("/login", (req, res) => {
 
   if (username === adminuser) {
     bcrypt.compare(password, adminPasswordHash, (err, result) => {
+      if (err) {
+        console.error("Bcrypt error:", err);
+        return res.render("login", { error: "An error occurred.", username });
+      }
+
       if (result) {
-        // ✅ Set session on successful login
         req.session.user = username;
-        req.session.isAuthenticated = true; // 👈 Add this line
+        req.session.isAuthenticated = true;
+        req.session.createdAt = Date.now(); // ✅ session timestamp
         res.redirect("/orders");
       } else {
         res.render("login", { error: "Invalid admin credentials.", username });
@@ -182,6 +205,7 @@ app.post("/login", (req, res) => {
     res.render("login", { error: "Invalid admin credentials.", username });
   }
 });
+
 
 
 app.listen(PORT, () => {
