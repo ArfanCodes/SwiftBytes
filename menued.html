@@ -222,6 +222,20 @@
             margin-top: 10px;
             display: none;
         }
+
+        /* Disabled button styling */
+        .photo-btn-disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+            background-color: #e5e7eb;
+            border-color: #d1d5db;
+        }
+        
+        .dark .photo-btn-disabled {
+            background-color: #374151;
+            border-color: #4b5563;
+        }
     </style>
 </head>
 <header><nav class="bg-white border-gray-200 py-2.5 dark:bg-gray-900 transition-colors duration-300">
@@ -406,6 +420,7 @@
                             <!-- Custom styled button -->
                             <button 
                                 type="button"
+                                id="photoUploadBtn"
                                 onclick="document.getElementById('itemImageFile').click()"
                                 class="w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-xl text-base hover:border-indigo-500 dark:hover:border-yellow-400 hover:bg-gray-100 dark:hover:bg-slate-600 focus:outline-none focus:border-indigo-500 dark:focus:border-yellow-400 focus:ring-4 focus:ring-indigo-100 dark:focus:ring-yellow-400/20 transition-all duration-300 flex items-center justify-center gap-2"
                             >
@@ -415,6 +430,9 @@
                             <div id="selectedFileName" class="mt-2 text-sm text-gray-600 dark:text-gray-400 hidden transition-colors duration-300">
                                 <span class="flex items-center gap-2">
                                     ✅ <span id="fileName"></span>
+                                    <button type="button" onclick="clearPhotoSelection()" class="text-red-500 hover:text-red-700 dark:hover:text-red-400">
+                                        ✕ Remove
+                                    </button>
                                 </span>
                             </div>
                             <!-- Image preview -->
@@ -493,6 +511,7 @@
                 const fileNameDisplay = document.getElementById('selectedFileName');
                 const fileName = document.getElementById('fileName');
                 const imagePreview = document.getElementById('imagePreview');
+                const photoUploadBtn = document.getElementById('photoUploadBtn');
                 
                 // Validate file type
                 if (!file.type.match('image.*')) {
@@ -501,15 +520,20 @@
                     return;
                 }
                 
-                // Validate file size (max 2MB)
-                if (file.size > 2 * 1024 * 1024) {
-                    alert('Image size should be less than 2MB');
+                // Validate file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Image size should be less than 5MB');
                     input.value = '';
                     return;
                 }
                 
                 fileName.textContent = file.name;
                 fileNameDisplay.classList.remove('hidden');
+                
+                // Disable the photo upload button
+                photoUploadBtn.classList.add('photo-btn-disabled');
+                photoUploadBtn.disabled = true;
+                photoUploadBtn.innerHTML = 'Photo Selected';
                 
                 // Show image preview
                 const reader = new FileReader();
@@ -518,6 +542,28 @@
                     imagePreview.style.display = 'block';
                 }
                 reader.readAsDataURL(file);
+            }
+        }
+
+        // Clear photo selection
+        function clearPhotoSelection() {
+            const fileInput = document.getElementById('itemImageFile');
+            const fileNameDisplay = document.getElementById('selectedFileName');
+            const imagePreview = document.getElementById('imagePreview');
+            const photoUploadBtn = document.getElementById('photoUploadBtn');
+            
+            fileInput.value = '';
+            fileNameDisplay.classList.add('hidden');
+            imagePreview.style.display = 'none';
+            
+            // Re-enable the photo upload button
+            photoUploadBtn.classList.remove('photo-btn-disabled');
+            photoUploadBtn.disabled = false;
+            photoUploadBtn.innerHTML = '📸 Select Single Photo';
+            
+            // Clear current image URL if editing
+            if (editingItemId) {
+                currentImageUrl = '';
             }
         }
 
@@ -686,6 +732,13 @@
             document.getElementById('selectedFileName').classList.add('hidden');
             document.getElementById('itemImageFile').value = '';
             document.getElementById('imagePreview').style.display = 'none';
+            
+            // Reset photo upload button
+            const photoUploadBtn = document.getElementById('photoUploadBtn');
+            photoUploadBtn.classList.remove('photo-btn-disabled');
+            photoUploadBtn.disabled = false;
+            photoUploadBtn.innerHTML = '📸 Select Single Photo';
+            
             setSubmitButtonState(false);
             document.getElementById('itemModal').classList.remove('hidden');
         }
@@ -754,15 +807,26 @@
                 const fileNameDisplay = document.getElementById('selectedFileName');
                 const fileName = document.getElementById('fileName');
                 const imagePreview = document.getElementById('imagePreview');
+                const photoUploadBtn = document.getElementById('photoUploadBtn');
                 
                 if (item.image) {
                     fileName.textContent = 'Current: ' + item.image.split('/').pop();
                     fileNameDisplay.classList.remove('hidden');
                     imagePreview.src = item.image;
                     imagePreview.style.display = 'block';
+                    
+                    // Disable the photo upload button if there's already an image
+                    photoUploadBtn.classList.add('photo-btn-disabled');
+                    photoUploadBtn.disabled = true;
+                    photoUploadBtn.innerHTML = 'Photo Selected';
                 } else {
                     fileNameDisplay.classList.add('hidden');
                     imagePreview.style.display = 'none';
+                    
+                    // Enable the photo upload button if no image exists
+                    photoUploadBtn.classList.remove('photo-btn-disabled');
+                    photoUploadBtn.disabled = false;
+                    photoUploadBtn.innerHTML = '📸 Select Single Photo';
                 }
                 
                 setSubmitButtonState(false);
