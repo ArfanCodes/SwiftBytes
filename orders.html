@@ -87,13 +87,13 @@
     </div>
     <div class="flex items-center gap-4">
 
-      <!-- Logout Form -->
-<a href="/logout">
-  <button type="button"
-    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-semibold shadow font-bebas text-2xl tracking-wider hover:underline font-bold">
-    Logout
-  </button>
-</a>
+      <a href="/logout" onclick="sessionStorage.clear()">
+        <button type="button"
+          class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-semibold shadow font-bebas text-2xl tracking-wider hover:underline font-bold">
+          Logout
+        </button>
+      </a>
+
 
 
 
@@ -352,6 +352,31 @@
     }
   };
 </script>
+
+<script>
+  // Only allow refresh if user is already logged in in this tab
+  const wasLoggedIn = sessionStorage.getItem("isLoggedIn");
+
+  fetch("/check-auth").then(res => {
+    if (res.status === 200) {
+      if (wasLoggedIn) {
+        // ✅ Refresh within same tab → restore login flag
+        sessionStorage.setItem("isLoggedIn", "true");
+      } else {
+        // ❌ New tab or reopened browser → logout
+        sessionStorage.clear();
+        window.location.href = "/logout";
+      }
+    } else {
+      // ❌ Session expired
+      sessionStorage.clear();
+      window.location.href = "/logout";
+    }
+  });
+</script>
+
+
+
 
 
 </body>

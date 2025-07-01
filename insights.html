@@ -219,6 +219,29 @@
     }
   };
 </script>
+<script>
+  // Only allow refresh if user is already logged in in this tab
+  const wasLoggedIn = sessionStorage.getItem("isLoggedIn");
+
+  fetch("/check-auth").then(res => {
+    if (res.status === 200) {
+      if (wasLoggedIn) {
+        // ✅ Refresh within same tab → restore login flag
+        sessionStorage.setItem("isLoggedIn", "true");
+      } else {
+        // ❌ New tab or reopened browser → logout
+        sessionStorage.clear();
+        window.location.href = "/logout";
+      }
+    } else {
+      // ❌ Session expired
+      sessionStorage.clear();
+      window.location.href = "/logout";
+    }
+  });
+</script>
+
+
 
 </body>
 
