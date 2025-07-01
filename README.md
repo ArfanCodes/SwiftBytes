@@ -60,7 +60,7 @@ SwiftBytes brings **smart canteen management**:
 2. 📊 **Live Order Dashboard** – Real-time display for staff  
 3. 📈 **Business Insights Dashboard** – Operational trends and metrics  
 4. 📱 **Real-Time Order Status via UI & SMS** – Live feedback to customers  
-5. 💾 **Reliable Local Storage** – Efficient data handling using SQLite  
+5. 💾 **Reliable Local Storage** – Efficient data handling using PostgreSQL 
 
 ---
 
