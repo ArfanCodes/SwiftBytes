@@ -1,6 +1,6 @@
 # ⚖️ License & Copyright
 
-© 2025 ByteForce. All rights reserved.  
+© 2025 Phoenix Coders. All rights reserved.  
 This codebase is provided strictly for project viewing purposes only.
 **No part of this code may be reused, copied, or distributed without explicit permission.**
 
