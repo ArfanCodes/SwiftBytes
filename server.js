@@ -1,19 +1,26 @@
-const express = require("express");
-const { Pool } = require("pg");
-//const sqlite3 = require('sqlite3').verbose();
-const path = require("path");
-const bodyParser = require("body-parser");
-const bcrypt = require("bcrypt");
-const crypto = require("crypto");
-const { Vonage } = require("@vonage/server-sdk");
+const express = require('express');
+const { Pool } = require('pg');
+const path = require('path');
+const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
+const { Vonage } = require('@vonage/server-sdk');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-require("dotenv").config();
-const cors = require("cors");
+require('dotenv').config();
+const cors = require('cors');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;  // ✅ This is the fix
+
 app.use(cors());
 app.use(express.json());
+
+// Your routes and DB logic here...
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Server running at http://0.0.0.0:${PORT}`);
+});
+
 
 const db = new Pool({
   connectionString: process.env.DATABASE_URL,
