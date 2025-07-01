@@ -3,23 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <!-- Optimized Favicon links matching your generated files -->
+    <!-- Standard favicon sizes for browser tabs -->
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+
+    <!-- Apple touch icon for iOS home screen -->
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+
+    <!-- Fallback ICO for older browsers -->
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="images/site.webmanifest">
+
+    <!-- Optional: Microsoft tile color -->
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="output.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    
+   
     <title>SwiftBytes</title>
     <style>
       /* This keeps cart icons black in dark mode but allows hover effects to work */
       .dark-mode-cart-icon {
           color: #000000 !important;
       }
-
       /* This ensures the hover effect still works */
       .dark button:hover .dark-mode-cart-icon {
           color: #ffffff !important;
+      }
+      
+      /* Logo styles */
+      .logo-container {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+      }
+      
+      .logo {
+          height: 60px;
+          width: auto;
+          transition: transform 0.3s ease;
+      }
+      
+      .logo:hover {
+          transform: scale(1.05);
+      }
+      
+      /* Responsive logo sizing */
+      @media (max-width: 640px) {
+          .logo {
+              height: 45px;
+          }
+      }
+      
+      @media (min-width: 1024px) {
+          .logo {
+              height: 75px;
+          }
       }
     </style>
     
