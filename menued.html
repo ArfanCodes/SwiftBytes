@@ -9,14 +9,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+        // Immediately set the correct theme to prevent flash
+        (function() {
+            const storedTheme = localStorage.getItem('color-theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (storedTheme === 'dark' || (!storedTheme && systemDark)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
-                bebas: ['"Bebas Neue"', 'sans-serif'],
-                inter: ['"Inter"', 'sans-serif'],
-            },
+                        bebas: ['"Bebas Neue"', 'sans-serif'],
+                        inter: ['"Inter"', 'sans-serif'],
+                    },
                     colors: {
                         primary: {
                             yellow: '#FFC107',
@@ -29,6 +39,9 @@
                           text: '#e8e8e8',
                           'text-secondary': '#cbd5e0',
                         }
+                    },
+                    transitionProperty: {
+                        'colors': 'background-color, border-color, color, fill, stroke',
                     },
                     animation: {
                         'fade-in': 'fadeIn 0.3s ease-in-out',
@@ -57,6 +70,51 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        /* Base transitions */
+        html, body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* Color transitions */
+        .bg-white, .bg-gray-50, .bg-gray-100, .bg-gray-200, 
+        .dark\:bg-slate-800, .dark\:bg-slate-700, .dark\:bg-slate-900,
+        .text-gray-700, .dark\:text-yellow-400,
+        .text-gray-600, .dark\:text-gray-300,
+        .text-white, .dark\:text-gray-200,
+        .text-gray-800, .dark\:text-white {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* Border transitions */
+        .border-gray-200, .dark\:border-slate-600,
+        .border-gray-300, .dark\:border-slate-700 {
+            transition: border-color 0.3s ease;
+        }
+        
+        /* Header specific transitions */
+        .bg-brand-yellow {
+            background: #FFC107;
+            transition: background-color 0.3s ease;
+        }
+        
+        .dark\:bg-slate-900 {
+            transition: background-color 0.3s ease;
+        }
+        
+        /* Hardware acceleration for performance */
+        .theme-toggle, .bg-brand-yellow, .dark\:bg-slate-900 {
+            will-change: auto;
+        }
+        
+        /* Respect reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+        
         body { font-family: 'Inter', sans-serif; }
         
         .bg-brand-yellow {
@@ -166,10 +224,10 @@
         }
     </style>
 </head>
-<header><nav class="bg-white border-gray-200 py-2.5 dark:bg-gray-900">
+<header><nav class="bg-white border-gray-200 py-2.5 dark:bg-gray-900 transition-colors duration-300">
     <div class="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
         <a href="#" class="flex items-center">
-            <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
+            <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white transition-colors duration-300">
                 <img src="images/logo.png" alt="" class="h-20 w-20">
             </span>
         </a>
@@ -178,23 +236,21 @@
         <div class="flex items-center gap-4 lg:order-2">
             <!-- Theme toggle button -->
             <div class="z-50">
-                <button id="darkModeToggle" class="theme-toggle p-2 rounded-full bg-gray-200 dark:bg-gray-700 cursor-pointer">
-    <!-- Sun icon (visible in light mode) -->
-    <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-yellow-500 dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-    </svg>
-    <!-- Moon icon (visible in dark mode) -->
-    <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-yellow-400 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-    </svg>
-</button>
+                <button id="darkModeToggle" class="theme-toggle p-2 rounded-full bg-gray-200 dark:bg-gray-700 cursor-pointer transition-colors duration-300">
+                    <!-- Sun icon (visible in light mode) -->
+                    <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-yellow-500 dark:hidden transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <!-- Moon icon (visible in dark mode) -->
+                    <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-yellow-400 hidden dark:block transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
             </div>
-            
-            
             
             <!-- Mobile menu button -->
             <button data-collapse-toggle="mobile-menu-2" type="button"
-                class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 transition-colors duration-300"
                 aria-controls="mobile-menu-2" aria-expanded="true">
                 <span class="sr-only">Open main menu</span>
                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -213,22 +269,24 @@
         <!-- Navigation links -->
         <div class="items-center justify-between w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
             <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-               <nav class="flex space-x-4 text-gray-800  dark:text-white">
-    <a href="/orders" class="font-bebas text-2xl tracking-wider font-bold relative group">
-        Orders
-        <span class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
-    </a>
-    <a href="/insights" class="font-bebas text-2xl tracking-wider font-bold relative group">
-        Insights
-        <span class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
-    </a>
-    <a href="/inventory" class="font-bebas text-2xl tracking-wider font-bold relative group">
-        Inventory
-        <span class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
-    </a>
-</nav>
-      
-</nav>
+               <nav class="flex space-x-4 text-gray-800 dark:text-white transition-colors duration-300">
+                    <a href="/orders" class="font-bebas text-2xl tracking-wider font-bold relative group transition-colors duration-300">
+                        Orders
+                        <span class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="/insights" class="font-bebas text-2xl tracking-wider font-bold relative group transition-colors duration-300">
+                        Insights
+                        <span class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="/inventory" class="font-bebas text-2xl tracking-wider font-bold relative group transition-colors duration-300">
+                        Inventory
+                        <span class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                </nav>
+            </ul>
+        </div>
+    </div>
+</nav></header>
 <body class="light:bg-gradient-primary-light dark:bg-gradient-primary-dark dark:bg-slate-900 min-h-screen p-5 transition-colors duration-300">
     <!-- Theme Toggle Button -->
     <div class="fixed top-6 right-6 z-50">
@@ -237,8 +295,8 @@
 
     <div class="max-w-7xl mx-auto bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden animate-slide-up transition-colors duration-300">
         <!-- Header -->
-        <div class="bg-brand-yellow dark:bg-slate-900 text-gray-900 dark:text-white px-8 py-8 text-center relative overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 dark:from-slate-700/20 dark:to-slate-600/20"></div>
+        <div class="bg-brand-yellow dark:bg-slate-900 text-gray-900 dark:text-white px-8 py-8 text-center relative overflow-hidden transition-colors duration-300">
+            <div class="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 dark:from-slate-700/20 dark:to-slate-600/20 transition-colors duration-300"></div>
             
             <div class="relative z-10">
                 <div class="flex items-center justify-center gap-6 mb-4">
@@ -246,8 +304,8 @@
                         <img src="./images/logo.png" alt="Logo" class="w-full h-full object-contain">
                     </div>
                     <div class="text-left">
-                        <div class="text-2xl font-bold text-gray-700 dark:text-yellow-400">MENU EDITOR</div>
-                        <p class="text-lg opacity-90 mt-1">Manage your menu items and track inventory levels</p>
+                        <div class="text-2xl font-bold text-gray-700 dark:text-yellow-400 transition-colors duration-300">MENU EDITOR</div>
+                        <p class="text-lg opacity-90 mt-1 transition-colors duration-300">Manage your menu items and track inventory levels</p>
                     </div>
                 </div>
             </div>
@@ -263,7 +321,7 @@
                         placeholder="Search items..." 
                         class="w-full pl-5 pr-12 py-3 border-2 border-gray-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-full text-base focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition-all duration-300"
                     >
-                    <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
+                    <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 transition-colors duration-300">🔍</span>
                 </div>
                 <button 
                     class="bg-gradient-button dark:bg-gradient-button-dark text-white px-6 py-3 rounded-full font-semibold hover-lift transition-all duration-300 hover:shadow-xl flex items-center gap-2 whitespace-nowrap" 
@@ -277,7 +335,7 @@
         <!-- Menu Table -->
         <div class="overflow-x-auto bg-white dark:bg-slate-900 transition-colors duration-300">
             <table class="w-full">
-                <thead class="bg-gradient-dark dark:bg-gradient-dark-mode text-white">
+                <thead class="bg-gradient-dark dark:bg-gradient-dark-mode text-white transition-colors duration-300">
                     <tr>
                         <th class="px-4 py-5 text-left font-semibold text-sm uppercase tracking-wider">Image</th>
                         <th class="px-4 py-5 text-left font-semibold text-sm uppercase tracking-wider">Name</th>
@@ -285,7 +343,7 @@
                         <th class="px-4 py-5 text-left font-semibold text-sm uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
-                <tbody id="inventoryTableBody" class="divide-y divide-gray-200 dark:divide-slate-700 bg-gray-50 dark:bg-slate-800">
+                <tbody id="inventoryTableBody" class="divide-y divide-gray-200 dark:divide-slate-700 bg-gray-50 dark:bg-slate-800 transition-colors duration-300">
                     <!-- Items will be populated here -->
                 </tbody>
             </table>
@@ -293,13 +351,13 @@
     </div>
 
     <!-- Add/Edit Item Modal -->
-    <div id="itemModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden">
+    <div id="itemModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden transition-opacity duration-300">
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-2xl max-h-screen overflow-y-auto shadow-2xl animate-bounce-gentle border-2 border-gray-200 dark:border-slate-700">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-2xl max-h-screen overflow-y-auto shadow-2xl animate-bounce-gentle border-2 border-gray-200 dark:border-slate-700 transition-colors duration-300">
                 <div class="p-8">
                     <!-- Modal Header -->
-                    <div class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200 dark:border-slate-700">
-                        <h2 id="modalTitle" class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-yellow-400">Add New Item</h2>
+                    <div class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200 dark:border-slate-700 transition-colors duration-300">
+                        <h2 id="modalTitle" class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-yellow-400 transition-colors duration-300">Add New Item</h2>
                         <button 
                             class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-yellow-400 text-3xl font-light transition-colors duration-200" 
                             onclick="closeModal()"
@@ -311,7 +369,7 @@
                     <!-- Form -->
                     <form id="itemForm" class="space-y-6" autocomplete="off">
                         <div>
-                            <label for="itemName" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Item Name *</label>
+                            <label for="itemName" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Item Name *</label>
                             <input 
                                 type="text" 
                                 id="itemName" 
@@ -322,7 +380,7 @@
                         </div>
                         
                         <div>
-                            <label for="itemPrice" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Price (₹) *</label>
+                            <label for="itemPrice" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Price (₹) *</label>
                             <input 
                                 type="number" 
                                 id="itemPrice" 
@@ -335,7 +393,7 @@
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Photo</label>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Photo</label>
                             <!-- Hidden file input -->
                             <input 
                                 type="file" 
@@ -354,7 +412,7 @@
                                 📸 Select Single Photo
                             </button>
                             <!-- File name display -->
-                            <div id="selectedFileName" class="mt-2 text-sm text-gray-600 dark:text-gray-400 hidden">
+                            <div id="selectedFileName" class="mt-2 text-sm text-gray-600 dark:text-gray-400 hidden transition-colors duration-300">
                                 <span class="flex items-center gap-2">
                                     ✅ <span id="fileName"></span>
                                 </span>
@@ -364,7 +422,7 @@
                         </div>
 
                         <!-- Form Actions -->
-                        <div class="flex gap-4 justify-end mt-8 pt-6 border-t border-gray-200 dark:border-slate-700">
+                        <div class="flex gap-4 justify-end mt-8 pt-6 border-t border-gray-200 dark:border-slate-700 transition-colors duration-300">
                             <button 
                                 type="button" 
                                 class="px-6 py-3 bg-gray-500 dark:bg-slate-700 text-white dark:text-gray-300 rounded-full font-semibold hover-lift transition-all duration-300 hover:shadow-lg hover:bg-gray-600 dark:hover:bg-slate-600" 
@@ -388,17 +446,17 @@
     </div>
 
     <!-- Custom Delete Confirmation Modal -->
-    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden">
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden transition-opacity duration-300">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-md shadow-2xl animate-bounce-gentle border-2 border-gray-200 dark:border-slate-700 transition-colors duration-300">
                 <div class="p-8">
                     <!-- Modal Header -->
                     <div class="text-center mb-6">
-                        <div class="w-16 h-16 mx-auto mb-4 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center transition-colors duration-300">
                             <span class="text-3xl">🗑️</span>
                         </div>
-                        <h2 class="text-2xl font-bold text-gray-800 dark:text-red-400 mb-2">Delete Item</h2>
-                        <p class="text-gray-600 dark:text-gray-300">Are you sure you want to delete this item? This action cannot be undone.</p>
+                        <h2 class="text-2xl font-bold text-gray-800 dark:text-red-400 mb-2 transition-colors duration-300">Delete Item</h2>
+                        <p class="text-gray-600 dark:text-gray-300 transition-colors duration-300">Are you sure you want to delete this item? This action cannot be undone.</p>
                     </div>
 
                     <!-- Modal Actions -->
@@ -465,27 +523,43 @@
 
         // Theme toggle functionality
         document.addEventListener('DOMContentLoaded', function() {
-      const darkModeToggle = document.getElementById('darkModeToggle');
-      
-      // Check for saved theme preference or use system preference
-      if (localStorage.getItem('color-theme') === 'light' || 
-          (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)) {
-        document.documentElement.classList.remove('dark');
-      }
-      
-      // Dark mode toggle click event
-      darkModeToggle.addEventListener('click', function() {
-        // Toggle dark class on html element
-        document.documentElement.classList.toggle('dark');
-        
-        // Store user preference
-        if (document.documentElement.classList.contains('dark')) {
-          localStorage.setItem('color-theme', 'dark');
-        } else {
-          localStorage.setItem('color-theme', 'light');
-        }
-      });
-    });
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            
+            // Function to set theme with transition
+            function setTheme(isDark) {
+                // Start transition
+                document.documentElement.classList.add('transition-colors');
+                document.documentElement.classList.add('duration-300');
+                
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                }
+                
+                // Remove transition classes after animation completes
+                setTimeout(() => {
+                    document.documentElement.classList.remove('transition-colors');
+                    document.documentElement.classList.remove('duration-300');
+                }, 300);
+            }
+            
+            // Check for saved theme preference or use system preference
+            if (localStorage.getItem('color-theme') === 'dark' || 
+                (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                setTheme(true);
+            } else {
+                setTheme(false);
+            }
+            
+            // Dark mode toggle click event
+            darkModeToggle.addEventListener('click', function() {
+                const isDark = !document.documentElement.classList.contains('dark');
+                setTheme(isDark);
+            });
+        });
 
         // Disable/Enable submit button
         function setSubmitButtonState(disabled) {
@@ -522,11 +596,11 @@
             if (item.image && item.image.trim() !== '') {
                 return `<img src="${item.image}" alt="${item.name}" class="item-image" 
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="item-image bg-gray-200 dark:bg-slate-600 flex items-center justify-center text-2xl text-gray-400 dark:text-gray-500" style="display: none;">
+                        <div class="item-image bg-gray-200 dark:bg-slate-600 flex items-center justify-center text-2xl text-gray-400 dark:text-gray-500 transition-colors duration-300" style="display: none;">
                             <img src="./images/no image.webp" alt="No Image" class="h-12 w-12 opacity-50">
                         </div>`;
             } else {
-                return `<div class="item-image bg-gray-200 dark:bg-slate-600 flex items-center justify-center text-2xl text-gray-400 dark:text-gray-500">
+                return `<div class="item-image bg-gray-200 dark:bg-slate-600 flex items-center justify-center text-2xl text-gray-400 dark:text-gray-500 transition-colors duration-300">
                             <img src="./images/no image.webp" alt="No Image" class="h-12 w-12 opacity-50">
                         </div>`;
             }
@@ -546,8 +620,8 @@
                     <td class="px-4 py-5">
                         ${getImageDisplay(item)}
                     </td>
-                    <td class="px-4 py-5 font-semibold text-gray-800 dark:text-gray-200 text-lg">${item.name}</td>
-                    <td class="px-4 py-5 text-lg font-bold text-green-600 dark:text-green-400">₹${item.price}</td>
+                    <td class="px-4 py-5 font-semibold text-gray-800 dark:text-gray-200 text-lg transition-colors duration-300">${item.name}</td>
+                    <td class="px-4 py-5 text-lg font-bold text-green-600 dark:text-green-400 transition-colors duration-300">₹${item.price}</td>
                     <td class="px-4 py-5">
                         <div class="flex gap-2">
                             <button 
@@ -581,27 +655,26 @@
         }
 
         // Delete item from database
-     function deleteItem() {
-    if (itemToDelete) {
-        fetch(`/menu/${itemToDelete}`, {
-            method: 'DELETE'
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Failed to delete item.');
-            // Don't try to parse JSON if response is just "OK"
-            return response.text(); // Changed from .json() to .text()
-        })
-        .then(data => {
-            closeDeleteModal();
-            window.location.reload();
-        })
-        .catch(error => {
-            console.error('Error deleting item:', error);
-            closeDeleteModal();
-            window.location.reload();
-        });
-    }
-}
+        function deleteItem() {
+            if (itemToDelete) {
+                fetch(`/menu/${itemToDelete}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to delete item.');
+                    return response.text();
+                })
+                .then(data => {
+                    closeDeleteModal();
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error deleting item:', error);
+                    closeDeleteModal();
+                    window.location.reload();
+                });
+            }
+        }
 
         // Open Add New Item modal
         function openAddModal() {
@@ -618,51 +691,50 @@
         }
 
         // Handle form submission
-       document.getElementById('itemForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+        document.getElementById('itemForm').addEventListener('submit', function(e) {
+            e.preventDefault();
 
-    if (isSubmitting) return;
-    isSubmitting = true;
-    setSubmitButtonState(true);
+            if (isSubmitting) return;
+            isSubmitting = true;
+            setSubmitButtonState(true);
 
-    const formData = new FormData(this);
-    const fileInput = document.getElementById('itemImageFile');
-    
-    const itemData = {
-        name: formData.get('name'),
-        price: formData.get('price'),
-        image: fileInput.files[0] ? `images/${fileInput.files[0].name}` : currentImageUrl
-    };
+            const formData = new FormData(this);
+            const fileInput = document.getElementById('itemImageFile');
+            
+            const itemData = {
+                name: formData.get('name'),
+                price: formData.get('price'),
+                image: fileInput.files[0] ? `images/${fileInput.files[0].name}` : currentImageUrl
+            };
 
-    const endpoint = editingItemId ? `/menu/${editingItemId}` : '/menu';
-    const method = editingItemId ? 'PUT' : 'POST';
+            const endpoint = editingItemId ? `/menu/${editingItemId}` : '/menu';
+            const method = editingItemId ? 'PUT' : 'POST';
 
-    fetch(endpoint, {
-        method: method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(itemData)
-    })
-    .then(response => {
-        if (!response.ok) throw new Error(`Failed to ${editingItemId ? 'update' : 'add'} item.`);
-        // Handle both JSON and text responses
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-            return response.json();
-        } else {
-            return response.text();
-        }
-    })
-    .then(data => {
-        closeModal();
-        window.location.reload();
-    })
-    .catch(error => {
-        console.error(`Error ${editingItemId ? 'updating' : 'adding'} item:`, error);
-        isSubmitting = false;
-        setSubmitButtonState(false);
-        alert(`Failed to ${editingItemId ? 'update' : 'add'} item. Please try again.`);
-    });
-});
+            fetch(endpoint, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(itemData)
+            })
+            .then(response => {
+                if (!response.ok) throw new Error(`Failed to ${editingItemId ? 'update' : 'add'} item.`);
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json();
+                } else {
+                    return response.text();
+                }
+            })
+            .then(data => {
+                closeModal();
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error(`Error ${editingItemId ? 'updating' : 'adding'} item:`, error);
+                isSubmitting = false;
+                setSubmitButtonState(false);
+                alert(`Failed to ${editingItemId ? 'update' : 'add'} item. Please try again.`);
+            });
+        });
 
         // Populate modal with existing item details for editing
         function editItem(id) {
