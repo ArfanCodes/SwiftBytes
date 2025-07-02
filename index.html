@@ -102,46 +102,66 @@
 </head>
 <body class="cursor-pointer bg-secondary-light dark:bg-secondary-dark transition-colors duration-300">
     <nav class="bg-primary-light dark:bg-primary-dark transition-colors duration-300">
-  <div class='w-full py-0.5 border-b dark:border-gray-700'>
-    <div class='flex justify-between px-20 items-center font-semibold'>
-      <div>
-        <img src="./images/logo.png" alt="logo" class="rounded-full w-32 h-32  object-cover border-0 bg-transparent">
-      </div>
+  <div class="w-full py-2 border-b dark:border-gray-700 px-6 md:px-10 lg:px-20">
+    <div class="flex justify-between items-center">
       
-      <!-- Navigation Links -->
-      <div class='flex xl:gap-10 md:gap-8 font-bebas font-4xl gap-2'>
-        <a href="#about" class="text-3xl text-text-light dark:text-text-dark relative group transition-colors duration-300">
+      <!-- Logo -->
+      <div class="flex items-center gap-4">
+        <img src="./images/logo.png" alt="logo" class="rounded-full w-20 h-20 object-cover border-0 bg-transparent">
+      </div>
+
+      <!-- Desktop Links -->
+      <div class="hidden lg:flex gap-10 font-bebas text-3xl">
+        <a href="#about" class="text-text-light dark:text-text-dark relative group transition-colors duration-300">
           About Us
           <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-black dark:bg-white transition-all duration-300 group-hover:w-full"></span>
         </a>
-        <a href="#Menu1" class="text-3xl text-text-light dark:text-text-dark relative group transition-colors duration-300">
+        <a href="#Menu1" class="text-text-light dark:text-text-dark relative group transition-colors duration-300">
           Menu
           <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-black dark:bg-white transition-all duration-300 group-hover:w-full"></span>
         </a>
-        <a href="#Contact" class="text-3xl text-text-light dark:text-text-dark relative group transition-colors duration-300">
+        <a href="#Contact" class="text-text-light dark:text-text-dark relative group transition-colors duration-300">
           Contact Us
-          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-black dark:bg-white transition-all duration-300 group-hover:w-full"></span>
+          <span class="absolute bottom-0 left-0 w-0.5 bg-black dark:bg-white transition-all duration-300 group-hover:w-full"></span>
         </a>
       </div>
-      
-      <!-- Buttons -->
-      <div class="flex space-x-4">
-        <button onclick="window.location.href='/login'" class=' py-2 px-3 bg-black dark:bg-white text-white dark:text-black rounded-3xl font-semibold transition-all duration-300 hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white hover:border hover:border-black dark:hover:border-white'>
-          <i class="fa-solid fa-circle-user transition-all duration-300"></i>
+
+      <!-- Buttons + Hamburger -->
+      <div class="flex items-center gap-4">
+        <!-- Login -->
+        <button onclick="window.location.href='/login'" class="py-2 px-3 bg-black dark:bg-white text-white dark:text-black rounded-3xl font-semibold transition-all duration-300 hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white hover:border hover:border-black dark:hover:border-white">
+          <i class="fa-solid fa-circle-user"></i>
         </button>
-        <button class='py-2 px-3 bg-black dark:bg-white text-white dark:text-black rounded-3xl font-semibold transition-all duration-300 hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white hover:border hover:border-black dark:hover:border-white group'>
-          <i class="fa-solid fa-cart-shopping cart-icon transition-all duration-300"></i>
+
+        <!-- Cart -->
+        <button class="py-2 px-3 bg-black dark:bg-white text-white dark:text-black rounded-3xl font-semibold transition-all duration-300 hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white hover:border hover:border-black dark:hover:border-white">
+          <i class="fa-solid fa-cart-shopping cart-icon"></i>
         </button>
-        <!-- Dark Mode Toggle -->
-        <button id="theme-toggle" class='py-2 px-3 bg-black dark:bg-white text-white dark:text-black rounded-3xl font-semibold transition-all duration-300 hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white hover:border hover:border-black dark:hover:border-white'>
-          <i id="theme-toggle-dark-icon" class="fa-solid fa-moon hidden transition-all duration-300"></i>
-          <i id="theme-toggle-light-icon" class="fa-solid fa-sun text-yellow-400 transition-all duration-300"></i>
+
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="py-2 px-3 bg-black dark:bg-white text-white dark:text-black rounded-3xl font-semibold transition-all duration-300 hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white hover:border hover:border-black dark:hover:border-white">
+          <i id="theme-toggle-dark-icon" class="fa-solid fa-moon hidden"></i>
+          <i id="theme-toggle-light-icon" class="fa-solid fa-sun text-yellow-400"></i>
         </button>
+
+        <!-- Hamburger -->
+        <button id="hamburger" class="lg:hidden flex items-center px-3 py-2  text-black dark:text-white border-black dark:border-white">
+  <svg class="h-6 w-6 text-black dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+  </svg>
+</button>
       </div>
-      </div>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="lg:hidden hidden mt-3 flex flex-col gap-3 font-bebas text-2xl text-text-light dark:text-text-dark">
+      <a href="#about" class="block px-4 py-2 hover:text-yellow-500">About Us</a>
+      <a href="#Menu1" class="block px-4 py-2 hover:text-yellow-500">Menu</a>
+      <a href="#Contact" class="block px-4 py-2 hover:text-yellow-500">Contact Us</a>
     </div>
   </div>
 </nav>
+
     <!-- source: https://github.com/mfg888/Responsive-Tailwind-CSS-Grid/blob/main/index.html -->
       <button id="back-to-top" class="fixed bottom-8 right-8 p-3 bg-yellow-400 dark:bg-blue-500 text-blue-600 dark:text-yellow-500 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 transform translate-y-4 hover:scale-110 z-50">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -220,6 +240,15 @@
     </div>
 </footer>
 <script src="index.js"></script>
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  hamburger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+</script>
+
 
   <script>
         // Back to Top Button
