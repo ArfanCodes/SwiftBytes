@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "@vonage/server-sdk": "^3.21.2",
+    "@vonage/server-sdk": "^3.22.0",
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",

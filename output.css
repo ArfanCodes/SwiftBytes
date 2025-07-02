@@ -162,6 +162,7 @@ html,
   /* 6 */
   -webkit-tap-highlight-color: transparent;
   /* 7 */
+  scroll-behavior: smooth;
 }
 
 /*
