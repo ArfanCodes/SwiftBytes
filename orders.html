@@ -334,48 +334,46 @@
 
     
   </script>
-  <script>
-  setInterval(() => {
-    fetch('/check-auth')
-      .then(res => {
-        if (res.status === 401) {
-          window.location.href = '/login';
-        }
-      });
-  }, 1000); // ⏱️ checks every 5 seconds
+    <script>
+    // Periodically check server-side authentication status.
+    // This catches session expiry or logout from other tabs/windows.
+    // Adjusted frequency to 30 seconds to reduce unnecessary network traffic.
+    setInterval(() => {
+        fetch('/check-auth')
+            .then(res => {
+                if (res.status === 401) {
+                    // Session has expired or user logged out from server
+                    window.location.href = '/login';
+                }
+                // If status is 200, the session is active and 'rolling: true' on server
+                // means its expiration timer is automatically reset.
+            })
+            .catch(error => {
+                console.error('Error checking authentication:', error);
+                // Optionally, redirect to login on network error if deemed appropriate
+                // window.location.href = '/login';
+            });
+    }, 1000); // Checks every 30 seconds
+
+    // Initial check on page load:
+    // This is the most important check to ensure the user is authenticated when the page first loads.
+    // Removed all sessionStorage and onpageshow logic as it interfered with server-side session management.
+    fetch("/check-auth")
+        .then(res => {
+            if (res.status === 401) {
+                // Session expired or not authenticated on initial load
+                window.location.href = "/login";
+            }
+            // If status is 200, no action needed, user is authenticated by the server.
+        })
+        .catch(error => {
+            console.error('Error on initial authentication check:', error);
+            // Handle network errors or server unavailability gracefully.
+            // Redirecting to login is a common fallback for critical auth errors.
+            window.location.href = "/login";
+        });
+
 </script>
-
-<script>
-  // Clear forward/back history cache
-  window.onpageshow = function(event) {
-    if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
-      window.location.reload(); // Force session re-check on back
-    }
-  };
-</script>
-
-<script>
-  // Only allow refresh if user is already logged in in this tab
-  const wasLoggedIn = sessionStorage.getItem("isLoggedIn");
-
-  fetch("/check-auth").then(res => {
-    if (res.status === 200) {
-      if (wasLoggedIn) {
-        // ✅ Refresh within same tab → restore login flag
-        sessionStorage.setItem("isLoggedIn", "true");
-      } else {
-        // ❌ New tab or reopened browser → logout
-        sessionStorage.clear();
-        window.location.href = "/logout";
-      }
-    } else {
-      // ❌ Session expired
-      sessionStorage.clear();
-      window.location.href = "/logout";
-    }
-  });
-</script>
-
 
 
 
