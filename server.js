@@ -529,8 +529,8 @@ app.post("/place-order", async (req, res) => {
   }
 
   const now = new Date();
-  const date = now.toLocaleDateString("en-GB");
-  const time = now.toLocaleTimeString("en-GB");
+  const date = now.toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata" });
+  const time = now.toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata" });
   const token = generateToken();
 
   const itemsSummary = cart
