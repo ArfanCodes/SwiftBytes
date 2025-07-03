@@ -8,6 +8,7 @@
     "tailwindcss": "^3.4.17"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.842.0",
     "@google/generative-ai": "^0.24.1",
     "@vonage/server-sdk": "^3.22.0",
     "bcrypt": "^6.0.0",
