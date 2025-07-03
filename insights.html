@@ -1,249 +1,350 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <!-- Optimized Favicon links matching your generated files -->
     <!-- Standard favicon sizes for browser tabs -->
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="images/favicon-16x16.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="images/favicon-32x32.png"
+    />
 
     <!-- Apple touch icon for iOS home screen -->
-    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="images/apple-touch-icon.png"
+    />
 
     <!-- Fallback ICO for older browsers -->
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
 
     <!-- Web App Manifest -->
-    <link rel="manifest" href="images/site.webmanifest">
+    <link rel="manifest" href="images/site.webmanifest" />
 
     <!-- Optional: Microsoft tile color -->
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
     <title>AI Insights</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="output.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="output.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-        darkMode: 'class',
+      tailwind.config = {
+        darkMode: "class",
         theme: {
-            extend: {
+          extend: {
             fontFamily: {
-                bebas: ['"Bebas Neue"', 'sans-serif'],
-                inter: ['"Inter"', 'sans-serif'],
+              bebas: ['"Bebas Neue"', "sans-serif"],
+              inter: ['"Inter"', "sans-serif"],
             },
             colors: {
-                primary: {
-                light: '#FACC15', // Yellow-400
-                dark: '#111827',  // Gray-900
-                },
-                secondary: {
-                light: '#F9FAFB', // Gray-50
-                dark: '#1F2937',  // Gray-800
-                },
-                text: {
-                light: '#191919', // Near black
-                dark: '#F9FAFB',  // Near white
-                },
+              primary: {
+                light: "#FACC15", // Yellow-400
+                dark: "#111827", // Gray-900
+              },
+              secondary: {
+                light: "#F9FAFB", // Gray-50
+                dark: "#1F2937", // Gray-800
+              },
+              text: {
+                light: "#191919", // Near black
+                dark: "#F9FAFB", // Near white
+              },
             },
-            },
+          },
         },
-        };
+      };
     </script>
-</head>
+  </head>
 
-<body class="bg-gray-900 dark:bg-secondary-light text-text-dark dark:text-text-light transition-colors duration-300 p-6">
+  <body
+    class="bg-gray-900 dark:bg-secondary-light text-text-dark dark:text-text-light transition-colors duration-300 p-6"
+  >
     <header class="mb-8 flex justify-between items-center">
-        <div>
-            <h1 class="font-bebas tracking-wider text-4xl text-yellow-500 dark:text-black font-bold mb-2">Order AI Insights</h1>
-            <p class="text-gray-400 dark:text-gray-600">AI-powered analysis of your business data</p>
-        </div>
-        <div class="flex items-center">
-            <button id="theme-toggle" class="p-2 rounded-full bg-gray-800 dark:bg-gray-200 text-yellow-400 dark:text-yellow-400 hover:bg-gray-700 dark:hover:bg-gray-300 transition-colors duration-300">
-                <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-                <svg id="theme-icon-dark" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-            </button> 
-            <img src="/images/logo.png" alt="AI Insights Logo" class="h-32 w-32 ml-4">
-        </div>
+      <div>
+        <h1
+          class="font-bebas tracking-wider text-4xl text-yellow-500 dark:text-black font-bold mb-2"
+        >
+          Order AI Insights
+        </h1>
+        <p class="text-gray-400 dark:text-gray-600">
+          AI-powered analysis of your business data
+        </p>
+      </div>
+      <div class="flex items-center">
+        <button
+          id="theme-toggle"
+          class="p-2 rounded-full bg-gray-800 dark:bg-gray-200 text-yellow-400 dark:text-yellow-400 hover:bg-gray-700 dark:hover:bg-gray-300 transition-colors duration-300"
+        >
+          <svg
+            id="theme-icon-light"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+          </svg>
+          <svg
+            id="theme-icon-dark"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 hidden"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+            />
+          </svg>
+        </button>
+        <img
+          src="/images/logo.png"
+          alt="AI Insights Logo"
+          class="h-32 w-32 ml-4"
+        />
+      </div>
     </header>
 
     <nav class="mb-6">
-        <ul class="flex space-x-4">
-    <li>
-        <a href="/orders" class="font-bebas tracking-wider text-primary-light dark:text-primary-dark font-bold text-2xl relative group">
+      <ul class="flex space-x-4">
+        <li>
+          <a
+            href="/orders"
+            class="font-bebas tracking-wider text-primary-light dark:text-primary-dark font-bold text-2xl relative group"
+          >
             View Orders
-            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
-        </a>
-    </li>
-    <li>
-        <a href="/menued" class="font-bebas tracking-wider text-primary-light dark:text-primary-dark font-bold text-2xl relative group">
+            <span
+              class="absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"
+            ></span>
+          </a>
+        </li>
+        <li>
+          <a
+            href="/menued"
+            class="font-bebas tracking-wider text-primary-light dark:text-primary-dark font-bold text-2xl relative group"
+          >
             Menu
-            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
-        </a>
-    </li>
-    <li>
-        <a href="/inventory" class="font-bebas tracking-wider text-primary-light dark:text-primary-dark font-bold text-2xl relative group">
+            <span
+              class="absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"
+            ></span>
+          </a>
+        </li>
+        <li>
+          <a
+            href="/inventory"
+            class="font-bebas tracking-wider text-primary-light dark:text-primary-dark font-bold text-2xl relative group"
+          >
             Inventory
-            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
-        </a>
-    </li>
-</ul>
+            <span
+              class="absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"
+            ></span>
+          </a>
+        </li>
+      </ul>
     </nav>
 
     <div class="flex flex-col space-y-4">
-        <button onclick="fetchInsights()" 
-        class="bg-primary-light dark:bg-blue-500 text-primary-dark dark:text-yellow-500 font-bebas tracking-wider text-xl px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center w-48 relative overflow-hidden">
-        <svg class="w-6 h-6 mr-3 transform transition hover:rotate-6 hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+      <button
+        onclick="fetchInsights()"
+        class="bg-primary-light dark:bg-blue-500 text-primary-dark dark:text-yellow-500 font-bebas tracking-wider text-xl px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center w-48 relative overflow-hidden"
+      >
+        <svg
+          class="w-6 h-6 mr-3 transform transition hover:rotate-6 hover:scale-110"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 10V3L4 14h7v7l9-11h-7z"
+          ></path>
         </svg>
         <span>Generate Insights</span>
-    </button>
+      </button>
 
-        <div id="loading" class="hidden text-gray-400 dark:text-gray-600">
-            Analyzing your order data...
-        </div>
+      <div id="loading" class="hidden text-gray-400 dark:text-gray-600">
+        Analyzing your order data...
+      </div>
     </div>
 
     <div id="insights-container" class="mt-8 hidden">
-        <div class="bg-secondary-light dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-6">
-            <div id="insights" class="text-gray-700 dark:text-gray-300 whitespace-pre-line markdown"></div>
-        </div>
+      <div
+        class="bg-secondary-light dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-6"
+      >
+        <div
+          id="insights"
+          class="text-gray-700 dark:text-gray-300 whitespace-pre-line markdown"
+        ></div>
+      </div>
     </div>
 
     <script>
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('theme-toggle');
-        const themeIconDark = document.getElementById('theme-icon-dark');
-        const themeIconLight = document.getElementById('theme-icon-light');
-        
-        // Check for saved theme preference or use system preference
-        const savedTheme = localStorage.getItem('theme') || 
-                          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        
-        // Apply the saved theme
-        if (savedTheme === 'dark') {
-            document.documentElement.classList.add('dark');
-            themeIconDark.classList.add('hidden');
-            themeIconLight.classList.remove('hidden');
+      // Theme toggle functionality
+      const themeToggle = document.getElementById("theme-toggle");
+      const themeIconDark = document.getElementById("theme-icon-dark");
+      const themeIconLight = document.getElementById("theme-icon-light");
+
+      // Check for saved theme preference or use system preference
+      const savedTheme =
+        localStorage.getItem("theme") ||
+        (window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light");
+
+      // Apply the saved theme
+      if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+        themeIconDark.classList.add("hidden");
+        themeIconLight.classList.remove("hidden");
+      } else {
+        document.documentElement.classList.remove("dark");
+        themeIconDark.classList.remove("hidden");
+        themeIconLight.classList.add("hidden");
+      }
+
+      // Toggle theme on button click
+      themeToggle.addEventListener("click", () => {
+        if (document.documentElement.classList.contains("dark")) {
+          document.documentElement.classList.remove("dark");
+          localStorage.setItem("theme", "light");
+          themeIconDark.classList.remove("hidden");
+          themeIconLight.classList.add("hidden");
         } else {
-            document.documentElement.classList.remove('dark');
-            themeIconDark.classList.remove('hidden');
-            themeIconLight.classList.add('hidden');
+          document.documentElement.classList.add("dark");
+          localStorage.setItem("theme", "dark");
+          themeIconDark.classList.add("hidden");
+          themeIconLight.classList.remove("hidden");
         }
-        
-        // Toggle theme on button click
-        themeToggle.addEventListener('click', () => {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                themeIconDark.classList.remove('hidden');
-                themeIconLight.classList.add('hidden');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                themeIconDark.classList.add('hidden');
-                themeIconLight.classList.remove('hidden');
+      });
+
+      // Simple markdown parser for formatting insights
+      function parseMarkdown(markdown) {
+        if (!markdown) return "";
+
+        // Replace headers
+        let html = markdown
+          .replace(/^# (.*$)/gm, '<h1 class="text-2xl font-bold my-3">$1</h1>')
+          .replace(
+            /^## (.*$)/gm,
+            '<h2 class="text-xl font-semibold my-2">$1</h2>'
+          )
+          .replace(
+            /^### (.*$)/gm,
+            '<h3 class="text-lg font-medium my-2">$1</h3>'
+          )
+
+          // Replace lists
+          .replace(/^\- (.*$)/gm, '<li class="ml-4"> $1</li>')
+
+          // Replace paragraphs
+          .split("\n\n")
+          .join('</p><p class="my-2">');
+
+        return '<p class="my-2">' + html + "</p>";
+      }
+
+      function fetchInsights() {
+        // Show loading state
+        document.getElementById("loading").classList.remove("hidden");
+        document.getElementById("insights-container").classList.add("hidden");
+
+        fetch("/api/order-insights")
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error("Server error: " + res.status);
             }
-        });
+            return res.json();
+          })
+          .then((data) => {
+            // Hide loading state
+            document.getElementById("loading").classList.add("hidden");
 
-        // Simple markdown parser for formatting insights
-        function parseMarkdown(markdown) {
-            if (!markdown) return '';
+            // Show insights container
+            document
+              .getElementById("insights-container")
+              .classList.remove("hidden");
 
-            // Replace headers
-            let html = markdown
-                .replace(/^# (.*$)/gm, '<h1 class="text-2xl font-bold my-3">$1</h1>')
-                .replace(/^## (.*$)/gm, '<h2 class="text-xl font-semibold my-2">$1</h2>')
-                .replace(/^### (.*$)/gm, '<h3 class="text-lg font-medium my-2">$1</h3>')
-
-                // Replace lists
-                .replace(/^\- (.*$)/gm, '<li class="ml-4"> $1</li>')
-
-                // Replace paragraphs
-                .split('\n\n').join('</p><p class="my-2">');
-
-            return '<p class="my-2">' + html + '</p>';
-        }
-
-        function fetchInsights() {
-            // Show loading state
-            document.getElementById('loading').classList.remove('hidden');
-            document.getElementById('insights-container').classList.add('hidden');
-
-            fetch('/api/order-insights')
-                .then(res => {
-                    if (!res.ok) {
-                        throw new Error('Server error: ' + res.status);
-                    }
-                    return res.json();
-                })
-                .then(data => {
-                    // Hide loading state
-                    document.getElementById('loading').classList.add('hidden');
-
-                    // Show insights container
-                    document.getElementById('insights-container').classList.remove('hidden');
-
-                    // Format and display insights with markdown parsing
-                    document.getElementById('insights').innerHTML = parseMarkdown(data.insights);
-                })
-                .catch(err => {
-                    console.error(err);
-                    document.getElementById('loading').classList.add('hidden');
-                    document.getElementById('insights-container').classList.remove('hidden');
-                    document.getElementById('insights').innerHTML =
-                        '<div class="text-red-500">Failed to fetch insights. Please try again later.</div>';
-                });
-        }
+            // Format and display insights with markdown parsing
+            document.getElementById("insights").innerHTML = parseMarkdown(
+              data.insights
+            );
+          })
+          .catch((err) => {
+            console.error(err);
+            document.getElementById("loading").classList.add("hidden");
+            document
+              .getElementById("insights-container")
+              .classList.remove("hidden");
+            document.getElementById("insights").innerHTML =
+              '<div class="text-red-500">Failed to fetch insights. Please try again later.</div>';
+          });
+      }
     </script>
-       <script>
-    // Periodically check server-side authentication status.
-    // This catches session expiry or logout from other tabs/windows.
-    // Adjusted frequency to 30 seconds to reduce unnecessary network traffic.
-    setInterval(() => {
-        fetch('/check-auth')
-            .then(res => {
-                if (res.status === 401) {
-                    // Session has expired or user logged out from server
-                    window.location.href = '/login';
-                }
-                // If status is 200, the session is active and 'rolling: true' on server
-                // means its expiration timer is automatically reset.
-            })
-            .catch(error => {
-                console.error('Error checking authentication:', error);
-                // Optionally, redirect to login on network error if deemed appropriate
-                // window.location.href = '/login';
-            });
-    }, 1000); // Checks every 30 seconds
-
-    // Initial check on page load:
-    // This is the most important check to ensure the user is authenticated when the page first loads.
-    // Removed all sessionStorage and onpageshow logic as it interfered with server-side session management.
-    fetch("/check-auth")
-        .then(res => {
+    <script>
+      // Periodically check server-side authentication status.
+      // This catches session expiry or logout from other tabs/windows.
+      // Adjusted frequency to 30 seconds to reduce unnecessary network traffic.
+      setInterval(() => {
+        fetch("/check-auth")
+          .then((res) => {
             if (res.status === 401) {
-                // Session expired or not authenticated on initial load
-                window.location.href = "/login";
+              // Session has expired or user logged out from server
+              window.location.href = "/login";
             }
-            // If status is 200, no action needed, user is authenticated by the server.
-        })
-        .catch(error => {
-            console.error('Error on initial authentication check:', error);
-            // Handle network errors or server unavailability gracefully.
-            // Redirecting to login is a common fallback for critical auth errors.
+            // If status is 200, the session is active and 'rolling: true' on server
+            // means its expiration timer is automatically reset.
+          })
+          .catch((error) => {
+            console.error("Error checking authentication:", error);
+            // Optionally, redirect to login on network error if deemed appropriate
+            // window.location.href = '/login';
+          });
+      }, 1000); // Checks every 30 seconds
+
+      // Initial check on page load:
+      // This is the most important check to ensure the user is authenticated when the page first loads.
+      // Removed all sessionStorage and onpageshow logic as it interfered with server-side session management.
+      fetch("/check-auth")
+        .then((res) => {
+          if (res.status === 401) {
+            // Session expired or not authenticated on initial load
             window.location.href = "/login";
+          }
+          // If status is 200, no action needed, user is authenticated by the server.
+        })
+        .catch((error) => {
+          console.error("Error on initial authentication check:", error);
+          // Handle network errors or server unavailability gracefully.
+          // Redirecting to login is a common fallback for critical auth errors.
+          window.location.href = "/login";
         });
-
-</script>
-
-
-</body>
-
+    </script>
+  </body>
 </html>

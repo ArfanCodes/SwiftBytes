@@ -1,146 +1,268 @@
 <!-- login.ejs -->
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Optimized Favicon links matching your generated files -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Optimized Favicon links matching your generated files -->
     <!-- Standard favicon sizes for browser tabs -->
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="images/favicon-16x16.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="images/favicon-32x32.png"
+    />
 
     <!-- Apple touch icon for iOS home screen -->
-    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="images/apple-touch-icon.png"
+    />
 
     <!-- Fallback ICO for older browsers -->
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
 
     <!-- Web App Manifest -->
-    <link rel="manifest" href="images/site.webmanifest">
+    <link rel="manifest" href="images/site.webmanifest" />
 
     <!-- Optional: Microsoft tile color -->
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
-  <title>Login</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="output.css">
- <style>
-    .bg-cr {
-      background-color: #F2E9D8;
-    }
-    .bg-copper {
-      background-color: #B87333;
-    }
-  </style>
-  <script>
-    tailwind.config = {
-      darkMode: 'class', // This enables Tailwind's dark mode class-based system
-      theme: {
-        extend: {
-          fontFamily: {
-            bebas: ['"Bebas Neue"', 'sans-serif'],
-            inter: ['"Inter"', 'sans-serif'],
-          },
-          colors: {
-            primary: {
-              light: '#FACC15', // Yellow-400
-              dark: '#111827',  // Gray-900
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="output.css" />
+    <style>
+      .bg-cr {
+        background-color: #f2e9d8;
+      }
+      .bg-copper {
+        background-color: #b87333;
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        darkMode: "class", // This enables Tailwind's dark mode class-based system
+        theme: {
+          extend: {
+            fontFamily: {
+              bebas: ['"Bebas Neue"', "sans-serif"],
+              inter: ['"Inter"', "sans-serif"],
             },
-            secondary: {
-              light: '#F9FAFB', // Gray-50
-              dark: '#1F2937',  // Gray-800
-            },
-            text: {
-              light: '#191919', // Near black
-              dark: '#F9FAFB',  // Near white
+            colors: {
+              primary: {
+                light: "#FACC15", // Yellow-400
+                dark: "#111827", // Gray-900
+              },
+              secondary: {
+                light: "#F9FAFB", // Gray-50
+                dark: "#1F2937", // Gray-800
+              },
+              text: {
+                light: "#191919", // Near black
+                dark: "#F9FAFB", // Near white
+              },
             },
           },
         },
-      },
-    };
-  </script>
-</head>
-<body class="bg-primary-light dark:bg-primary-dark transition-colors duration-300">
-  <!-- Fixed Header Buttons Container -->
-  <div class="fixed top-4 right-4 z-50 flex gap-2">
-    <!-- Home Button -->
-    <a href="index.html" 
-       class="p-2 rounded-full bg-gray-500 dark:bg-gray-700 hover:bg-yellow-400 dark:hover:bg-yellow-400 transition-colors duration-300 shadow-lg group">
-      <!-- Home icon -->
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white group-hover:text-gray-700" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-      </svg>
-    </a>
-    
-    <!-- Theme Toggle Button -->
-    <button id="theme-toggle"
-      class="p-2 rounded-full bg-gray-500 dark:bg-gray-700 transition-colors duration-300 shadow-lg">
-      <!-- Sun icon (light mode) -->
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400 block dark:hidden" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-      </svg>
-      <!-- Moon icon (dark mode) -->
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400 hidden dark:block" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-      </svg>
-    </button>
-  </div>
+      };
+    </script>
+  </head>
+  <body
+    class="bg-primary-light dark:bg-primary-dark transition-colors duration-300"
+  >
+    <!-- Fixed Header Buttons Container -->
+    <div class="fixed top-4 right-4 z-50 flex gap-2">
+      <!-- Home Button -->
+      <a
+        href="index.html"
+        class="p-2 rounded-full bg-gray-500 dark:bg-gray-700 hover:bg-yellow-400 dark:hover:bg-yellow-400 transition-colors duration-300 shadow-lg group"
+      >
+        <!-- Home icon -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 text-white group-hover:text-gray-700"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+          />
+        </svg>
+      </a>
 
-  <div class="flex h-screen">
-    <div class="relative w-full max-h-full max-w-md m-auto bg-secondary-light dark:bg-secondary-dark transition-colors duration-300 rounded-lg p-5">
-      <header class="relative">
-        <img class="w-40 mx-auto mb-5" src="images/logo.png" />
-      </header>
-      <form method="POST" action="/login">
-        <div>
-          <label class="block mb-2 text-xl text-gray-700 dark:text-white font-bebas" for="username">Username</label>
-          <input class="w-full p-2 mb-6 text-gray-700 border-b-2 dark:border-gray-700 outline-none focus:bg-gray-300" type="text" name="username" id="username" value="<%= username || '' %>">
-        </div>
-        <div>
-          <label class="block mb-2 text-xl text-gray-700 dark:text-white font-bebas" for="password">Password</label>
-          <input class="w-full p-2 mb-6 text-gray-700 border-b-2 dark:border-gray-700 outline-none focus:bg-gray-300" type="password" name="password" id="password">
-        </div>
-
-        <% if (error) { %>
-          <p class="text-red-600 dark:text-red-400 mb-4 font-medium"><%= error %></p>
-        <% } %>
-
-        <div>          
-          <input class="w-full font-bebas text-2xl bg-gray-500 hover:bg-yellow-400 text-white hover:text-gray-700 font-bold py-2 px-4 mb-4 rounded cursor-pointer transition-colors duration-300" type="submit" value="Login">
-        </div>
-      </form>   
+      <!-- Theme Toggle Button -->
+      <button
+        id="theme-toggle"
+        class="p-2 rounded-full bg-gray-500 dark:bg-gray-700 transition-colors duration-300 shadow-lg"
+      >
+        <!-- Sun icon (light mode) -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 text-yellow-400 block dark:hidden"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+          />
+        </svg>
+        <!-- Moon icon (dark mode) -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 text-yellow-400 hidden dark:block"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+          />
+        </svg>
+      </button>
     </div>
-  </div>
 
-  <script>
-    // Theme handling
-    if (localStorage.getItem('theme') === 'dark' ||
-      (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    <div class="flex h-screen">
+      <div
+        class="relative w-full max-h-full max-w-md m-auto bg-secondary-light dark:bg-secondary-dark transition-colors duration-300 rounded-lg p-5"
+      >
+        <header class="relative">
+          <img class="w-40 mx-auto mb-5" src="images/logo.png" />
+        </header>
+        <form method="POST" action="/login">
+          <div>
+            <label
+              class="block mb-2 text-xl text-gray-700 dark:text-white font-bebas"
+              for="username"
+              >Username</label
+            >
+            <input
+              class="w-full p-2 mb-6 text-gray-700 border-b-2 dark:border-gray-700 outline-none focus:bg-gray-300"
+              type="text"
+              name="username"
+              id="username"
+              value="<%= username || '' %>"
+            />
+          </div>
+          <div>
+            <label
+              class="block mb-2 text-xl text-gray-700 dark:text-white font-bebas"
+              for="password"
+              >Password</label
+            >
+            <div class="relative">
+              <input
+                class="w-full p-2 pr-10 mb-6 text-gray-700 border-b-2 dark:border-gray-700 outline-none focus:bg-gray-300"
+                type="password"
+                name="password"
+                id="password"
+              />
+              <button
+                type="button"
+                id="toggle-password"
+                class="absolute right-2 top-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
+              >
+                <!-- Eye icon (default - password hidden) -->
+                <img
+                  id="eye-hidden"
+                  src="images/close-eye.png"
+                  class="h-5 w-5"
+                  alt="Show password"
+                />
+                <!-- View icon (password visible) -->
+                <img
+                  id="eye-visible"
+                  src="images/view.png"
+                  class="h-5 w-5 hidden"
+                  alt="Hide password"
+                />
+              </button>
+            </div>
+          </div>
 
-    document.getElementById('theme-toggle').addEventListener('click', function () {
-      if (document.documentElement.classList.contains('dark')) {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
+          <% if (error) { %>
+          <p class="text-red-600 dark:text-red-400 mb-4 font-medium">
+            <%= error %>
+          </p>
+          <% } %>
+
+          <div>
+            <input
+              class="w-full font-bebas text-2xl bg-gray-500 hover:bg-yellow-400 text-white hover:text-gray-700 font-bold py-2 px-4 mb-4 rounded cursor-pointer transition-colors duration-300"
+              type="submit"
+              value="Login"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // Theme handling
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!localStorage.getItem("theme") &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
       } else {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
+        document.documentElement.classList.remove("dark");
       }
-    });
-  </script>
-  <script>
-  sessionStorage.setItem("isLoggedIn", "true");
-</script>
 
-</body>
+      document
+        .getElementById("theme-toggle")
+        .addEventListener("click", function () {
+          if (document.documentElement.classList.contains("dark")) {
+            document.documentElement.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+          } else {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+          }
+        });
+
+      // Password visibility toggle
+      document
+        .getElementById("toggle-password")
+        .addEventListener("click", function () {
+          const passwordInput = document.getElementById("password");
+          const eyeHidden = document.getElementById("eye-hidden");
+          const eyeVisible = document.getElementById("eye-visible");
+
+          if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            eyeHidden.classList.add("hidden");
+            eyeVisible.classList.remove("hidden");
+          } else {
+            passwordInput.type = "password";
+            eyeHidden.classList.remove("hidden");
+            eyeVisible.classList.add("hidden");
+          }
+        });
+    </script>
+    <script>
+      sessionStorage.setItem("isLoggedIn", "true");
+    </script>
+  </body>
 </html>

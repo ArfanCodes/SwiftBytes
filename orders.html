@@ -1,383 +1,481 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
-
-<head>
-  <meta charset="UTF-8">
-  <!-- Optimized Favicon links matching your generated files -->
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Optimized Favicon links matching your generated files -->
     <!-- Standard favicon sizes for browser tabs -->
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="images/favicon-16x16.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="images/favicon-32x32.png"
+    />
 
     <!-- Apple touch icon for iOS home screen -->
-    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="images/apple-touch-icon.png"
+    />
 
     <!-- Fallback ICO for older browsers -->
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
 
     <!-- Web App Manifest -->
-    <link rel="manifest" href="images/site.webmanifest">
+    <link rel="manifest" href="images/site.webmanifest" />
 
     <!-- Optional: Microsoft tile color -->
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
-  <title>Orders</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="output.css">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            bebas: ['"Bebas Neue"', 'sans-serif'],
-            inter: ['"Inter"', 'sans-serif'],
-          },
-          colors: {
-            primary: {
-              light: '#FACC15', // Yellow-400
-              dark: '#111827',  // Gray-900
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Orders</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="output.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              bebas: ['"Bebas Neue"', "sans-serif"],
+              inter: ['"Inter"', "sans-serif"],
             },
-            secondary: {
-              light: '#F9FAFB', // Gray-50
-              dark: '#1F2937',  // Gray-800
-            },
-            text: {
-              light: '#191919', // Near black
-              dark: '#F9FAFB',  // Near white
+            colors: {
+              primary: {
+                light: "#FACC15", // Yellow-400
+                dark: "#111827", // Gray-900
+              },
+              secondary: {
+                light: "#F9FAFB", // Gray-50
+                dark: "#1F2937", // Gray-800
+              },
+              text: {
+                light: "#191919", // Near black
+                dark: "#F9FAFB", // Near white
+              },
             },
           },
         },
-      },
-    };
-  </script>
-  <style>
-    .theme-toggle {
-      transition: all 0.3s ease;
-    }
-    
-    .mode-icon {
-      width: 20px;
-      height: 20px;
-    }
-  </style>
-</head>
+      };
+    </script>
+    <style>
+      .theme-toggle {
+        transition: all 0.3s ease;
+      }
 
-<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-6 transition-colors duration-300">
-  <header class="mb-6 flex justify-between items-center">
-    <div>
-     <h1 class="font-bebas tracking-wider  text-gray-800 dark:text-yellow-500 text-4xl font-bold mb-2">Orders Dashboard</h1>
-      <nav class="flex space-x-4 text-gray-800 dark:text-yellow-500">
-    <a href="/insights" class="font-bebas text-2xl tracking-wider font-bold relative group">
-        Insights
-        <span class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
-    </a>
-    <a href="/menued" class="font-bebas text-2xl tracking-wider font-bold relative group">
-        Menu
-        <span class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
-    </a>
-    <a href="/inventory" class="font-bebas text-2xl tracking-wider font-bold relative group">
-        Inventory
-        <span class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
-    </a>
-</nav>
-    </div>
-    <div class="flex items-center gap-4">
+      .mode-icon {
+        width: 20px;
+        height: 20px;
+      }
+    </style>
+  </head>
 
-      <a href="/logout" onclick="sessionStorage.clear()">
-        <button type="button"
-          class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-semibold shadow font-bebas text-2xl tracking-wider hover:underline font-bold">
-          Logout
+  <body
+    class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-6 transition-colors duration-300"
+  >
+    <header class="mb-6 flex justify-between items-center">
+      <div>
+        <h1
+          class="font-bebas tracking-wider text-gray-800 dark:text-yellow-500 text-4xl font-bold mb-2"
+        >
+          Orders Dashboard
+        </h1>
+        <nav class="flex space-x-4 text-gray-800 dark:text-yellow-500">
+          <a
+            href="/insights"
+            class="font-bebas text-2xl tracking-wider font-bold relative group"
+          >
+            Insights
+            <span
+              class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"
+            ></span>
+          </a>
+          <a
+            href="/menued"
+            class="font-bebas text-2xl tracking-wider font-bold relative group"
+          >
+            Menu
+            <span
+              class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"
+            ></span>
+          </a>
+          <a
+            href="/inventory"
+            class="font-bebas text-2xl tracking-wider font-bold relative group"
+          >
+            Inventory
+            <span
+              class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"
+            ></span>
+          </a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="/logout" onclick="sessionStorage.clear()">
+          <button
+            type="button"
+            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-semibold shadow font-bebas text-2xl tracking-wider hover:underline font-bold"
+          >
+            Logout
+          </button>
+        </a>
+
+        <!-- Theme Toggle Icon -->
+        <button
+          id="darkModeToggle"
+          class="theme-toggle p-2 rounded-full bg-gray-200 dark:bg-gray-700 cursor-pointer transition-all duration-300 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-110 hover:shadow-lg"
+        >
+          <!-- Sun icon (visible in light mode) -->
+          <svg
+            id="sunIcon"
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-6 h-6 text-yellow-500 dark:hidden transition-colors duration-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+          </svg>
+          <!-- Moon icon (visible in dark mode) -->
+          <svg
+            id="moonIcon"
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-6 h-6 text-yellow-400 hidden dark:block transition-colors duration-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+            />
+          </svg>
         </button>
-      </a>
+        <img src="/images/logo.png" alt="Logo" class="h-32 w-32" />
+      </div>
+    </header>
 
+    <div
+      id="messageBox"
+      class="hidden mb-4 p-4 rounded bg-green-600 text-white font-semibold"
+    ></div>
 
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h2 class="font-bebas tracking-wider text-2xl font-semibold mb-3">
+          Pending Orders
+        </h2>
+        <div id="pendingOrders" class="space-y-4"></div>
+      </div>
 
-
-      <!-- Theme Toggle Icon -->
-      <button id="darkModeToggle" class="theme-toggle p-2 rounded-full bg-gray-200 dark:bg-gray-700 cursor-pointer transition-all duration-300 
-                                      hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-110 hover:shadow-lg">
-                            <!-- Sun icon (visible in light mode) -->
-                            <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-yellow-500 dark:hidden transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                            <!-- Moon icon (visible in dark mode) -->
-                            <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-yellow-400 hidden dark:block transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                            </svg>
-                        </button>
-      <img src="/images/logo.png" alt="Logo" class="h-32 w-32">
+      <div>
+        <h2 class="font-bebas tracking-wider text-2xl font-semibold mb-3">
+          Prepared Orders
+        </h2>
+        <div id="preparedOrders" class="space-y-4"></div>
+      </div>
     </div>
 
-    
-
-  </header>
-
-  <div id="messageBox" class="hidden mb-4 p-4 rounded bg-green-600 text-white font-semibold"></div>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
-      <h2 class="font-bebas tracking-wider text-2xl font-semibold mb-3">Pending Orders</h2>
-      <div id="pendingOrders" class="space-y-4"></div>
+    <div class="mt-8">
+      <h2 class="font-bebas tracking-wider text-2xl font-semibold mb-3">
+        Completed Orders
+      </h2>
+      <div id="completedOrders" class="space-y-4"></div>
     </div>
 
-    <div>
-      <h2 class="font-bebas tracking-wider text-2xl font-semibold mb-3">Prepared Orders</h2>
-      <div id="preparedOrders" class="space-y-4"></div>
-    </div>
-  </div>
+    <script>
+      // Dark mode toggle functionality
+      document.addEventListener("DOMContentLoaded", function () {
+        const darkModeToggle = document.getElementById("darkModeToggle");
 
-  <div class="mt-8">
-    <h2 class="font-bebas tracking-wider text-2xl font-semibold mb-3">Completed Orders</h2>
-    <div id="completedOrders" class="space-y-4"></div>
-  </div>
-
-  <script>
-    // Dark mode toggle functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      const darkModeToggle = document.getElementById('darkModeToggle');
-      
-      // Check for saved theme preference or use system preference
-      if (localStorage.getItem('color-theme') === 'light' || 
-          (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)) {
-        document.documentElement.classList.remove('dark');
-      }
-      
-      // Dark mode toggle click event
-      darkModeToggle.addEventListener('click', function() {
-        // Toggle dark class on html element
-        document.documentElement.classList.toggle('dark');
-        
-        // Store user preference
-        if (document.documentElement.classList.contains('dark')) {
-          localStorage.setItem('color-theme', 'dark');
-        } else {
-          localStorage.setItem('color-theme', 'light');
+        // Check for saved theme preference or use system preference
+        if (
+          localStorage.getItem("color-theme") === "light" ||
+          (!("color-theme" in localStorage) &&
+            window.matchMedia("(prefers-color-scheme: light)").matches)
+        ) {
+          document.documentElement.classList.remove("dark");
         }
-      });
-    });
 
-    function fetchInsights() {
-      // Your insights generation function
-      console.log("Generating insights...");
-    }
+        // Dark mode toggle click event
+        darkModeToggle.addEventListener("click", function () {
+          // Toggle dark class on html element
+          document.documentElement.classList.toggle("dark");
 
-    // Rest of your JavaScript remains the same...
-    function showMessage(msg) {
-      const box = document.getElementById('messageBox');
-      box.textContent = msg;
-      box.classList.remove('hidden');
-      setTimeout(() => {
-        box.classList.add('hidden');
-      }, 3000);
-    }
-
-    function loadOrders() {
-  fetch('/api/orders')
-    .then(res => res.json())
-    .then(data => {
-      const pendingContainer = document.getElementById('pendingOrders');
-      const preparedContainer = document.getElementById('preparedOrders');
-      const completedContainer = document.getElementById('completedOrders');
-
-      pendingContainer.innerHTML = '';
-      preparedContainer.innerHTML = '';
-      completedContainer.innerHTML = '';
-
-      if (data.filter(order => order.status === 'pending').length === 0) {
-        pendingContainer.innerHTML = '<div class="bg-gray-100 dark:bg-gray-800 p-4 rounded text-gray-600 dark:text-gray-400">No pending orders</div>';
-      }
-
-      if (data.filter(order => order.status === 'prepared').length === 0) {
-        preparedContainer.innerHTML = '<div class="bg-gray-100 dark:bg-gray-800 p-4 rounded text-gray-600 dark:text-gray-400">No prepared orders</div>';
-      }
-
-      const completedOrders = data.filter(order => order.status === 'pickedup');
-      if (completedOrders.length === 0) {
-        completedContainer.innerHTML = '<div class="bg-gray-100 dark:bg-gray-800 p-4 rounded text-gray-600 dark:text-gray-400">No completed orders</div>';
-      }
-
-      // Sort by status and then by priority_level
-      data.sort((a, b) => {
-        if (a.status === b.status) {
-          return (b.priority_level || 0) - (a.priority_level || 0);
-        }
-        return 0;
+          // Store user preference
+          if (document.documentElement.classList.contains("dark")) {
+            localStorage.setItem("color-theme", "dark");
+          } else {
+            localStorage.setItem("color-theme", "light");
+          }
+        });
       });
 
-      const priorityMap = {
-        50: 'Platinum',
-        30: 'Gold',
-        10: 'Silver',
-        0: 'Default'
-      };
+      function fetchInsights() {
+        // Your insights generation function
+        console.log("Generating insights...");
+      }
 
-      const priorityColorMap = {
-        Platinum: 'text-purple-600 dark:text-purple-400',
-        Gold: 'text-yellow-600 dark:text-yellow-300',
-        Silver: 'text-gray-500 dark:text-gray-300',
-        Default: 'text-gray-400 dark:text-gray-500'
-      };
+      // Rest of your JavaScript remains the same...
+      function showMessage(msg) {
+        const box = document.getElementById("messageBox");
+        box.textContent = msg;
+        box.classList.remove("hidden");
+        setTimeout(() => {
+          box.classList.add("hidden");
+        }, 3000);
+      }
 
-      data.forEach(order => {
-        const priorityLabel = priorityMap[order.priority_level] || 'Default';
-        const priorityColor = priorityColorMap[priorityLabel];
+      function loadOrders() {
+        fetch("/api/orders")
+          .then((res) => res.json())
+          .then((data) => {
+            const pendingContainer = document.getElementById("pendingOrders");
+            const preparedContainer = document.getElementById("preparedOrders");
+            const completedContainer =
+              document.getElementById("completedOrders");
 
-        const div = document.createElement('div');
-        div.className = `order bg-gray-100 dark:bg-gray-800 p-4 rounded shadow border-l-4 ${order.status === 'pending' ? 'border-red-500' :
-          order.status === 'prepared' ? 'border-blue-500' : 'border-green-500'
-          } transition-colors duration-300`;
+            pendingContainer.innerHTML = "";
+            preparedContainer.innerHTML = "";
+            completedContainer.innerHTML = "";
 
-        const tokenDisplay = order.token ?
-          `<div class="flex items-center mt-1 mb-2">
+            if (
+              data.filter((order) => order.status === "pending").length === 0
+            ) {
+              pendingContainer.innerHTML =
+                '<div class="bg-gray-100 dark:bg-gray-800 p-4 rounded text-gray-600 dark:text-gray-400">No pending orders</div>';
+            }
+
+            if (
+              data.filter((order) => order.status === "prepared").length === 0
+            ) {
+              preparedContainer.innerHTML =
+                '<div class="bg-gray-100 dark:bg-gray-800 p-4 rounded text-gray-600 dark:text-gray-400">No prepared orders</div>';
+            }
+
+            const completedOrders = data.filter(
+              (order) => order.status === "pickedup"
+            );
+            if (completedOrders.length === 0) {
+              completedContainer.innerHTML =
+                '<div class="bg-gray-100 dark:bg-gray-800 p-4 rounded text-gray-600 dark:text-gray-400">No completed orders</div>';
+            }
+
+            // Sort by status and then by priority_level
+            data.sort((a, b) => {
+              if (a.status === b.status) {
+                return (b.priority_level || 0) - (a.priority_level || 0);
+              }
+              return 0;
+            });
+
+            const priorityMap = {
+              50: "Platinum",
+              30: "Gold",
+              10: "Silver",
+              0: "Default",
+            };
+
+            const priorityColorMap = {
+              Platinum: "text-purple-600 dark:text-purple-400",
+              Gold: "text-yellow-600 dark:text-yellow-300",
+              Silver: "text-gray-500 dark:text-gray-300",
+              Default: "text-gray-400 dark:text-gray-500",
+            };
+
+            data.forEach((order) => {
+              const priorityLabel =
+                priorityMap[order.priority_level] || "Default";
+              const priorityColor = priorityColorMap[priorityLabel];
+
+              const div = document.createElement("div");
+              div.className = `order bg-gray-100 dark:bg-gray-800 p-4 rounded shadow border-l-4 ${
+                order.status === "pending"
+                  ? "border-red-500"
+                  : order.status === "prepared"
+                  ? "border-blue-500"
+                  : "border-green-500"
+              } transition-colors duration-300`;
+
+              const tokenDisplay = order.token
+                ? `<div class="flex items-center mt-1 mb-2">
               <span class="bg-gray-200 dark:bg-gray-700 text-yellow-600 dark:text-yellow-300 px-2 py-1 rounded font-mono tracking-wider">#${order.token}</span>
               <button class="ml-2 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" onclick="copyToClipboard('${order.token}')">
                 Copy
               </button>
-            </div>` : '';
+            </div>`
+                : "";
 
-        div.innerHTML = `
+              div.innerHTML = `
           <div class="flex justify-between items-start">
             <div>
               <h3 class="font-semibold text-lg">${order.item}</h3>
               ${tokenDisplay}
             </div>
-            <span class="text-sm text-gray-500 dark:text-gray-400">${order.time}</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400">${
+              order.time
+            }</span>
           </div>
           <div class="mt-2 grid grid-cols-2 gap-x-4 text-sm">
-            <div><span class="text-gray-500 dark:text-gray-400">Phone:</span> ${order.phone}</div>
-            <div><span class="text-gray-500 dark:text-gray-400">Amount:</span> ₹${order.amount}</div>
-            <div><span class="text-gray-500 dark:text-gray-400">Date:</span> ${order.date}</div>
+            <div><span class="text-gray-500 dark:text-gray-400">Phone:</span> ${
+              order.phone
+            }</div>
+            <div><span class="text-gray-500 dark:text-gray-400">Amount:</span> ₹${
+              order.amount
+            }</div>
+            <div><span class="text-gray-500 dark:text-gray-400">Date:</span> ${
+              order.date
+            }</div>
             <div><span class="text-gray-500 dark:text-gray-400">Status:</span> 
-              <span class="${order.status === 'pending' ? 'text-red-500' :
-          order.status === 'prepared' ? 'text-blue-500 dark:text-blue-400' : 'text-green-500 dark:text-green-400'
-        }">${order.status}</span>
+              <span class="${
+                order.status === "pending"
+                  ? "text-red-500"
+                  : order.status === "prepared"
+                  ? "text-blue-500 dark:text-blue-400"
+                  : "text-green-500 dark:text-green-400"
+              }">${order.status}</span>
             </div>
             <div><span class="text-gray-500 dark:text-gray-400">Priority:</span> <span class="font-semibold ${priorityColor}">${priorityLabel}</span></div>
           </div>
           <div class="mt-4 flex space-x-2">
-            ${order.status === 'pending' ?
-            `<button class="mark-prepared-btn bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white text-sm" data-id="${order.id}">
+            ${
+              order.status === "pending"
+                ? `<button class="mark-prepared-btn bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white text-sm" data-id="${order.id}">
                 Mark Prepared & Notify
-              </button>` : ''}
-            ${order.status === 'prepared' ?
-            `<button class="mark-pickedup-btn bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-white text-sm" data-id="${order.id}">
+              </button>`
+                : ""
+            }
+            ${
+              order.status === "prepared"
+                ? `<button class="mark-pickedup-btn bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-white text-sm" data-id="${order.id}">
                 Mark as Picked Up
-              </button>` : ''}
+              </button>`
+                : ""
+            }
           </div>
         `;
 
-        if (order.status === 'pending') {
-          pendingContainer.appendChild(div);
-        } else if (order.status === 'prepared') {
-          preparedContainer.appendChild(div);
-        } else if (order.status === 'pickedup') {
-          completedContainer.appendChild(div);
+              if (order.status === "pending") {
+                pendingContainer.appendChild(div);
+              } else if (order.status === "prepared") {
+                preparedContainer.appendChild(div);
+              } else if (order.status === "pickedup") {
+                completedContainer.appendChild(div);
+              }
+            });
+          })
+          .catch((err) => {
+            console.error("Error loading orders:", err);
+          });
+      }
+
+      function copyToClipboard(text) {
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            showMessage("Token copied to clipboard!");
+          })
+          .catch((err) => {
+            console.error("Failed to copy:", err);
+          });
+      }
+
+      // Load orders initially and refresh every 30 seconds
+      loadOrders();
+
+      document.addEventListener("click", function (e) {
+        if (e.target.classList.contains("mark-prepared-btn")) {
+          const id = e.target.getAttribute("data-id");
+          fetch(`/mark-prepared/${id}`, {
+            method: "POST",
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              showMessage(data.message || "Marked as prepared");
+              loadOrders();
+            })
+            .catch((err) => {
+              console.error("Error marking as prepared:", err);
+              showMessage("Something went wrong while marking as prepared");
+            });
+        }
+
+        if (e.target.classList.contains("mark-pickedup-btn")) {
+          const id = e.target.getAttribute("data-id");
+          fetch(`/mark-pickedup/${id}`, {
+            method: "POST",
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              showMessage(data.message || "Marked as picked up");
+              loadOrders();
+            })
+            .catch((err) => {
+              console.error("Error marking as picked up:", err);
+              showMessage("Something went wrong while marking as picked up");
+            });
         }
       });
-    })
-    .catch(err => {
-      console.error('Error loading orders:', err);
-    });
-}
 
-
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text).then(() => {
-        showMessage('Token copied to clipboard!');
-      }).catch(err => {
-        console.error('Failed to copy:', err);
-      });
-    }
-
-    // Load orders initially and refresh every 30 seconds
-    loadOrders();
-
-    document.addEventListener('click', function (e) {
-  if (e.target.classList.contains('mark-prepared-btn')) {
-    const id = e.target.getAttribute('data-id');
-    fetch(`/mark-prepared/${id}`, {
-      method: 'POST'
-    })
-      .then(res => res.json())
-      .then(data => {
-        showMessage(data.message || 'Marked as prepared');
-        loadOrders();
-      })
-      .catch(err => {
-        console.error('Error marking as prepared:', err);
-        showMessage('Something went wrong while marking as prepared');
-      });
-  }
-
-  if (e.target.classList.contains('mark-pickedup-btn')) {
-    const id = e.target.getAttribute('data-id');
-    fetch(`/mark-pickedup/${id}`, {
-      method: 'POST'
-    })
-      .then(res => res.json())
-      .then(data => {
-        showMessage(data.message || 'Marked as picked up');
-        loadOrders();
-      })
-      .catch(err => {
-        console.error('Error marking as picked up:', err);
-        showMessage('Something went wrong while marking as picked up');
-      });
-  }
-});
-
-    setInterval(loadOrders, 30000);
-
-    
-  </script>
+      setInterval(loadOrders, 30000);
+    </script>
     <script>
-    // Periodically check server-side authentication status.
-    // This catches session expiry or logout from other tabs/windows.
-    // Adjusted frequency to 30 seconds to reduce unnecessary network traffic.
-    setInterval(() => {
-        fetch('/check-auth')
-            .then(res => {
-                if (res.status === 401) {
-                    // Session has expired or user logged out from server
-                    window.location.href = '/login';
-                }
-                // If status is 200, the session is active and 'rolling: true' on server
-                // means its expiration timer is automatically reset.
-            })
-            .catch(error => {
-                console.error('Error checking authentication:', error);
-                // Optionally, redirect to login on network error if deemed appropriate
-                // window.location.href = '/login';
-            });
-    }, 1000); // Checks every 30 seconds
-
-    // Initial check on page load:
-    // This is the most important check to ensure the user is authenticated when the page first loads.
-    // Removed all sessionStorage and onpageshow logic as it interfered with server-side session management.
-    fetch("/check-auth")
-        .then(res => {
+      // Periodically check server-side authentication status.
+      // This catches session expiry or logout from other tabs/windows.
+      // Adjusted frequency to 30 seconds to reduce unnecessary network traffic.
+      setInterval(() => {
+        fetch("/check-auth")
+          .then((res) => {
             if (res.status === 401) {
-                // Session expired or not authenticated on initial load
-                window.location.href = "/login";
+              // Session has expired or user logged out from server
+              window.location.href = "/login";
             }
-            // If status is 200, no action needed, user is authenticated by the server.
-        })
-        .catch(error => {
-            console.error('Error on initial authentication check:', error);
-            // Handle network errors or server unavailability gracefully.
-            // Redirecting to login is a common fallback for critical auth errors.
+            // If status is 200, the session is active and 'rolling: true' on server
+            // means its expiration timer is automatically reset.
+          })
+          .catch((error) => {
+            console.error("Error checking authentication:", error);
+            // Optionally, redirect to login on network error if deemed appropriate
+            // window.location.href = '/login';
+          });
+      }, 1000); // Checks every 30 seconds
+
+      // Initial check on page load:
+      // This is the most important check to ensure the user is authenticated when the page first loads.
+      // Removed all sessionStorage and onpageshow logic as it interfered with server-side session management.
+      fetch("/check-auth")
+        .then((res) => {
+          if (res.status === 401) {
+            // Session expired or not authenticated on initial load
             window.location.href = "/login";
+          }
+          // If status is 200, no action needed, user is authenticated by the server.
+        })
+        .catch((error) => {
+          console.error("Error on initial authentication check:", error);
+          // Handle network errors or server unavailability gracefully.
+          // Redirecting to login is a common fallback for critical auth errors.
+          window.location.href = "/login";
         });
-
-</script>
-
-
-
-
-</body>
-
+    </script>
+  </body>
 </html>

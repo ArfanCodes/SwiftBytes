@@ -1,921 +1,1259 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Optimized Favicon links matching your generated files -->
-    <!-- Standard favicon sizes for browser tabs -->
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="images/favicon-16x16.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="images/favicon-32x32.png"
+    />
 
-    <!-- Apple touch icon for iOS home screen -->
-    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="images/apple-touch-icon.png"
+    />
 
-    <!-- Fallback ICO for older browsers -->
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
 
-    <!-- Web App Manifest -->
-    <link rel="manifest" href="images/site.webmanifest">
+    <link rel="manifest" href="images/site.webmanifest" />
 
-    <!-- Optional: Microsoft tile color -->
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
     <title>Restaurant Menu Management</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Immediately set the correct theme to prevent flash
-        (function() {
-            const storedTheme = localStorage.getItem('color-theme');
-            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
-            if (storedTheme === 'dark' || (!storedTheme && systemDark)) {
-                document.documentElement.classList.add('dark');
-            }
-        })();
+      // Immediately set the correct theme to prevent flash
+      (function () {
+        const storedTheme = localStorage.getItem("color-theme");
+        const systemDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
 
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        bebas: ['"Bebas Neue"', 'sans-serif'],
-                        inter: ['"Inter"', 'sans-serif'],
-                    },
-                    colors: {
-                        primary: {
-                            yellow: '#FFC107',
-                          'yellow-dark': '#FFB300',
-                        },
-                        dark: {
-                          bg: '#1a1a2e',
-                          'bg-secondary': '#16213e',
-                          'bg-card': '#0f172a',
-                          text: '#e8e8e8',
-                          'text-secondary': '#cbd5e0',
-                        }
-                    },
-                    transitionProperty: {
-                        'colors': 'background-color, border-color, color, fill, stroke',
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.3s ease-in-out',
-                        'slide-up': 'slideUp 0.3s ease-out',
-                        'bounce-gentle': 'bounceGentle 0.6s ease-in-out',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        },
-                        bounceGentle: {
-                            '0%, 20%, 53%, 80%, 100%': { transform: 'translateY(0)' },
-                            '40%, 43%': { transform: 'translateY(-10px)' },
-                            '70%': { transform: 'translateY(-5px)' },
-                            '90%': { transform: 'translateY(-2px)' },
-                        }
-                    }
-                }
-            }
+        if (storedTheme === "dark" || (!storedTheme && systemDark)) {
+          document.documentElement.classList.add("dark");
         }
+      })();
+
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              bebas: ['"Bebas Neue"', "sans-serif"],
+              inter: ['"Inter"', "sans-serif"],
+            },
+            colors: {
+              primary: {
+                yellow: "#FFC107",
+                "yellow-dark": "#FFB300",
+              },
+              dark: {
+                bg: "#1a1a2e",
+                "bg-secondary": "#16213e",
+                "bg-card": "#0f172a",
+                text: "#e8e8e8",
+                "text-secondary": "#cbd5e0",
+              },
+            },
+            transitionProperty: {
+              colors: "background-color, border-color, color, fill, stroke",
+            },
+            animation: {
+              "fade-in": "fadeIn 0.3s ease-in-out",
+              "slide-up": "slideUp 0.3s ease-out",
+              "bounce-gentle": "bounceGentle 0.6s ease-in-out",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: "0" },
+                "100%": { opacity: "1" },
+              },
+              slideUp: {
+                "0%": { transform: "translateY(20px)", opacity: "0" },
+                "100%": { transform: "translateY(0)", opacity: "1" },
+              },
+              bounceGentle: {
+                "0%, 20%, 53%, 80%, 100%": { transform: "translateY(0)" },
+                "40%, 43%": { transform: "translateY(-10px)" },
+                "70%": { transform: "translateY(-5px)" },
+                "90%": { transform: "translateY(-2px)" },
+              },
+            },
+          },
+        },
+      };
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        
-        /* Base transitions */
-        html, body {
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        
-        /* Color transitions */
-        .bg-white, .bg-gray-50, .bg-gray-100, .bg-gray-200, 
-        .dark\:bg-slate-800, .dark\:bg-slate-700, .dark\:bg-slate-900,
-        .text-gray-700, .dark\:text-yellow-400,
-        .text-gray-600, .dark\:text-gray-300,
-        .text-white, .dark\:text-gray-200,
-        .text-gray-800, .dark\:text-white {
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        
-        /* Border transitions */
-        .border-gray-200, .dark\:border-slate-600,
-        .border-gray-300, .dark\:border-slate-700 {
-            transition: border-color 0.3s ease;
-        }
-        
-        /* Header specific transitions */
-        .bg-brand-yellow {
-            background: #FFC107;
-            transition: background-color 0.3s ease;
-        }
-        
-        .dark\:bg-slate-900 {
-            transition: background-color 0.3s ease;
-        }
-        
-        /* Hardware acceleration for performance */
-        .theme-toggle, .bg-brand-yellow, .dark\:bg-slate-900 {
-            will-change: auto;
-        }
-        
-        /* Respect reduced motion preference */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                transition: none !important;
-                animation: none !important;
-            }
-        }
-        
-        body { font-family: 'Inter', sans-serif; }
-        
-        .bg-brand-yellow {
-            background: #FFC107;
-        }
-        
-        .bg-brand-yellow-dark {
-            background: #FFB300;
-        }
-        
-        .bg-gradient-primary-light {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-        }
-        
-        .bg-gradient-header-light {
-            background: #FFC107;
-        }
-        
-        .bg-gradient-primary-dark {
-            background: #0f172a;
-        }
-        
-        .bg-gradient-header-dark {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-        }
-        
-        .bg-gradient-button {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-        }
-        
-        .bg-gradient-button-dark {
-            background: linear-gradient(135deg, #FFC107, #FFB300);
-        }
-        
-        .bg-gradient-success {
-            background: linear-gradient(135deg, #10b981, #059669);
-        }
-        
-        .bg-gradient-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-        }
-        
-        .bg-gradient-warning {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-        }
-        
-        .bg-gradient-dark {
-            background: linear-gradient(135deg, #374151, #1f2937);
-        }
-        
-        .bg-gradient-dark-mode {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-        }
-        
-        .hover-lift:hover {
-            transform: translateY(-2px);
-        }
-        
-        .hover-scale:hover {
-            transform: scale(1.05);
-        }
-        
-        .glass {
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.9);
-        }
-        
-        .glass-dark {
-            backdrop-filter: blur(10px);
-            background: rgba(15, 23, 42, 0.9);
-        }
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
-        .theme-toggle {
-            transition: all 0.3s ease;
-        }
-        
-        .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
+      /* Base transitions */
+      html,
+      body {
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
 
-        .dark {
-            color: #e8e8e8;
-        }
+      /* Color transitions */
+      .bg-white,
+      .bg-gray-50,
+      .bg-gray-100,
+      .bg-gray-200,
+      .dark\:bg-slate-800,
+      .dark\:bg-slate-700,
+      .dark\:bg-slate-900,
+      .text-gray-700,
+      .dark\:text-yellow-400,
+      .text-gray-600,
+      .dark\:text-gray-300,
+      .text-white,
+      .dark\:text-gray-200,
+      .text-gray-800,
+      .dark\:text-white {
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
 
-        .item-image {
-            width: 80px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
+      /* Border transitions */
+      .border-gray-200,
+      .dark\:border-slate-600,
+      .border-gray-300,
+      .dark\:border-slate-700 {
+        transition: border-color 0.3s ease;
+      }
 
-        .btn-disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
+      /* Header specific transitions */
+      .bg-brand-yellow {
+        background: #ffc107;
+        transition: background-color 0.3s ease;
+      }
 
-        /* Preview image styling */
-        .image-preview {
-            max-width: 150px;
-            max-height: 100px;
-            object-fit: contain;
-            border-radius: 8px;
-            margin-top: 10px;
-            display: none;
-        }
+      .dark\:bg-slate-900 {
+        transition: background-color 0.3s ease;
+      }
 
-        /* Disabled button styling */
-        .photo-btn-disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            pointer-events: none;
-            background-color: #e5e7eb;
-            border-color: #d1d5db;
+      /* Hardware acceleration for performance */
+      .theme-toggle,
+      .bg-brand-yellow,
+      .dark\:bg-slate-900 {
+        will-change: auto;
+      }
+
+      /* Respect reduced motion preference */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
         }
-        
-        .dark .photo-btn-disabled {
-            background-color: #374151;
-            border-color: #4b5563;
-        }
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
+      .bg-brand-yellow {
+        background: #ffc107;
+      }
+
+      .bg-brand-yellow-dark {
+        background: #ffb300;
+      }
+
+      .bg-gradient-primary-light {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      }
+
+      .bg-gradient-header-light {
+        background: #ffc107;
+      }
+
+      .bg-gradient-primary-dark {
+        background: #0f172a;
+      }
+
+      .bg-gradient-header-dark {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      }
+
+      .bg-gradient-button {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      }
+
+      .bg-gradient-button-dark {
+        background: linear-gradient(135deg, #ffc107, #ffb300);
+      }
+
+      .bg-gradient-success {
+        background: linear-gradient(135deg, #10b981, #059669);
+      }
+
+      .bg-gradient-danger {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+      }
+
+      .bg-gradient-warning {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+      }
+
+      .bg-gradient-dark {
+        background: linear-gradient(135deg, #374151, #1f2937);
+      }
+
+      .bg-gradient-dark-mode {
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+      }
+
+      .hover-lift:hover {
+        transform: translateY(-2px);
+      }
+
+      .hover-scale:hover {
+        transform: scale(1.05);
+      }
+
+      .glass {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .glass-dark {
+        backdrop-filter: blur(10px);
+        background: rgba(15, 23, 42, 0.9);
+      }
+
+      .theme-toggle {
+        transition: all 0.3s ease;
+      }
+
+      .theme-toggle:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .dark {
+        color: #e8e8e8;
+      }
+
+      .item-image {
+        width: 80px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      /* Preview image styling */
+      .image-preview {
+        max-width: 150px;
+        max-height: 100px;
+        object-fit: contain;
+        border-radius: 8px;
+        margin-top: 10px;
+        display: none;
+      }
+
+      /* Disabled button styling */
+      .photo-btn-disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        pointer-events: none;
+        background-color: #e5e7eb;
+        border-color: #d1d5db;
+      }
+
+      .dark .photo-btn-disabled {
+        background-color: #374151;
+        border-color: #4b5563;
+      }
     </style>
-</head>
-<header><nav class="bg-white border-gray-200 py-2.5 dark:bg-gray-900 transition-colors duration-300">
-    <div class="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
+  </head>
+  <header>
+    <nav
+      class="bg-white border-gray-200 py-2.5 dark:bg-gray-900 transition-colors duration-300"
+    >
+      <div
+        class="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto"
+      >
         <a href="#" class="flex items-center">
-            <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white transition-colors duration-300">
-                <img src="images/logo.png" alt="" class="h-20 w-20">
-            </span>
+          <span
+            class="self-center text-xl font-semibold whitespace-nowrap dark:text-white transition-colors duration-300"
+          >
+            <img src="images/logo.png" alt="" class="h-20 w-20" />
+          </span>
         </a>
-        
-        <!-- Combined right-aligned elements in a single flex container -->
+
         <div class="flex items-center gap-4 lg:order-2">
-            <!-- Theme toggle button -->
-            <div class="z-50">
-                        <button id="darkModeToggle" class="theme-toggle p-2 rounded-full bg-gray-200 dark:bg-gray-700 cursor-pointer transition-all duration-300 
-                                      hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-110 hover:shadow-lg">
-                            <!-- Sun icon (visible in light mode) -->
-                            <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-yellow-500 dark:hidden transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                            <!-- Moon icon (visible in dark mode) -->
-                            <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-yellow-400 hidden dark:block transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                            </svg>
-                        </button>
-            </div>
-            
-            <!-- Mobile menu button -->
-            <button data-collapse-toggle="mobile-menu-2" type="button"
-                class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 transition-colors duration-300"
-                aria-controls="mobile-menu-2" aria-expanded="true">
-                <span class="sr-only">Open main menu</span>
-                
-                <svg class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                        clip-rule="evenodd"></path>
-                </svg>
+          <div class="z-50">
+            <button
+              id="darkModeToggle"
+              class="theme-toggle p-2 rounded-full bg-gray-200 dark:bg-gray-700 cursor-pointer transition-all duration-300 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-110 hover:shadow-lg"
+            >
+              <svg
+                id="sunIcon"
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-6 h-6 text-yellow-500 dark:hidden transition-colors duration-300"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                />
+              </svg>
+              <svg
+                id="moonIcon"
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-6 h-6 text-yellow-400 hidden dark:block transition-colors duration-300"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                />
+              </svg>
             </button>
-        </div>
-        
-        <!-- Navigation links -->
-        <div class="items-center justify-between w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
-            <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-               <nav class="flex space-x-4 text-gray-800 dark:text-white transition-colors duration-300">
-                    <a href="/orders" class="font-bebas text-2xl tracking-wider font-bold relative group transition-colors duration-300">
-                        Orders
-                        <span class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
-                    </a>
-                    <a href="/insights" class="font-bebas text-2xl tracking-wider font-bold relative group transition-colors duration-300">
-                        Insights
-                        <span class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
-                    </a>
-                    <a href="/inventory" class="font-bebas text-2xl tracking-wider font-bold relative group transition-colors duration-300">
-                        Inventory
-                        <span class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
-                    </a>
-                </nav>
-            </ul>
-        </div>
-    </div>
-</nav></header>
-<body class="light:bg-gradient-primary-light dark:bg-gradient-primary-dark dark:bg-slate-900 min-h-screen p-5 transition-colors duration-300">
-    <!-- Theme Toggle Button -->
-    <div class="fixed top-6 right-6 z-50">
-     
-    </div>
+          </div>
 
-    <div class="max-w-7xl mx-auto bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden animate-slide-up transition-colors duration-300">
-        <!-- Header -->
-        <div class="bg-brand-yellow dark:bg-slate-900 text-gray-900 dark:text-white px-8 py-8 text-center relative overflow-hidden transition-colors duration-300">
-            <div class="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 dark:from-slate-700/20 dark:to-slate-600/20 transition-colors duration-300"></div>
-            
-            <div class="relative z-10">
-                <div class="flex items-center justify-center gap-6 mb-4">
-                    <div class="w-24 h-24 flex items-center justify-center">
-                        <img src="./images/logo.png" alt="Logo" class="w-full h-full object-contain">
-                    </div>
-                    <div class="text-left">
-                        <div class="text-2xl font-bold text-gray-700 dark:text-yellow-400 transition-colors duration-300">MENU EDITOR</div>
-                        <p class="text-lg opacity-90 mt-1 transition-colors duration-300">Manage your menu items and track inventory levels</p>
-                    </div>
-                </div>
+          <button
+            data-collapse-toggle="mobile-menu-2"
+            type="button"
+            class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 transition-colors duration-300"
+            aria-controls="mobile-menu-2"
+            aria-expanded="true"
+          >
+            <span class="sr-only">Open main menu</span>
+
+            <svg
+              class="hidden w-6 h-6"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        <div
+          class="items-center justify-between w-full lg:flex lg:w-auto lg:order-1"
+          id="mobile-menu-2"
+        >
+          <ul
+            class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0"
+          >
+            <nav
+              class="flex space-x-4 text-gray-800 dark:text-white transition-colors duration-300"
+            >
+              <a
+                href="/orders"
+                class="font-bebas text-2xl tracking-wider font-bold relative group transition-colors duration-300"
+              >
+                Orders
+                <span
+                  class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"
+                ></span>
+              </a>
+              <a
+                href="/insights"
+                class="font-bebas text-2xl tracking-wider font-bold relative group transition-colors duration-300"
+              >
+                Insights
+                <span
+                  class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"
+                ></span>
+              </a>
+              <a
+                href="/inventory"
+                class="font-bebas text-2xl tracking-wider font-bold relative group transition-colors duration-300"
+              >
+                Inventory
+                <span
+                  class="block absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"
+                ></span>
+              </a>
+            </nav>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <body
+    class="light:bg-gradient-primary-light dark:bg-gradient-primary-dark dark:bg-slate-900 min-h-screen p-5 transition-colors duration-300"
+  >
+    <div class="fixed top-6 right-6 z-50"></div>
+
+    <div
+      class="max-w-7xl mx-auto bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden animate-slide-up transition-colors duration-300"
+    >
+      <div
+        class="bg-brand-yellow dark:bg-slate-900 text-gray-900 dark:text-white px-8 py-8 text-center relative overflow-hidden transition-colors duration-300"
+      >
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 dark:from-slate-700/20 dark:to-slate-600/20 transition-colors duration-300"
+        ></div>
+
+        <div class="relative z-10">
+          <div class="flex items-center justify-center gap-6 mb-4">
+            <div class="w-24 h-24 flex items-center justify-center">
+              <img
+                src="./images/logo.png"
+                alt="Logo"
+                class="w-full h-full object-contain"
+              />
             </div>
+            <div class="text-left">
+              <div
+                class="text-2xl font-bold text-gray-700 dark:text-yellow-400 transition-colors duration-300"
+              >
+                MENU EDITOR
+              </div>
+              <p class="text-lg opacity-90 mt-1 transition-colors duration-300">
+                Manage your menu items and track inventory levels
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <!-- Controls -->
-        <div class="px-8 py-6 bg-gray-50 dark:bg-slate-800 border-b border-gray-200 dark:border-slate-600 transition-colors duration-300">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="relative flex-1 max-w-md w-full">
-                    <input 
-                        type="text" 
-                        id="searchInput" 
-                        placeholder="Search items..." 
-                        class="w-full pl-5 pr-12 py-3 border-2 border-gray-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-full text-base focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition-all duration-300"
-                    >
-                    <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 transition-colors duration-300">🔍</span>
-                </div>
-                <button 
-                    class="bg-gradient-button dark:bg-gradient-button-dark text-white px-6 py-3 rounded-full font-semibold hover-lift transition-all duration-300 hover:shadow-xl flex items-center gap-2 whitespace-nowrap" 
-                    onclick="openAddModal()"
+      <div
+        class="px-8 py-6 bg-gray-50 dark:bg-slate-800 border-b border-gray-200 dark:border-slate-600 transition-colors duration-300"
+      >
+        <div
+          class="flex flex-col md:flex-row justify-between items-center gap-4"
+        >
+          <div class="relative flex-1 max-w-md w-full">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search items..."
+              class="w-full pl-5 pr-12 py-3 border-2 border-gray-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-full text-base focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition-all duration-300"
+            />
+            <span
+              class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 transition-colors duration-300"
+              >🔍</span
+            >
+          </div>
+          <button
+            class="bg-gradient-button dark:bg-gradient-button-dark text-white px-6 py-3 rounded-full font-semibold hover-lift transition-all duration-300 hover:shadow-xl flex items-center gap-2 whitespace-nowrap"
+            onclick="openAddModal()"
+          >
+            ➕ Add New Item
+          </button>
+        </div>
+      </div>
+
+      <div
+        class="overflow-x-auto bg-white dark:bg-slate-900 transition-colors duration-300"
+      >
+        <table class="w-full">
+          <thead
+            class="bg-gradient-dark dark:bg-gradient-dark-mode text-white transition-colors duration-300"
+          >
+            <tr>
+              <th
+                class="px-4 py-5 text-left font-semibold text-sm uppercase tracking-wider"
+              >
+                Image
+              </th>
+              <th
+                class="px-4 py-5 text-left font-semibold text-sm uppercase tracking-wider"
+              >
+                Name
+              </th>
+              <th
+                class="px-4 py-5 text-left font-semibold text-sm uppercase tracking-wider"
+              >
+                Price
+              </th>
+              <th
+                class="px-4 py-5 text-left font-semibold text-sm uppercase tracking-wider"
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            id="inventoryTableBody"
+            class="divide-y divide-gray-200 dark:divide-slate-700 bg-gray-50 dark:bg-slate-800 transition-colors duration-300"
+          ></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div
+      id="itemModal"
+      class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden transition-opacity duration-300"
+    >
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div
+          class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-2xl max-h-screen overflow-y-auto shadow-2xl animate-bounce-gentle border-2 border-gray-200 dark:border-slate-700 transition-colors duration-300"
+        >
+          <div class="p-8">
+            <div
+              class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200 dark:border-slate-700 transition-colors duration-300"
+            >
+              <h2
+                id="modalTitle"
+                class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-yellow-400 transition-colors duration-300"
+              >
+                Add New Item
+              </h2>
+              <button
+                class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-yellow-400 text-3xl font-light transition-colors duration-200"
+                onclick="closeModal()"
+              >
+                &times;
+              </button>
+            </div>
+
+            <form id="itemForm" class="space-y-6" autocomplete="off">
+              <div>
+                <label
+                  for="itemName"
+                  class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300"
+                  >Item Name *</label
                 >
-                    ➕ Add New Item
+                <input
+                  type="text"
+                  id="itemName"
+                  name="name"
+                  required
+                  class="w-full px-4 py-3 border-2 border-gray-200 dark:border-slate-700 dark:bg-slate-700 dark:text-white rounded-xl text-base focus:outline-none focus:border-indigo-500 dark:focus:border-yellow-400 focus:ring-4 focus:ring-indigo-100 dark:focus:ring-yellow-400/20 transition-all duration-300"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="itemPrice"
+                  class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300"
+                  >Price (₹) *</label
+                >
+                <input
+                  type="number"
+                  id="itemPrice"
+                  name="price"
+                  step="0.01"
+                  min="0"
+                  required
+                  class="w-full px-4 py-3 border-2 border-gray-200 dark:border-slate-700 dark:bg-slate-700 dark:text-white rounded-xl text-base focus:outline-none focus:border-indigo-500 dark:focus:border-yellow-400 focus:ring-4 focus:ring-indigo-100 dark:focus:ring-yellow-400/20 transition-all duration-300"
+                />
+              </div>
+
+              <div>
+                <label
+                  class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300"
+                  >Photo</label
+                >
+                <input
+                  type="file"
+                  id="itemImageFile"
+                  name="imageFile"
+                  accept="image/*"
+                  class="hidden"
+                  onchange="handleFileSelect(this)"
+                />
+                <button
+                  type="button"
+                  id="photoUploadBtn"
+                  onclick="document.getElementById('itemImageFile').click()"
+                  class="w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-xl text-base hover:border-indigo-500 dark:hover:border-yellow-400 hover:bg-gray-100 dark:hover:bg-slate-600 focus:outline-none focus:border-indigo-500 dark:focus:border-yellow-400 focus:ring-4 focus:ring-indigo-100 dark:focus:ring-yellow-400/20 transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  📸 Select Single Photo
                 </button>
-            </div>
-        </div>
-
-        <!-- Menu Table -->
-        <div class="overflow-x-auto bg-white dark:bg-slate-900 transition-colors duration-300">
-            <table class="w-full">
-                <thead class="bg-gradient-dark dark:bg-gradient-dark-mode text-white transition-colors duration-300">
-                    <tr>
-                        <th class="px-4 py-5 text-left font-semibold text-sm uppercase tracking-wider">Image</th>
-                        <th class="px-4 py-5 text-left font-semibold text-sm uppercase tracking-wider">Name</th>
-                        <th class="px-4 py-5 text-left font-semibold text-sm uppercase tracking-wider">Price</th>
-                        <th class="px-4 py-5 text-left font-semibold text-sm uppercase tracking-wider">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="inventoryTableBody" class="divide-y divide-gray-200 dark:divide-slate-700 bg-gray-50 dark:bg-slate-800 transition-colors duration-300">
-                    <!-- Items will be populated here -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Add/Edit Item Modal -->
-    <div id="itemModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden transition-opacity duration-300">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-2xl max-h-screen overflow-y-auto shadow-2xl animate-bounce-gentle border-2 border-gray-200 dark:border-slate-700 transition-colors duration-300">
-                <div class="p-8">
-                    <!-- Modal Header -->
-                    <div class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200 dark:border-slate-700 transition-colors duration-300">
-                        <h2 id="modalTitle" class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-yellow-400 transition-colors duration-300">Add New Item</h2>
-                        <button 
-                            class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-yellow-400 text-3xl font-light transition-colors duration-200" 
-                            onclick="closeModal()"
-                        >
-                            &times;
-                        </button>
-                    </div>
-
-                    <!-- Form -->
-                    <form id="itemForm" class="space-y-6" autocomplete="off">
-                        <div>
-                            <label for="itemName" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Item Name *</label>
-                            <input 
-                                type="text" 
-                                id="itemName" 
-                                name="name"
-                                required 
-                                class="w-full px-4 py-3 border-2 border-gray-200 dark:border-slate-700 dark:bg-slate-700 dark:text-white rounded-xl text-base focus:outline-none focus:border-indigo-500 dark:focus:border-yellow-400 focus:ring-4 focus:ring-indigo-100 dark:focus:ring-yellow-400/20 transition-all duration-300"
-                            >
-                        </div>
-                        
-                        <div>
-                            <label for="itemPrice" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Price (₹) *</label>
-                            <input 
-                                type="number" 
-                                id="itemPrice" 
-                                name="price"
-                                step="0.01" 
-                                min="0" 
-                                required 
-                                class="w-full px-4 py-3 border-2 border-gray-200 dark:border-slate-700 dark:bg-slate-700 dark:text-white rounded-xl text-base focus:outline-none focus:border-indigo-500 dark:focus:border-yellow-400 focus:ring-4 focus:ring-indigo-100 dark:focus:ring-yellow-400/20 transition-all duration-300"
-                            >
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Photo</label>
-                            <!-- Hidden file input -->
-                            <input 
-                                type="file" 
-                                id="itemImageFile" 
-                                name="image"
-                                accept="image/*"
-                                class="hidden"
-                                onchange="handleFileSelect(this)"
-                            >
-                            <!-- Custom styled button -->
-                            <button 
-                                type="button"
-                                id="photoUploadBtn"
-                                onclick="document.getElementById('itemImageFile').click()"
-                                class="w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-xl text-base hover:border-indigo-500 dark:hover:border-yellow-400 hover:bg-gray-100 dark:hover:bg-slate-600 focus:outline-none focus:border-indigo-500 dark:focus:border-yellow-400 focus:ring-4 focus:ring-indigo-100 dark:focus:ring-yellow-400/20 transition-all duration-300 flex items-center justify-center gap-2"
-                            >
-                                📸 Select Single Photo
-                            </button>
-                            <!-- File name display -->
-                            <div id="selectedFileName" class="mt-2 text-sm text-gray-600 dark:text-gray-400 hidden transition-colors duration-300">
-                                <span class="flex items-center gap-2">
-                                    ✅ <span id="fileName"></span>
-                                    <button type="button" onclick="clearPhotoSelection()" class="text-red-500 hover:text-red-700 dark:hover:text-red-400">
-                                        ✕ Remove
-                                    </button>
-                                </span>
-                            </div>
-                            <!-- Image preview -->
-                            <img id="imagePreview" class="image-preview" alt="Image Preview">
-                        </div>
-
-                        <!-- Form Actions -->
-                        <div class="flex gap-4 justify-end mt-8 pt-6 border-t border-gray-200 dark:border-slate-700 transition-colors duration-300">
-                            <button 
-                                type="button" 
-                                class="px-6 py-3 bg-gray-500 dark:bg-slate-700 text-white dark:text-gray-300 rounded-full font-semibold hover-lift transition-all duration-300 hover:shadow-lg hover:bg-gray-600 dark:hover:bg-slate-600" 
-                                onclick="closeModal()"
-                            >
-                                Cancel
-                            </button>
-                            <button 
-                                type="submit" 
-                                id="saveItemBtn"
-                                class="bg-gradient-success dark:bg-gradient-to-r dark:from-yellow-500 dark:to-yellow-600 text-white px-6 py-3 rounded-full font-semibold hover-lift transition-all duration-300 hover:shadow-xl flex items-center gap-2"
-                            >
-                                <span id="saveItemText">💾 Save Item</span>
-                                <span id="saveItemSpinner" class="hidden">⏳ Saving...</span>
-                            </button>
-                        </div>
-                    </form>
+                <div
+                  id="selectedFileName"
+                  class="mt-2 text-sm text-gray-600 dark:text-gray-400 hidden transition-colors duration-300"
+                >
+                  <span class="flex items-center gap-2">
+                    ✅ <span id="fileName"></span>
+                    <button
+                      type="button"
+                      onclick="clearPhotoSelection()"
+                      class="text-red-500 hover:text-red-700 dark:hover:text-red-400"
+                    >
+                      ✕ Remove
+                    </button>
+                  </span>
                 </div>
-            </div>
+                <img
+                  id="imagePreview"
+                  class="image-preview"
+                  alt="Image Preview"
+                />
+              </div>
+
+              <div
+                class="flex gap-4 justify-end mt-8 pt-6 border-t border-gray-200 dark:border-slate-700 transition-colors duration-300"
+              >
+                <button
+                  type="button"
+                  class="px-6 py-3 bg-gray-500 dark:bg-slate-700 text-white dark:text-gray-300 rounded-full font-semibold hover-lift transition-all duration-300 hover:shadow-lg hover:bg-gray-600 dark:hover:bg-slate-600"
+                  onclick="closeModal()"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  id="saveItemBtn"
+                  class="bg-gradient-success dark:bg-gradient-to-r dark:from-yellow-500 dark:to-yellow-600 text-white px-6 py-3 rounded-full font-semibold hover-lift transition-all duration-300 hover:shadow-xl flex items-center gap-2"
+                >
+                  <span id="saveItemText">💾 Save Item</span>
+                  <span id="saveItemSpinner" class="hidden">⏳ Saving...</span>
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
 
-    <!-- Custom Delete Confirmation Modal -->
-    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden transition-opacity duration-300">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-md shadow-2xl animate-bounce-gentle border-2 border-gray-200 dark:border-slate-700 transition-colors duration-300">
-                <div class="p-8">
-                    <!-- Modal Header -->
-                    <div class="text-center mb-6">
-                        <div class="w-16 h-16 mx-auto mb-4 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center transition-colors duration-300">
-                            <span class="text-3xl">🗑️</span>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800 dark:text-red-400 mb-2 transition-colors duration-300">Delete Item</h2>
-                        <p class="text-gray-600 dark:text-gray-300 transition-colors duration-300">Are you sure you want to delete this item? This action cannot be undone.</p>
-                    </div>
+    <div
+      id="deleteModal"
+      class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden transition-opacity duration-300"
+    >
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div
+          class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-md shadow-2xl animate-bounce-gentle border-2 border-gray-200 dark:border-slate-700 transition-colors duration-300"
+        >
+          <div class="p-8">
+            <div class="text-center mb-6">
+              <div
+                class="w-16 h-16 mx-auto mb-4 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center transition-colors duration-300"
+              >
+                <span class="text-3xl">🗑️</span>
+              </div>
+              <h2
+                class="text-2xl font-bold text-gray-800 dark:text-red-400 mb-2 transition-colors duration-300"
+              >
+                Delete Item
+              </h2>
+              <p
+                class="text-gray-600 dark:text-gray-300 transition-colors duration-300"
+              >
+                Are you sure you want to delete this item? This action cannot be
+                undone.
+              </p>
+            </div>
 
-                    <!-- Modal Actions -->
-                    <div class="flex gap-3 justify-center">
-                        <button 
-                            id="cancelDeleteBtn"
-                            class="px-6 py-3 bg-gray-500 dark:bg-slate-700 text-white dark:text-gray-300 rounded-full font-semibold hover-lift transition-all duration-300 hover:shadow-lg hover:bg-gray-600 dark:hover:bg-slate-600"
+            <div class="flex gap-3 justify-center">
+              <button
+                id="cancelDeleteBtn"
+                class="px-6 py-3 bg-gray-500 dark:bg-slate-700 text-white dark:text-gray-300 rounded-full font-semibold hover-lift transition-all duration-300 hover:shadow-lg hover:bg-gray-600 dark:hover:bg-slate-600"
+              >
+                Cancel
+              </button>
+              <button
+                id="confirmDeleteBtn"
+                class="bg-gradient-danger dark:bg-gradient-to-r dark:from-red-600 dark:to-red-700 text-white px-6 py-3 rounded-full font-semibold hover-lift transition-all duration-300 hover:shadow-xl flex items-center gap-2"
+              >
+                🗑️ Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let editingItemId = null;
+      let inventory = [];
+      let itemToDelete = null;
+      let isSubmitting = false;
+      let currentImageUrl = ""; // Track current image URL for edits
+
+      // --- AWS S3 Configuration (Dynamically Loaded) ---
+      let S3_BUCKET_NAME = "";
+      let S3_REGION = "";
+      let S3_BASE_URL = ""; // Will be set after fetching config
+
+      // Function to fetch S3 configuration from the backend
+      async function fetchS3Config() {
+        try {
+          const response = await fetch("/api/s3-config");
+          if (!response.ok) {
+            throw new Error("Failed to fetch S3 configuration");
+          }
+          const config = await response.json();
+          S3_BUCKET_NAME = config.bucketName;
+          S3_REGION = config.region;
+          S3_BASE_URL = `https://${S3_BUCKET_NAME}.s3.${S3_REGION}.amazonaws.com/`;
+          console.log("S3 config loaded:", S3_BASE_URL);
+        } catch (error) {
+          console.error("Error loading S3 configuration:", error);
+          // Fallback or error handling if config cannot be loaded
+          S3_BASE_URL = "https://placehold.co/100x100/FF0000/FFFFFF?text=Error"; // Visual fallback
+        }
+      }
+
+      // Call fetchS3Config as soon as the script loads
+      // and ensure loadInventory() waits for it.
+      (async () => {
+        await fetchS3Config();
+        loadInventory(); // Now load inventory only after S3 config is ready
+      })();
+
+      // Handle file selection - ensures only one file is selected and shows preview
+      function handleFileSelect(input) {
+        if (input.files && input.files[0]) {
+          const file = input.files[0];
+          const fileNameDisplay = document.getElementById("selectedFileName");
+          const fileName = document.getElementById("fileName");
+          const imagePreview = document.getElementById("imagePreview");
+          const photoUploadBtn = document.getElementById("photoUploadBtn");
+          const clearImageContainer = document.getElementById(
+            "clearImageContainer"
+          ); // Get the container
+
+          // Validate file type
+          if (!file.type.match("image.*")) {
+            alert("Please select an image file (JPEG, PNG, etc.)");
+            input.value = "";
+            return;
+          }
+
+          // Validate file size (max 5MB)
+          if (file.size > 5 * 1024 * 1024) {
+            alert("Image size should be less than 5MB");
+            input.value = "";
+            return;
+          }
+
+          fileName.textContent = file.name;
+          fileNameDisplay.classList.remove("hidden");
+
+          // Disable the photo upload button
+          photoUploadBtn.classList.add("photo-btn-disabled");
+          photoUploadBtn.disabled = true;
+          photoUploadBtn.innerHTML = "Photo Selected";
+
+          // Hide the "Clear Image" checkbox when a new file is selected
+          if (clearImageContainer) {
+            clearImageContainer.classList.add("hidden");
+            document.getElementById("clearImageCheckbox").checked = false; // Uncheck it
+          }
+
+          // Show image preview
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      // Clear photo selection
+      function clearPhotoSelection() {
+        const fileInput = document.getElementById("itemImageFile");
+        const fileNameDisplay = document.getElementById("selectedFileName");
+        const imagePreview = document.getElementById("imagePreview");
+        const photoUploadBtn = document.getElementById("photoUploadBtn");
+        const clearImageContainer = document.getElementById(
+          "clearImageContainer"
+        ); // Get the container
+
+        fileInput.value = "";
+        fileNameDisplay.classList.add("hidden");
+        imagePreview.style.display = "none";
+
+        // Re-enable the photo upload button
+        photoUploadBtn.classList.remove("photo-btn-disabled");
+        photoUploadBtn.disabled = false;
+        photoUploadBtn.innerHTML = "📸 Select Single Photo";
+
+        // Show "Clear Image" checkbox if it was hidden and we are editing
+        if (clearImageContainer && editingItemId) {
+          clearImageContainer.classList.remove("hidden");
+        } else if (clearImageContainer) {
+          // For add new item, ensure it's hidden
+          clearImageContainer.classList.add("hidden");
+          document.getElementById("clearImageCheckbox").checked = false;
+        }
+
+        // Clear current image URL if editing and the user explicitly clicks remove
+        if (editingItemId) {
+          currentImageUrl = ""; // Explicitly clear if the user clicks remove
+          // Mark the checkbox as checked if user clicks clear, so it sends the signal
+          if (document.getElementById("clearImageCheckbox")) {
+            document.getElementById("clearImageCheckbox").checked = true;
+          }
+        }
+      }
+
+      // Theme toggle functionality
+      document.addEventListener("DOMContentLoaded", function () {
+        const darkModeToggle = document.getElementById("darkModeToggle");
+
+        // Function to set theme with transition
+        function setTheme(isDark) {
+          // Start transition
+          document.documentElement.classList.add("transition-colors");
+          document.documentElement.classList.add("duration-300");
+
+          if (isDark) {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("color-theme", "dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+            localStorage.setItem("color-theme", "light");
+          }
+
+          // Remove transition classes after animation completes
+          setTimeout(() => {
+            document.documentElement.classList.remove("transition-colors");
+            document.documentElement.classList.remove("duration-300");
+          }, 300);
+        }
+
+        // Check for saved theme preference or use system preference
+        if (
+          localStorage.getItem("color-theme") === "dark" ||
+          (!("color-theme" in localStorage) &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          setTheme(true);
+        } else {
+          setTheme(false);
+        }
+
+        // Dark mode toggle click event
+        darkModeToggle.addEventListener("click", function () {
+          const isDark = !document.documentElement.classList.contains("dark");
+          setTheme(isDark);
+        });
+      });
+
+      // Disable/Enable submit button
+      function setSubmitButtonState(disabled) {
+        const saveBtn = document.getElementById("saveItemBtn");
+        const saveText = document.getElementById("saveItemText");
+        const saveSpinner = document.getElementById("saveItemSpinner");
+
+        if (disabled) {
+          saveBtn.classList.add("btn-disabled");
+          saveBtn.disabled = true;
+          saveText.classList.add("hidden");
+          saveSpinner.classList.remove("hidden");
+        } else {
+          saveBtn.classList.remove("btn-disabled");
+          saveBtn.disabled = false;
+          saveText.classList.remove("hidden");
+          saveSpinner.classList.add("hidden");
+        }
+      }
+
+      // Load inventory from server
+      // This function will now be called AFTER S3 config is loaded
+      function loadInventory() {
+        fetch("/menu")
+          .then((response) => response.json())
+          .then((data) => {
+            inventory = data;
+            renderInventory();
+          })
+          .catch((error) => console.error("Error fetching inventory:", error));
+      }
+
+      // Function to get image display element
+      function getImageDisplay(item) {
+        let imageUrl;
+        // Check if item.image already contains a full S3 URL (starts with https://)
+        if (item.image && item.image.startsWith("https://")) {
+          imageUrl = item.image;
+        } else if (item.image) {
+          // If it's just an S3 key (e.g., 'menu-items/image.jpg'), prepend the base URL.
+          imageUrl = `${S3_BASE_URL}${item.image}`;
+        } else {
+          // Fallback: Use no-image.jpg from S3. Assuming it's in the 'images' folder in your S3 bucket.
+          imageUrl = `${S3_BASE_URL}images/no-image.jpg`;
+        }
+
+        return `
+            <img src="${imageUrl}" alt="${item.name}" class="item-image"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="item-image bg-gray-200 dark:bg-slate-600 flex items-center justify-center text-2xl text-gray-400 dark:text-gray-500 transition-colors duration-300" style="display: none;">
+                <img src="${S3_BASE_URL}images/no-image.jpg" alt="No Image" class="h-12 w-12 opacity-50">
+            </div>`;
+      }
+
+      // Render inventory into table
+      function renderInventory() {
+        const tbody = document.getElementById("inventoryTableBody");
+        const searchTerm = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+
+        const filteredInventory = inventory.filter(
+          (item) =>
+            item && item.name && item.name.toLowerCase().includes(searchTerm)
+        );
+
+        tbody.innerHTML = filteredInventory
+          .map(
+            (item) => `
+            <tr class="transition-colors duration-200 bg-gray-50 dark:bg-slate-800">
+                <td class="px-4 py-5">
+                    ${getImageDisplay(item)}
+                </td>
+                <td class="px-4 py-5 font-semibold text-gray-800 dark:text-gray-200 text-lg transition-colors duration-300">${
+                  item.name
+                }</td>
+                <td class="px-4 py-5 text-lg font-bold text-green-600 dark:text-green-400 transition-colors duration-300">₹${
+                  item.price
+                }</td>
+                <td class="px-4 py-5">
+                    <div class="flex gap-2">
+                        <button
+                            class="bg-gradient-warning text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1"
+                            onclick="editItem(${item.id})"
                         >
-                            Cancel
+                            ✏️ Edit
                         </button>
-                        <button 
-                            id="confirmDeleteBtn"
-                            class="bg-gradient-danger dark:bg-gradient-to-r dark:from-red-600 dark:to-red-700 text-white px-6 py-3 rounded-full font-semibold hover-lift transition-all duration-300 hover:shadow-xl flex items-center gap-2"
+                        <button
+                            class="bg-gradient-danger text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1"
+                            onclick="showDeleteModal(${item.id})"
                         >
                             🗑️ Delete
                         </button>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                </td>
+            </tr>
+        `
+          )
+          .join("");
+      }
 
-    <script>
-        let editingItemId = null;
-        let inventory = [];
-        let itemToDelete = null;
-        let isSubmitting = false;
-        let currentImageUrl = ''; // Track current image URL for edits
+      // Show custom delete confirmation modal
+      function showDeleteModal(id) {
+        itemToDelete = id;
+        document.getElementById("deleteModal").classList.remove("hidden");
+      }
 
-        // Handle file selection - ensures only one file is selected and shows preview
-        function handleFileSelect(input) {
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
-                const fileNameDisplay = document.getElementById('selectedFileName');
-                const fileName = document.getElementById('fileName');
-                const imagePreview = document.getElementById('imagePreview');
-                const photoUploadBtn = document.getElementById('photoUploadBtn');
-                
-                // Validate file type
-                if (!file.type.match('image.*')) {
-                    alert('Please select an image file (JPEG, PNG, etc.)');
-                    input.value = '';
-                    return;
-                }
-                
-                // Validate file size (max 5MB)
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('Image size should be less than 5MB');
-                    input.value = '';
-                    return;
-                }
-                
-                fileName.textContent = file.name;
-                fileNameDisplay.classList.remove('hidden');
-                
-                // Disable the photo upload button
-                photoUploadBtn.classList.add('photo-btn-disabled');
-                photoUploadBtn.disabled = true;
-                photoUploadBtn.innerHTML = 'Photo Selected';
-                
-                // Show image preview
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
-                    imagePreview.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
-            }
-        }
+      // Close delete modal
+      function closeDeleteModal() {
+        document.getElementById("deleteModal").classList.add("hidden");
+        itemToDelete = null;
+      }
 
-        // Clear photo selection
-        function clearPhotoSelection() {
-            const fileInput = document.getElementById('itemImageFile');
-            const fileNameDisplay = document.getElementById('selectedFileName');
-            const imagePreview = document.getElementById('imagePreview');
-            const photoUploadBtn = document.getElementById('photoUploadBtn');
-            
-            fileInput.value = '';
-            fileNameDisplay.classList.add('hidden');
-            imagePreview.style.display = 'none';
-            
-            // Re-enable the photo upload button
-            photoUploadBtn.classList.remove('photo-btn-disabled');
-            photoUploadBtn.disabled = false;
-            photoUploadBtn.innerHTML = '📸 Select Single Photo';
-            
-            // Clear current image URL if editing
-            if (editingItemId) {
-                currentImageUrl = '';
-            }
-        }
-
-        // Theme toggle functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            
-            // Function to set theme with transition
-            function setTheme(isDark) {
-                // Start transition
-                document.documentElement.classList.add('transition-colors');
-                document.documentElement.classList.add('duration-300');
-                
-                if (isDark) {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('color-theme', 'dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('color-theme', 'light');
-                }
-                
-                // Remove transition classes after animation completes
-                setTimeout(() => {
-                    document.documentElement.classList.remove('transition-colors');
-                    document.documentElement.classList.remove('duration-300');
-                }, 300);
-            }
-            
-            // Check for saved theme preference or use system preference
-            if (localStorage.getItem('color-theme') === 'dark' || 
-                (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                setTheme(true);
-            } else {
-                setTheme(false);
-            }
-            
-            // Dark mode toggle click event
-            darkModeToggle.addEventListener('click', function() {
-                const isDark = !document.documentElement.classList.contains('dark');
-                setTheme(isDark);
+      // ✅ UPDATED: Delete item from database
+      async function deleteItem() {
+        if (itemToDelete) {
+          try {
+            console.log(itemToDelete);
+            const response = await fetch(`/menu/${itemToDelete}`, {
+              method: "DELETE",
             });
-        });
 
-        // Disable/Enable submit button
-        function setSubmitButtonState(disabled) {
-            const saveBtn = document.getElementById('saveItemBtn');
-            const saveText = document.getElementById('saveItemText');
-            const saveSpinner = document.getElementById('saveItemSpinner');
-            
-            if (disabled) {
-                saveBtn.classList.add('btn-disabled');
-                saveBtn.disabled = true;
-                saveText.classList.add('hidden');
-                saveSpinner.classList.remove('hidden');
+            if (response.ok) {
+              // Check for 2xx status codes (e.g., 204 No Content)
+              closeDeleteModal();
+              // OPTION 1: Reload the entire page (simpler, but less smooth)
+              window.location.reload();
+
+              // OPTION 2: Optimistic UI update (more advanced, smoother UX)
+              // // Remove the item from the local inventory array
+              // inventory = inventory.filter(item => item.id !== itemToDelete);
+              // // Re-render the table
+              // renderInventory();
+              // console.log(`Item ${itemToDelete} successfully deleted and UI updated.`);
+              // itemToDelete = null; // Clear itemToDelete after successful deletion and UI update
             } else {
-                saveBtn.classList.remove('btn-disabled');
-                saveBtn.disabled = false;
-                saveText.classList.remove('hidden');
-                saveSpinner.classList.add('hidden');
+              const errorText = await response.text(); // Get detailed error
+              throw new Error(
+                `Server responded with status ${response.status}: ${errorText}`
+              );
             }
-        }
-
-        // Load inventory from server
-        function loadInventory() {
-            fetch('/menu')
-                .then(response => response.json())
-                .then(data => {
-                    inventory = data;
-                    renderInventory();
-                })
-                .catch(error => console.error('Error fetching inventory:', error));
-        }
-
-        // Function to get image display element
-        function getImageDisplay(item) {
-            if (item.image && item.image.trim() !== '') {
-                return `<img src="${item.image}" alt="${item.name}" class="item-image" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="item-image bg-gray-200 dark:bg-slate-600 flex items-center justify-center text-2xl text-gray-400 dark:text-gray-500 transition-colors duration-300" style="display: none;">
-                            <img src="./images/no image.jpg" alt="No Image" class="h-12 w-12 opacity-50">
-                        </div>`;
-            } else {
-                return `<div class="item-image bg-gray-200 dark:bg-slate-600 flex items-center justify-center text-2xl text-gray-400 dark:text-gray-500 transition-colors duration-300">
-                            <img src="./images/no image.jpg" alt="No Image" class="h-12 w-12 opacity-50">
-                        </div>`;
-            }
-        }
-
-        // Render inventory into table
-        function renderInventory() {
-            const tbody = document.getElementById('inventoryTableBody');
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-
-            const filteredInventory = inventory.filter(item =>
-                item && item.name && item.name.toLowerCase().includes(searchTerm)
+          } catch (error) {
+            console.error("Error deleting item:", error);
+            alert(
+              `Failed to delete item. Please try again. Error: ${error.message}`
             );
+            closeDeleteModal(); // Close modal even on error
+          }
+        }
+      }
 
-            tbody.innerHTML = filteredInventory.map(item => `
-                <tr class="transition-colors duration-200 bg-gray-50 dark:bg-slate-800">
-                    <td class="px-4 py-5">
-                        ${getImageDisplay(item)}
-                    </td>
-                    <td class="px-4 py-5 font-semibold text-gray-800 dark:text-gray-200 text-lg transition-colors duration-300">${item.name}</td>
-                    <td class="px-4 py-5 text-lg font-bold text-green-600 dark:text-green-400 transition-colors duration-300">₹${item.price}</td>
-                    <td class="px-4 py-5">
-                        <div class="flex gap-2">
-                            <button 
-                                class="bg-gradient-warning text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1" 
-                                onclick="editItem(${item.id})"
-                            >
-                                ✏️ Edit
-                            </button>
-                            <button 
-                                class="bg-gradient-danger text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1" 
-                                onclick="showDeleteModal(${item.id})"
-                            >
-                                🗑️ Delete
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
+      // Open Add New Item modal
+      function openAddModal() {
+        editingItemId = null;
+        isSubmitting = false;
+        currentImageUrl = ""; // Clear for new item
+        document.getElementById("modalTitle").textContent = "Add New Item";
+        document.getElementById("itemForm").reset();
+        document.getElementById("selectedFileName").classList.add("hidden");
+        document.getElementById("itemImageFile").value = "";
+        document.getElementById("imagePreview").style.display = "none";
+
+        // Reset photo upload button
+        const photoUploadBtn = document.getElementById("photoUploadBtn");
+        photoUploadBtn.classList.remove("photo-btn-disabled");
+        photoUploadBtn.disabled = false;
+        photoUploadBtn.innerHTML = "📸 Select Single Photo";
+
+        // Hide "Clear Image" checkbox for new item
+        const clearImageContainer = document.getElementById(
+          "clearImageContainer"
+        );
+        if (clearImageContainer) {
+          clearImageContainer.classList.add("hidden");
+          document.getElementById("clearImageCheckbox").checked = false;
         }
 
-        // Show custom delete confirmation modal
-        function showDeleteModal(id) {
-            itemToDelete = id;
-            document.getElementById('deleteModal').classList.remove('hidden');
-        }
+        setSubmitButtonState(false);
+        document.getElementById("itemModal").classList.remove("hidden");
+      }
 
-        // Close delete modal
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').classList.add('hidden');
-            itemToDelete = null;
-        }
+      // Handle form submission
+      document
+        .getElementById("itemForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
 
-        // Delete item from database
-        function deleteItem() {
-            if (itemToDelete) {
-                fetch(`/menu/${itemToDelete}`, {
-                    method: 'DELETE'
-                })
-                .then(response => {
-                    if (!response.ok) throw new Error('Failed to delete item.');
-                    return response.text();
-                })
-                .then(data => {
-                    closeDeleteModal();
-                    window.location.reload();
-                })
-                .catch(error => {
-                    console.error('Error deleting item:', error);
-                    closeDeleteModal();
-                    window.location.reload();
-                });
+          if (isSubmitting) return;
+          isSubmitting = true;
+          setSubmitButtonState(true);
+
+          const formData = new FormData();
+          formData.append("name", document.getElementById("itemName").value);
+          formData.append("price", document.getElementById("itemPrice").value);
+
+          const fileInput = document.getElementById("itemImageFile");
+          const clearImageCheckbox =
+            document.getElementById("clearImageCheckbox");
+
+          if (fileInput.files[0]) {
+            // A new file is selected, append it
+            formData.append("imageFile", fileInput.files[0]);
+          } else if (editingItemId) {
+            // If editing and no new file is selected
+            if (clearImageCheckbox && clearImageCheckbox.checked) {
+              // User explicitly checked "Clear Image"
+              formData.append("clearImage", "true");
+            } else if (currentImageUrl) {
+              // No new file, no explicit clear, and there was an existing image.
+              // Backend should implicitly retain the image. We don't send anything for the image.
+              // If your backend requires explicit indication to keep, you'd add:
+              // formData.append('keepImage', 'true');
+            } else {
+              // Editing, no new file, no clear checkbox, and no existing image.
+              // This might happen if an item was added without an image initially.
+              // No action needed for image in formData.
             }
-        }
+          }
+          // If it's a new item and no file is selected, the 'imageFile' field will be absent,
+          // which your backend validation for "Image file is required for new menu item." will catch.
 
-        // Open Add New Item modal
-        function openAddModal() {
-            editingItemId = null;
+          const endpoint = editingItemId ? `/menu/${editingItemId}` : "/menu";
+          const method = editingItemId ? "PUT" : "POST";
+
+          try {
+            const response = await fetch(endpoint, {
+              method: method,
+              body: formData, // Send the FormData object directly
+            });
+
+            if (!response.ok) {
+              const errorText = await response.text();
+              if (errorText.includes("MulterError: Unexpected field")) {
+                throw new Error(
+                  `File upload issue: The server expected a file but received something else or a field name mismatch. Server response: ${errorText}`
+                );
+              }
+              throw new Error(
+                `Failed to ${
+                  editingItemId ? "update" : "add"
+                } item: ${errorText}`
+              );
+            }
+
+            // Handle successful response
+            closeModal();
+            window.location.reload();
+          } catch (error) {
+            console.error(
+              `Error ${editingItemId ? "updating" : "addding"} item:`,
+              error
+            );
+            alert(
+              `Failed to ${
+                editingItemId ? "update" : "add"
+              } item. Please try again. Error: ${error.message}`
+            );
+          } finally {
             isSubmitting = false;
-            currentImageUrl = '';
-            document.getElementById('modalTitle').textContent = 'Add New Item';
-            document.getElementById('itemForm').reset();
-            document.getElementById('selectedFileName').classList.add('hidden');
-            document.getElementById('itemImageFile').value = '';
-            document.getElementById('imagePreview').style.display = 'none';
-            
-            // Reset photo upload button
-            const photoUploadBtn = document.getElementById('photoUploadBtn');
-            photoUploadBtn.classList.remove('photo-btn-disabled');
+            setSubmitButtonState(false);
+          }
+        });
+      // Populate modal with existing item details for editing
+      function editItem(id) {
+        const item = inventory.find((item) => item.id === id);
+        if (item) {
+          editingItemId = id;
+          currentImageUrl = item.image || ""; // This will be the full S3 URL from DB
+          isSubmitting = false;
+          document.getElementById("modalTitle").textContent = "Edit Item";
+          document.getElementById("itemName").value = item.name;
+          document.getElementById("itemPrice").value = item.price;
+
+          // Clear file input
+          document.getElementById("itemImageFile").value = "";
+
+          // Update the file name display
+          const fileNameDisplay = document.getElementById("selectedFileName");
+          const fileName = document.getElementById("fileName");
+          const imagePreview = document.getElementById("imagePreview");
+          const photoUploadBtn = document.getElementById("photoUploadBtn");
+          const clearImageContainer = document.getElementById(
+            "clearImageContainer"
+          );
+          const clearImageCheckbox =
+            document.getElementById("clearImageCheckbox");
+
+          if (item.image) {
+            // Show the S3 image directly in the preview (it's already a full URL from DB)
+            // Extract filename from URL, remove query params for display
+            const imageUrlParts = item.image.split("/");
+            let displayedFileName = imageUrlParts[imageUrlParts.length - 1];
+            displayedFileName = displayedFileName.split("?")[0]; // Remove query parameters
+
+            fileName.textContent = "Current: " + displayedFileName;
+            fileNameDisplay.classList.remove("hidden");
+            imagePreview.src = item.image; // Use the full URL directly from the item object
+            imagePreview.style.display = "block";
+
+            // Disable the photo upload button because an image already exists
+            photoUploadBtn.classList.add("photo-btn-disabled");
+            photoUploadBtn.disabled = true;
+            photoUploadBtn.innerHTML = "Photo Selected";
+
+            // Show and uncheck the "Clear Image" checkbox
+            if (clearImageContainer) {
+              clearImageContainer.classList.remove("hidden");
+              clearImageCheckbox.checked = false; // Important: Uncheck by default when editing starts
+            }
+          } else {
+            fileNameDisplay.classList.add("hidden");
+            imagePreview.style.display = "none";
+
+            // Enable the photo upload button if no image exists
+            photoUploadBtn.classList.remove("photo-btn-disabled");
             photoUploadBtn.disabled = false;
-            photoUploadBtn.innerHTML = '📸 Select Single Photo';
-            
-            setSubmitButtonState(false);
-            document.getElementById('itemModal').classList.remove('hidden');
-        }
+            photoUploadBtn.innerHTML = "📸 Select Single Photo";
 
-        // Handle form submission
-        document.getElementById('itemForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            if (isSubmitting) return;
-            isSubmitting = true;
-            setSubmitButtonState(true);
-
-            const formData = new FormData(this);
-            const fileInput = document.getElementById('itemImageFile');
-            
-            const itemData = {
-                name: formData.get('name'),
-                price: formData.get('price'),
-                image: fileInput.files[0] ? `images/${fileInput.files[0].name}` : currentImageUrl
-            };
-
-            const endpoint = editingItemId ? `/menu/${editingItemId}` : '/menu';
-            const method = editingItemId ? 'PUT' : 'POST';
-
-            fetch(endpoint, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(itemData)
-            })
-            .then(response => {
-                if (!response.ok) throw new Error(`Failed to ${editingItemId ? 'update' : 'add'} item.`);
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    return response.json();
-                } else {
-                    return response.text();
-                }
-            })
-            .then(data => {
-                closeModal();
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error(`Error ${editingItemId ? 'updating' : 'adding'} item:`, error);
-                isSubmitting = false;
-                setSubmitButtonState(false);
-                alert(`Failed to ${editingItemId ? 'update' : 'add'} item. Please try again.`);
-            });
-        });
-
-        // Populate modal with existing item details for editing
-        function editItem(id) {
-            const item = inventory.find(item => item.id === id);
-            if (item) {
-                editingItemId = id;
-                currentImageUrl = item.image || '';
-                isSubmitting = false;
-                document.getElementById('modalTitle').textContent = 'Edit Item';
-                document.getElementById('itemName').value = item.name;
-                document.getElementById('itemPrice').value = item.price;
-                
-                // Clear file input
-                document.getElementById('itemImageFile').value = '';
-                
-                // Update the file name display
-                const fileNameDisplay = document.getElementById('selectedFileName');
-                const fileName = document.getElementById('fileName');
-                const imagePreview = document.getElementById('imagePreview');
-                const photoUploadBtn = document.getElementById('photoUploadBtn');
-                
-                if (item.image) {
-                    fileName.textContent = 'Current: ' + item.image.split('/').pop();
-                    fileNameDisplay.classList.remove('hidden');
-                    imagePreview.src = item.image;
-                    imagePreview.style.display = 'block';
-                    
-                    // Disable the photo upload button if there's already an image
-                    photoUploadBtn.classList.add('photo-btn-disabled');
-                    photoUploadBtn.disabled = true;
-                    photoUploadBtn.innerHTML = 'Photo Selected';
-                } else {
-                    fileNameDisplay.classList.add('hidden');
-                    imagePreview.style.display = 'none';
-                    
-                    // Enable the photo upload button if no image exists
-                    photoUploadBtn.classList.remove('photo-btn-disabled');
-                    photoUploadBtn.disabled = false;
-                    photoUploadBtn.innerHTML = '📸 Select Single Photo';
-                }
-                
-                setSubmitButtonState(false);
-                document.getElementById('itemModal').classList.remove('hidden');
+            // Hide the "Clear Image" checkbox if no image exists
+            if (clearImageContainer) {
+              clearImageContainer.classList.add("hidden");
+              clearImageCheckbox.checked = false;
             }
+          }
+
+          setSubmitButtonState(false);
+          document.getElementById("itemModal").classList.remove("hidden");
         }
+      }
 
-        // Close modal dialog
-        function closeModal() {
-            document.getElementById('itemModal').classList.add('hidden');
-            editingItemId = null;
-            isSubmitting = false;
-            setSubmitButtonState(false);
+      // Close modal dialog
+      function closeModal() {
+        document.getElementById("itemModal").classList.add("hidden");
+        editingItemId = null;
+        isSubmitting = false;
+        setSubmitButtonState(false);
+        // Ensure clear image checkbox is reset when modal closes
+        const clearImageCheckbox =
+          document.getElementById("clearImageCheckbox");
+        if (clearImageCheckbox) {
+          clearImageCheckbox.checked = false;
         }
+      }
 
-        // Filter inventory on search input
-        document.getElementById('searchInput').addEventListener('input', renderInventory);
+      // Filter inventory on search input
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", renderInventory);
 
-        // Close modal if clicking outside of it
-        window.addEventListener('click', function(e) {
-            const modal = document.getElementById('itemModal');
-            const deleteModal = document.getElementById('deleteModal');
-            if (e.target === modal) closeModal();
-            if (e.target === deleteModal) closeDeleteModal();
-        });
+      // Close modal if clicking outside of it
+      window.addEventListener("click", function (e) {
+        const modal = document.getElementById("itemModal");
+        const deleteModal = document.getElementById("deleteModal");
+        if (e.target === modal) closeModal();
+        if (e.target === deleteModal) closeDeleteModal();
+      });
 
-        // Delete modal event listeners
-        document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
-        document.getElementById('confirmDeleteBtn').addEventListener('click', deleteItem);
-
-        // Initial load
-        loadInventory();
+      // Delete modal event listeners
+      document
+        .getElementById("cancelDeleteBtn")
+        .addEventListener("click", closeDeleteModal);
+      document
+        .getElementById("confirmDeleteBtn")
+        .addEventListener("click", deleteItem);
     </script>
-     <script>
-    // Periodically check server-side authentication status.
-    // This catches session expiry or logout from other tabs/windows.
-    // Adjusted frequency to 30 seconds to reduce unnecessary network traffic.
-    setInterval(() => {
-        fetch('/check-auth')
-            .then(res => {
-                if (res.status === 401) {
-                    // Session has expired or user logged out from server
-                    window.location.href = '/login';
-                }
-                // If status is 200, the session is active and 'rolling: true' on server
-                // means its expiration timer is automatically reset.
-            })
-            .catch(error => {
-                console.error('Error checking authentication:', error);
-                // Optionally, redirect to login on network error if deemed appropriate
-                // window.location.href = '/login';
-            });
-    }, 1000); // Checks every 30 seconds
-
-    // Initial check on page load:
-    // This is the most important check to ensure the user is authenticated when the page first loads.
-    // Removed all sessionStorage and onpageshow logic as it interfered with server-side session management.
-    fetch("/check-auth")
-        .then(res => {
+    <script>
+      // Periodically check server-side authentication status.
+      // This catches session expiry or logout from other tabs/windows.
+      // Adjusted frequency to 30 seconds to reduce unnecessary network traffic.
+      setInterval(() => {
+        fetch("/check-auth")
+          .then((res) => {
             if (res.status === 401) {
-                // Session expired or not authenticated on initial load
-                window.location.href = "/login";
+              // Session has expired or user logged out from server
+              window.location.href = "/login";
             }
-            // If status is 200, no action needed, user is authenticated by the server.
-        })
-        .catch(error => {
-            console.error('Error on initial authentication check:', error);
-            // Handle network errors or server unavailability gracefully.
-            // Redirecting to login is a common fallback for critical auth errors.
+            // If status is 200, the session is active and 'rolling: true' on server
+            // means its expiration timer is automatically reset.
+          })
+          .catch((error) => {
+            console.error("Error checking authentication:", error);
+            // Optionally, redirect to login on network error if deemed appropriate
+            // window.location.href = '/login';
+          });
+      }, 1000); // Checks every 30 seconds
+
+      // Initial check on page load:
+      // This is the most important check to ensure the user is authenticated when the page first loads.
+      // Removed all sessionStorage and onpageshow logic as it interfered with server-side session management.
+      fetch("/check-auth")
+        .then((res) => {
+          if (res.status === 401) {
+            // Session expired or not authenticated on initial load
             window.location.href = "/login";
+          }
+          // If status is 200, no action needed, user is authenticated by the server.
+        })
+        .catch((error) => {
+          console.error("Error on initial authentication check:", error);
+          // Handle network errors or server unavailability gracefully.
+          // Redirecting to login is a common fallback for critical auth errors.
+          window.location.href = "/login";
         });
-
-</script>
-
-
-</body>
+    </script>
+  </body>
 </html>
