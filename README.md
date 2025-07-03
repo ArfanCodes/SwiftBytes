@@ -46,13 +46,14 @@ SwiftBytes brings **smart canteen management**:
 ## 🛠️ Tech Stack
 
 **Frontend:**
-- HTML
-- TailwindCSS
-- JavaScript
+- HTML  
+- TailwindCSS  
+- JavaScript  
 
 **Backend:**
-- Node.js + Express.js
-- PostgreSQL (for secure data storage)
+- Node.js + Express.js  
+- PostgreSQL (for secure data storage)  
+- AWS S3 Bucket (for image upload and storage)
 
 ---
 
@@ -62,7 +63,8 @@ SwiftBytes brings **smart canteen management**:
 2. 📊 **Live Order Dashboard** – Real-time display for staff  
 3. 📈 **Business Insights Dashboard** – Operational trends and metrics  
 4. 📱 **Real-Time Order Status via UI & SMS** – Live feedback to customers  
-5. 💾 **Reliable Local Storage** – Efficient data handling using PostgreSQL 
+5. 💾 **Reliable Local Storage** – Efficient data handling using PostgreSQL  
+6. 🖼️ **Image Upload with AWS S3** – Seamless image storage and retrieval for the menu
 
 ---
 
