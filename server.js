@@ -530,7 +530,12 @@ app.post("/place-order", async (req, res) => {
 
   const now = new Date();
   const date = now.toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata" });
-  const time = now.toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata" });
+  const time = now.toLocaleTimeString("en-GB", {
+    timeZone: "Asia/Kolkata",
+    hour: "numeric", // 'numeric', '2-digit'
+    minute: "2-digit", // 'numeric', '2-digit'
+    hour12: true // true for 12-hour format, false for 24-hour format
+  });
   const token = generateToken();
 
   const itemsSummary = cart
