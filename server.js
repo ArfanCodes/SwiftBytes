@@ -37,6 +37,28 @@ db.connect((err) => {
     return;
   }
   console.log("Connected to PostgreSQL main database.");
+
+  // Create Inventory table if it doesn't exist
+  // Added on July 5, 2025
+  db.query(
+    `
+    CREATE TABLE IF NOT EXISTS inventory (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      price NUMERIC(10, 2) NOT NULL,
+      quantity INTEGER NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    `,
+    (err, result) => {
+      if (err) {
+        console.error("Error creating inventory table:", err.stack);
+      } else {
+        console.log("Inventory table ready.");
+      }
+    }
+  );
 });
 
 // Transaction DB (separate pool for orders)
@@ -515,6 +537,124 @@ app.delete("/menu/:id", async (req, res) => {
   }
 });
 
+// --- New Inventory API Routes (Added on July 5, 2025) ---
+
+// Get all inventory items
+app.get("/api/inventory", async (req, res) => {
+  try {
+    const result = await db.query("SELECT * FROM inventory ORDER BY name ASC");
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error fetching inventory:", err);
+    res
+      .status(500)
+      .json({ error: "Internal Server Error", details: err.message });
+  }
+});
+
+// Add a new inventory item
+app.post("/api/inventory", async (req, res) => {
+  const { name, price, quantity } = req.body;
+  if (!name || price === undefined || quantity === undefined) {
+    // Check for undefined to allow 0
+    return res
+      .status(400)
+      .json({ error: "Missing required fields: name, price, quantity" });
+  }
+  if (isNaN(parseFloat(price)) || isNaN(parseInt(quantity))) {
+    return res
+      .status(400)
+      .json({ error: "Price and quantity must be valid numbers." });
+  }
+  try {
+    const result = await db.query(
+      "INSERT INTO inventory (name, price, quantity) VALUES ($1, $2, $3) RETURNING *",
+      [name, parseFloat(price), parseInt(quantity)] // Ensure correct types for DB
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error("Error adding inventory item:", err);
+    res.status(500).json({ error: "Failed to add item", details: err.message });
+  }
+});
+
+// Update an inventory item
+app.put("/api/inventory/:id", async (req, res) => {
+  const { id } = req.params;
+  const { name, price, quantity } = req.body;
+
+  if (name === undefined && price === undefined && quantity === undefined) {
+    return res.status(400).json({ error: "No fields provided for update" });
+  }
+
+  // Build dynamic query for update
+  let queryParts = [];
+  let queryValues = [];
+  let paramIndex = 1;
+
+  if (name !== undefined) {
+    queryParts.push(`name = $${paramIndex++}`);
+    queryValues.push(name);
+  }
+  if (price !== undefined) {
+    if (isNaN(parseFloat(price))) {
+      return res.status(400).json({ error: "Price must be a valid number." });
+    }
+    queryParts.push(`price = $${paramIndex++}`);
+    queryValues.push(parseFloat(price));
+  }
+  if (quantity !== undefined) {
+    if (isNaN(parseInt(quantity))) {
+      return res
+        .status(400)
+        .json({ error: "Quantity must be a valid number." });
+    }
+    queryParts.push(`quantity = $${paramIndex++}`);
+    queryValues.push(parseInt(quantity));
+  }
+
+  queryParts.push(`updated_at = CURRENT_TIMESTAMP`); // Always update timestamp
+
+  queryValues.push(id); // ID is the last parameter
+
+  const queryText = `UPDATE inventory SET ${queryParts.join(
+    ", "
+  )} WHERE id = $${paramIndex} RETURNING *`;
+
+  try {
+    const result = await db.query(queryText, queryValues);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Item not found" });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(`Error updating inventory item ${id}:`, err);
+    res
+      .status(500)
+      .json({ error: "Failed to update item", details: err.message });
+  }
+});
+
+// Delete an inventory item
+app.delete("/api/inventory/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await db.query(
+      "DELETE FROM inventory WHERE id = $1 RETURNING id",
+      [id]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Item not found" });
+    }
+    res.json({ message: `Item ${id} deleted successfully` });
+  } catch (err) {
+    console.error(`Error deleting inventory item ${id}:`, err);
+    res
+      .status(500)
+      .json({ error: "Failed to delete item", details: err.message });
+  }
+});
+
 // --- Order Processing API Routes ---
 
 function generateToken() {
@@ -534,7 +674,7 @@ app.post("/place-order", async (req, res) => {
     timeZone: "Asia/Kolkata",
     hour: "numeric", // 'numeric', '2-digit'
     minute: "2-digit", // 'numeric', '2-digit'
-    hour12: true // true for 12-hour format, false for 24-hour format
+    hour12: true, // true for 12-hour format, false for 24-hour format
   });
   const token = generateToken();
 
