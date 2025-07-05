@@ -138,12 +138,13 @@
             <img
               src="./images/logo.png"
               alt="logo"
-              class="rounded-full w-20 h-20 object-cover border-0 bg-transparent"
+              class="rounded-full w-24 h-24 object-cover border-0 bg-transparent"
             />
           </div>
-
           <!-- Desktop Links -->
-          <div class="hidden lg:flex gap-10 font-bebas text-3xl">
+          <div
+            class="hidden lg:flex gap-10 font-bebas text-3xl absolute left-1/2 transform -translate-x-1/2"
+          >
             <a
               href="#about"
               class="text-text-light dark:text-text-dark relative group transition-colors duration-300"
@@ -168,11 +169,10 @@
             >
               Contact Us
               <span
-                class="absolute bottom-0 left-0 w-0.5 bg-black dark:bg-white transition-all duration-300 group-hover:w-full"
+                class="absolute bottom-0 left-0 w-0 h-0.5 bg-black dark:bg-white transition-all duration-300 group-hover:w-full"
               ></span>
             </a>
           </div>
-
           <!-- Buttons + Hamburger -->
           <div class="flex items-center gap-4">
             <!-- Login -->
@@ -182,14 +182,12 @@
             >
               <i class="fa-solid fa-circle-user"></i>
             </button>
-
             <!-- Cart -->
             <button
               class="py-2 px-3 bg-black dark:bg-white text-white dark:text-black rounded-3xl font-semibold transition-all duration-300 hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white hover:border hover:border-black dark:hover:border-white"
             >
               <i class="fa-solid fa-cart-shopping cart-icon"></i>
             </button>
-
             <!-- Theme Toggle -->
             <button
               id="theme-toggle"
@@ -204,7 +202,6 @@
                 class="fa-solid fa-sun text-yellow-400"
               ></i>
             </button>
-
             <!-- Hamburger -->
             <button
               id="hamburger"
@@ -227,7 +224,6 @@
             </button>
           </div>
         </div>
-
         <!-- Mobile Dropdown Menu -->
         <div
           id="mobile-menu"
@@ -245,7 +241,6 @@
         </div>
       </div>
     </nav>
-
     <!-- source: https://github.com/mfg888/Responsive-Tailwind-CSS-Grid/blob/main/index.html -->
     <button
       id="back-to-top"
@@ -266,7 +261,6 @@
         />
       </svg>
     </button>
-
     <main
       class="bg-white dark:bg-gray-900 transition-colors duration-300 pb-56"
     >
@@ -291,16 +285,16 @@
           id="typewriter"
           class="max-w-6xl font-inter font-bold text-2xl px-1 text-text-light dark:text-text-dark transition-colors duration-300"
         >
-          With SwiftBytes, enjoy hassle-free dining on campus! Pre-order your
-          favorite meals, customize them just the way you like, and pick them up
-          at your convenience no more waiting in long queues. For canteen staff,
-          our platform simplifies order management, reduces workload, and keeps
-          service smooth. Eat smart. Serve smarter. Whether you're in a rush
-          between classes or just want a smoother mealtime experience,
-          SwiftBytes has you covered. Stay updated with real-time order
-          tracking, receive instant notifications, and manage your dietary
-          preferences with ease. Designed for students, loved by staff
-          SwiftBytes is the future of campus dining.
+          With SwiftBytes, campus dining becomes effortless. Skip the lines and
+          pre-order your favorite meals customized just the way you like
+          them and pick them up at your convenience. Whether you're rushing
+          between classes or just want a smoother dining experience, SwiftBytes
+          makes it easy. For canteen staff, our platform streamlines order
+          management, reduces workload, and ensures faster, more organized
+          service. Stay in control with real-time order tracking, instant
+          notifications, and personalized dietary settings. SwiftBytes isn't
+          just a meal solution it's your smart dining companion. Loved by
+          students. Trusted by staff. Welcome to the future of campus dining.
         </p>
       </div>
       <div class="h-48"></div>
