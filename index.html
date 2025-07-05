@@ -126,6 +126,13 @@
   <body
     class="cursor-pointer bg-secondary-light dark:bg-secondary-dark transition-colors duration-300"
   >
+    <div id="loader" class="fixed inset-0 flex items-center justify-center bg-white dark:bg-gray-900 z-[9999]">
+  <img
+    src="images/favicon.jpg"
+    alt="Loading..."
+    class="h-20 w-20 rounded-full animate-spin"
+  />
+</div>
     <nav
       class="bg-primary-light dark:bg-primary-dark transition-colors duration-300"
     >
@@ -433,5 +440,15 @@
         });
       });
     </script>
+    <script>
+  // Hide loader after 3 seconds no matter what
+  setTimeout(() => {
+    const loader = document.getElementById("loader");
+    loader.classList.add("opacity-0", "transition-opacity", "duration-500");
+    setTimeout(() => {
+      loader.style.display = "none";
+    }, 500);
+  }, 3000);
+</script>
   </body>
 </html>
