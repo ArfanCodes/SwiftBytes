@@ -652,17 +652,14 @@
     </div>
 
     <script>
-      // Start with empty inventory
-      let inventory = [];
+      let inventory = []; // This will still hold the local copy after fetching
       let editingItemId = null;
 
-      // Improved theme toggle functionality
+      // Improved theme toggle functionality (kept as is)
       document.addEventListener("DOMContentLoaded", function () {
         const darkModeToggle = document.getElementById("darkModeToggle");
 
-        // Function to set theme with transition
         function setTheme(isDark) {
-          // Start transition
           document.documentElement.classList.add("transition-colors");
           document.documentElement.classList.add("duration-300");
 
@@ -674,14 +671,12 @@
             localStorage.setItem("color-theme", "light");
           }
 
-          // Remove transition classes after animation completes
           setTimeout(() => {
             document.documentElement.classList.remove("transition-colors");
             document.documentElement.classList.remove("duration-300");
           }, 300);
         }
 
-        // Check for saved theme preference or use system preference
         if (
           localStorage.getItem("color-theme") === "dark" ||
           (!("color-theme" in localStorage) &&
@@ -692,14 +687,125 @@
           setTheme(false);
         }
 
-        // Dark mode toggle click event
         darkModeToggle.addEventListener("click", function () {
           const isDark = !document.documentElement.classList.contains("dark");
           setTheme(isDark);
         });
+
+        // Initial fetch of inventory data when the page loads
+        fetchInventory();
       });
 
-      function renderInventory() {
+      // --- API Interaction Functions ---
+
+      async function fetchInventory() {
+        try {
+          const response = await fetch("/api/inventory");
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          inventory = await response.json();
+          renderInventoryTable(); // Render table after successful fetch
+          updateStats(); // Update stats after fetching and rendering
+        } catch (error) {
+          console.error("Error fetching inventory:", error);
+          alert("Failed to load inventory. Please try again.");
+        }
+      }
+
+      async function addOrUpdateItem(itemData) {
+        const url = editingItemId
+          ? `/api/inventory/${editingItemId}`
+          : "/api/inventory";
+        const method = editingItemId ? "PUT" : "POST";
+
+        try {
+          const response = await fetch(url, {
+            method: method,
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(itemData),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(
+              `HTTP error! status: ${response.status}, message: ${
+                errorData.error || response.statusText
+              }`
+            );
+          }
+
+          closeModal();
+          fetchInventory(); // Re-fetch inventory to update UI
+        } catch (error) {
+          console.error("Error saving item:", error);
+          alert(`Failed to save item: ${error.message}`);
+        }
+      }
+
+      async function updateQuantity(id, change) {
+        const item = inventory.find((item) => item.id === id);
+        if (item) {
+          const newQuantity = Math.max(0, item.quantity + change);
+          const itemData = { quantity: newQuantity }; // Only send quantity for update
+
+          try {
+            const response = await fetch(`/api/inventory/${id}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(itemData),
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(
+                `HTTP error! status: ${response.status}, message: ${
+                  errorData.error || response.statusText
+                }`
+              );
+            }
+            fetchInventory(); // Re-fetch to update UI
+          } catch (error) {
+            console.error("Error updating quantity:", error);
+            alert(`Failed to update quantity: ${error.message}`);
+          }
+        }
+      }
+
+      async function deleteItem(id) {
+        if (
+          confirm(
+            "Are you sure you want to delete this item? This action cannot be undone."
+          )
+        ) {
+          try {
+            const response = await fetch(`/api/inventory/${id}`, {
+              method: "DELETE",
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(
+                `HTTP error! status: ${response.status}, message: ${
+                  errorData.error || response.statusText
+                }`
+              );
+            }
+            fetchInventory(); // Re-fetch to update UI
+          } catch (error) {
+            console.error("Error deleting item:", error);
+            alert(`Failed to delete item: ${error.message}`);
+          }
+        }
+      }
+
+      // --- UI Rendering and Helper Functions ---
+
+      function renderInventoryTable() {
         const tbody = document.getElementById("inventoryTableBody");
         const searchTerm = document
           .getElementById("searchInput")
@@ -716,13 +822,13 @@
                     <td class="px-4 py-5 font-semibold text-gray-800 dark:text-gray-200 text-lg transition-colors duration-300">${
                       item.name
                     }</td>
-                    <td class="px-4 py-5 text-lg font-bold text-green-600 dark:text-green-400 transition-colors duration-300">₹${item.price.toFixed(
-                      2
-                    )}</td>
+                    <td class="px-4 py-5 text-lg font-bold text-green-600 dark:text-green-400 transition-colors duration-300">₹${parseFloat(
+                      item.price
+                    ).toFixed(2)}</td>
                     <td class="px-4 py-5">
                         <div class="flex items-center gap-3">
-                            <button 
-                                class="w-9 h-9 bg-indigo-500 text-white rounded-full font-bold hover:bg-indigo-600 hover-scale transition-all duration-300 transition-colors duration-300" 
+                            <button
+                                class="w-9 h-9 bg-indigo-500 text-white rounded-full font-bold hover:bg-indigo-600 hover-scale transition-all duration-300 transition-colors duration-300"
                                 onclick="updateQuantity(${item.id}, -1)"
                             >
                                 -
@@ -730,8 +836,8 @@
                             <span class="min-w-12 text-center font-semibold text-base bg-gray-100 dark:bg-slate-600 dark:text-white px-3 py-2 rounded-lg transition-colors duration-300">${
                               item.quantity
                             }</span>
-                            <button 
-                                class="w-9 h-9 bg-indigo-500 text-white rounded-full font-bold hover:bg-indigo-600 hover-scale transition-all duration-300 transition-colors duration-300" 
+                            <button
+                                class="w-9 h-9 bg-indigo-500 text-white rounded-full font-bold hover:bg-indigo-600 hover-scale transition-all duration-300 transition-colors duration-300"
                                 onclick="updateQuantity(${item.id}, 1)"
                             >
                                 +
@@ -747,14 +853,14 @@
                     </td>
                     <td class="px-4 py-5">
                         <div class="flex gap-2">
-                            <button 
-                                class="bg-gradient-warning text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1" 
+                            <button
+                                class="bg-gradient-warning text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1"
                                 onclick="editItem(${item.id})"
                             >
                                 ✏️ Edit
                             </button>
-                            <button 
-                                class="bg-gradient-danger text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1" 
+                            <button
+                                class="bg-gradient-danger text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1"
                                 onclick="deleteItem(${item.id})"
                             >
                                 🗑️ Delete
@@ -765,8 +871,6 @@
             `
           )
           .join("");
-
-        updateStats();
       }
 
       function getStockStatus(quantity) {
@@ -792,7 +896,7 @@
           (item) => item.quantity === 0
         ).length;
         const totalValue = inventory.reduce(
-          (sum, item) => sum + item.price * item.quantity,
+          (sum, item) => sum + parseFloat(item.price) * item.quantity,
           0
         );
 
@@ -802,21 +906,6 @@
         document.getElementById(
           "totalValue"
         ).textContent = `₹${totalValue.toFixed(2)}`;
-      }
-
-      function updateQuantity(id, change) {
-        const item = inventory.find((item) => item.id === id);
-        if (item) {
-          item.quantity = Math.max(0, item.quantity + change);
-          renderInventory();
-        }
-      }
-
-      function deleteItem(id) {
-        if (confirm("Are you sure you want to delete this item?")) {
-          inventory = inventory.filter((item) => item.id !== id);
-          renderInventory();
-        }
       }
 
       function openAddModal() {
@@ -832,7 +921,7 @@
           editingItemId = id;
           document.getElementById("modalTitle").textContent = "Edit Item";
           document.getElementById("itemName").value = item.name;
-          document.getElementById("itemPrice").value = item.price;
+          document.getElementById("itemPrice").value = parseFloat(item.price); // Ensure number for input type="number"
           document.getElementById("itemQuantity").value = item.quantity;
           document.getElementById("itemModal").classList.remove("hidden");
         }
@@ -854,32 +943,32 @@
             document.getElementById("itemQuantity").value
           );
 
-          if (editingItemId) {
-            // Edit existing item
-            const item = inventory.find((item) => item.id === editingItemId);
-            if (item) {
-              item.name = name;
-              item.price = price;
-              item.quantity = quantity;
-            }
-          } else {
-            // Add new item
-            const newItem = {
-              id: Date.now(),
-              name,
-              price,
-              quantity,
-            };
-            inventory.push(newItem);
+          // Basic client-side validation
+          if (
+            !name.trim() ||
+            isNaN(price) ||
+            isNaN(quantity) ||
+            price < 0 ||
+            quantity < 0
+          ) {
+            alert(
+              "Please enter valid name, non-negative price, and non-negative quantity."
+            );
+            return;
           }
 
-          closeModal();
-          renderInventory();
+          const itemData = {
+            name,
+            price,
+            quantity,
+          };
+
+          addOrUpdateItem(itemData); // Call the new function to handle API interaction
         });
 
       document
         .getElementById("searchInput")
-        .addEventListener("input", renderInventory);
+        .addEventListener("input", renderInventoryTable); // Renamed to reflect its new dependency
 
       // Close modal when clicking outside
       window.addEventListener("click", function (e) {
@@ -889,8 +978,7 @@
         }
       });
 
-      // Initial render
-      renderInventory();
+      // Initial render is now done via fetchInventory() on DOMContentLoaded
     </script>
     <script>
       // Periodically check server-side authentication status.
