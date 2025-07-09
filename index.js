@@ -304,46 +304,58 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    const container = document.getElementById("Projects");
+    // Declare globally (or at least before it's used within the scope)
+const container = document.getElementById("Projects");
+let menuItems = [];
 
-    // Declare globally (within the DOMContentLoaded scope)
-    let menuItems = [];
+// Fetch menu items from the server
+fetch('/menu')
+    .then(response => response.json())
+    .then(items => {
+        menuItems = items; // assign to outer variable
 
-    // Fetch menu items from the server
-    fetch('/menu')
-        .then(response => response.json())
-        .then(items => {
-            menuItems = items; // assign to outer variable
+        menuItems.forEach((product) => {
+            const card = document.createElement("div");
+            card.className =
+                "w-72 bg-white dark:bg-gray-800 shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl product-card transition-colors duration-300";
 
-            menuItems.forEach((product) => {
-                const card = document.createElement("div");
-                card.className =
-                    "w-72 bg-white dark:bg-gray-800 shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl product-card transition-colors duration-300";
+            // Determine if the item is out of stock
+            const isOutOfStock = !product.stock; // 'stock' is true for in-stock, false for out-of-stock
 
-                card.innerHTML = `
-                <div>
+            card.innerHTML = `
+                <div class="relative ${isOutOfStock ? 'opacity-70 grayscale' : ''}">
                     <img src="${product.image}" alt="${product.name}" class="h-80 w-72 object-cover rounded-t-xl">
+                    ${isOutOfStock ? '<span class="absolute top-2 left-2 bg-red-600 text-white text-sm font-semibold px-2 py-1 rounded-full">Out of Stock</span>' : ''}
                     <div class="px-4 py-3 w-72">
                         <h3 class="text-lg font-bold text-text-light dark:text-text-dark truncate capitalize transition-colors duration-300">${product.name}</h3>
                         <div class="flex items-center">
                             <p class="text-lg font-semibold text-text-light dark:text-text-dark cursor-auto my-3 price transition-colors duration-300">₹${product.price}</p>
                             <div class="ml-auto cursor-pointer">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#e29400" class="bi bi-bag-plus" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5z"/>
-                                    <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
-                                </svg>
+                                ${isOutOfStock
+                                    ? `
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a0a0a0" class="bi bi-bag-x-fill" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5A3.5 3.5 0 1 1 12.5 3.5M11.854 8.146a.5.5 0 0 0-.708-.708L8 10.293 6.854 9.146a.5.5 0 1 0-.708.708L7.293 11l-1.853 1.854a.5.5 0 0 0 .708.708L8 11.707l1.854 1.853a.5.5 0 0 0 .708-.708L8.707 11l1.853-1.854a.5.5 0 0 0 0-.708z"/>
+                                    </svg>
+                                    ` // Greyed out 'bag-x' icon for out of stock
+                                    : `
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#e29400" class="bi bi-bag-plus" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5z"/>
+                                        <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
+                                    </svg>
+                                    ` // Original 'bag-plus' icon
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
-                `;
+            `;
 
-                container.appendChild(card);
-            });
-        })
-        .catch(err => {
-            console.error('Error fetching menu items:', err);
+            container.appendChild(card);
         });
+    })
+    .catch(err => {
+        console.error('Error fetching menu items:', err);
+    });
 
     // Event delegation for adding to cart
     container.addEventListener('click', function (e) {
