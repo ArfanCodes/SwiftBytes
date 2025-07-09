@@ -126,13 +126,16 @@
   <body
     class="cursor-pointer bg-secondary-light dark:bg-secondary-dark transition-colors duration-300"
   >
-    <div id="loader" class="fixed inset-0 flex items-center justify-center bg-white dark:bg-gray-900 z-[9999]">
-  <img
-    src="images/favicon.jpg"
-    alt="Loading..."
-    class="h-20 w-20 rounded-full animate-spin"
-  />
-</div>
+    <div
+      id="loader"
+      class="fixed inset-0 flex items-center justify-center bg-white dark:bg-gray-900 z-[9999]"
+    >
+      <img
+        src="images/favicon.jpg"
+        alt="Loading..."
+        class="h-20 w-20 rounded-full animate-spin"
+      />
+    </div>
     <nav
       class="bg-primary-light dark:bg-primary-dark transition-colors duration-300"
     >
@@ -293,15 +296,15 @@
           class="max-w-6xl font-inter font-bold text-2xl px-1 text-text-light dark:text-text-dark transition-colors duration-300"
         >
           With SwiftBytes, campus dining becomes effortless. Skip the lines and
-          pre-order your favorite meals customized just the way you like
-          them and pick them up at your convenience. Whether you're rushing
-          between classes or just want a smoother dining experience, SwiftBytes
-          makes it easy. For canteen staff, our platform streamlines order
-          management, reduces workload, and ensures faster, more organized
-          service. Stay in control with real-time order tracking, instant
-          notifications, and personalized dietary settings. SwiftBytes isn't
-          just a meal solution it's your smart dining companion. Loved by
-          students. Trusted by staff. Welcome to the future of campus dining.
+          pre-order your favorite meals customized just the way you like them
+          and pick them up at your convenience. Whether you're rushing between
+          classes or just want a smoother dining experience, SwiftBytes makes it
+          easy. For canteen staff, our platform streamlines order management,
+          reduces workload, and ensures faster, more organized service. Stay in
+          control with real-time order tracking, instant notifications, and
+          personalized dietary settings. SwiftBytes isn't just a meal solution
+          it's your smart dining companion. Loved by students. Trusted by staff.
+          Welcome to the future of campus dining.
         </p>
       </div>
       <div class="h-48"></div>
@@ -441,14 +444,14 @@
       });
     </script>
     <script>
-  // Hide loader after 3 seconds no matter what
-  setTimeout(() => {
-    const loader = document.getElementById("loader");
-    loader.classList.add("opacity-0", "transition-opacity", "duration-500");
-    setTimeout(() => {
-      loader.style.display = "none";
-    }, 500);
-  }, 3000);
-</script>
+      // Hide loader after 3 seconds no matter what
+      setTimeout(() => {
+        const loader = document.getElementById("loader");
+        loader.classList.add("opacity-0", "transition-opacity", "duration-500");
+        setTimeout(() => {
+          loader.style.display = "none";
+        }, 500);
+      }, 3000);
+    </script>
   </body>
 </html>

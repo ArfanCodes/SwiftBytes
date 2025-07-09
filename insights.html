@@ -42,7 +42,61 @@
     />
     <link rel="stylesheet" href="output.css" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Add the transition styles from menued.html */
+      html,
+      body {
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      /* Color transitions */
+      .bg-white,
+      .bg-gray-50,
+      .bg-gray-100,
+      .bg-gray-200,
+      .dark\:bg-slate-800,
+      .dark\:bg-slate-700,
+      .dark\:bg-slate-900,
+      .text-gray-700,
+      .dark\:text-yellow-400,
+      .text-gray-600,
+      .dark\:text-gray-300,
+      .text-white,
+      .dark\:text-gray-200,
+      .text-gray-800,
+      .dark\:text-white {
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      /* Border transitions */
+      .border-gray-200,
+      .dark\:border-slate-600,
+      .border-gray-300,
+      .dark\:border-slate-700 {
+        transition: border-color 0.3s ease;
+      }
+
+      /* Respect reduced motion preference */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+    </style>
     <script>
+      // Immediately set the correct theme to prevent flash
+      (function () {
+        const storedTheme = localStorage.getItem("color-theme");
+        const systemDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+
+        if (storedTheme === "dark" || (!storedTheme && systemDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+
       tailwind.config = {
         darkMode: "class",
         theme: {
@@ -53,17 +107,19 @@
             },
             colors: {
               primary: {
-                light: "#FACC15", // Yellow-400
-                dark: "#111827", // Gray-900
+                yellow: "#FFC107",
+                "yellow-dark": "#FFB300",
               },
-              secondary: {
-                light: "#F9FAFB", // Gray-50
-                dark: "#1F2937", // Gray-800
+              dark: {
+                bg: "#1a1a2e",
+                "bg-secondary": "#16213e",
+                "bg-card": "#0f172a",
+                text: "#e8e8e8",
+                "text-secondary": "#cbd5e0",
               },
-              text: {
-                light: "#191919", // Near black
-                dark: "#F9FAFB", // Near white
-              },
+            },
+            transitionProperty: {
+              colors: "background-color, border-color, color, fill, stroke",
             },
           },
         },
@@ -72,51 +128,51 @@
   </head>
 
   <body
-    class="bg-gray-900 dark:bg-secondary-light text-text-dark dark:text-text-light transition-colors duration-300 p-6"
+    class="dark:bg-slate-900 min-h-screen p-5 transition-colors duration-300"
   >
     <header class="mb-8 flex justify-between items-center">
       <div>
         <h1
-          class="font-bebas tracking-wider text-4xl text-yellow-500 dark:text-black font-bold mb-2"
+          class="font-bebas tracking-wider text-4xl text-yellow-500 dark:text-yellow-400 font-bold mb-2"
         >
           Order AI Insights
         </h1>
-        <p class="text-gray-400 dark:text-gray-600">
+        <p class="text-gray-400 dark:text-gray-300">
           AI-powered analysis of your business data
         </p>
       </div>
       <div class="flex items-center">
         <button
-          id="theme-toggle"
-          class="p-2 rounded-full bg-gray-800 dark:bg-gray-200 text-yellow-400 dark:text-yellow-400 hover:bg-gray-700 dark:hover:bg-gray-300 transition-colors duration-300"
+          id="darkModeToggle"
+          class="theme-toggle p-2 rounded-full bg-gray-200 dark:bg-gray-700 cursor-pointer transition-all duration-300 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-110 hover:shadow-lg"
         >
           <svg
-            id="theme-icon-light"
+            id="sunIcon"
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
+            class="w-6 h-6 text-yellow-500 dark:hidden transition-colors duration-300"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
+            stroke-width="2"
           >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              stroke-width="2"
               d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
             />
           </svg>
           <svg
-            id="theme-icon-dark"
+            id="moonIcon"
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 hidden"
+            class="w-6 h-6 text-yellow-400 hidden dark:block transition-colors duration-300"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
+            stroke-width="2"
           >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              stroke-width="2"
               d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
             />
           </svg>
@@ -134,7 +190,7 @@
         <li>
           <a
             href="/orders"
-            class="font-bebas tracking-wider text-primary-light dark:text-primary-dark font-bold text-2xl relative group"
+            class="font-bebas tracking-wider text-yellow-500 dark:text-yellow-400 font-bold text-2xl relative group"
           >
             View Orders
             <span
@@ -145,7 +201,7 @@
         <li>
           <a
             href="/menued"
-            class="font-bebas tracking-wider text-primary-light dark:text-primary-dark font-bold text-2xl relative group"
+            class="font-bebas tracking-wider text-yellow-500 dark:text-yellow-400 font-bold text-2xl relative group"
           >
             Menu
             <span
@@ -156,7 +212,7 @@
         <li>
           <a
             href="/inventory"
-            class="font-bebas tracking-wider text-primary-light dark:text-primary-dark font-bold text-2xl relative group"
+            class="font-bebas tracking-wider text-yellow-500 dark:text-yellow-400 font-bold text-2xl relative group"
           >
             Inventory
             <span
@@ -170,7 +226,7 @@
     <div class="flex flex-col space-y-4">
       <button
         onclick="fetchInsights()"
-        class="bg-primary-light dark:bg-blue-500 text-primary-dark dark:text-yellow-500 font-bebas tracking-wider text-xl px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center w-48 relative overflow-hidden"
+        class="bg-yellow-500 dark:bg-blue-600 text-gray-900 dark:text-white font-bebas tracking-wider text-xl px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center w-48 relative overflow-hidden"
       >
         <svg
           class="w-6 h-6 mr-3 transform transition hover:rotate-6 hover:scale-110"
@@ -189,59 +245,64 @@
         <span>Generate Insights</span>
       </button>
 
-      <div id="loading" class="hidden text-gray-400 dark:text-gray-600">
+      <div id="loading" class="hidden text-gray-400 dark:text-gray-300">
         Analyzing your order data...
       </div>
     </div>
 
     <div id="insights-container" class="mt-8 hidden">
       <div
-        class="bg-secondary-light dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-6"
+        class="bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg p-6 transition-colors duration-300"
       >
         <div
           id="insights"
-          class="text-gray-700 dark:text-gray-300 whitespace-pre-line markdown"
+          class="text-gray-700 dark:text-gray-300 whitespace-pre-line markdown transition-colors duration-300"
         ></div>
       </div>
     </div>
 
     <script>
       // Theme toggle functionality
-      const themeToggle = document.getElementById("theme-toggle");
-      const themeIconDark = document.getElementById("theme-icon-dark");
-      const themeIconLight = document.getElementById("theme-icon-light");
+      document.addEventListener("DOMContentLoaded", function () {
+        const darkModeToggle = document.getElementById("darkModeToggle");
 
-      // Check for saved theme preference or use system preference
-      const savedTheme =
-        localStorage.getItem("theme") ||
-        (window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light");
+        // Function to set theme with transition
+        function setTheme(isDark) {
+          // Start transition
+          document.documentElement.classList.add("transition-colors");
+          document.documentElement.classList.add("duration-300");
 
-      // Apply the saved theme
-      if (savedTheme === "dark") {
-        document.documentElement.classList.add("dark");
-        themeIconDark.classList.add("hidden");
-        themeIconLight.classList.remove("hidden");
-      } else {
-        document.documentElement.classList.remove("dark");
-        themeIconDark.classList.remove("hidden");
-        themeIconLight.classList.add("hidden");
-      }
+          if (isDark) {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("color-theme", "dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+            localStorage.setItem("color-theme", "light");
+          }
 
-      // Toggle theme on button click
-      themeToggle.addEventListener("click", () => {
-        if (document.documentElement.classList.contains("dark")) {
-          document.documentElement.classList.remove("dark");
-          localStorage.setItem("theme", "light");
-          themeIconDark.classList.remove("hidden");
-          themeIconLight.classList.add("hidden");
-        } else {
-          document.documentElement.classList.add("dark");
-          localStorage.setItem("theme", "dark");
-          themeIconDark.classList.add("hidden");
-          themeIconLight.classList.remove("hidden");
+          // Remove transition classes after animation completes
+          setTimeout(() => {
+            document.documentElement.classList.remove("transition-colors");
+            document.documentElement.classList.remove("duration-300");
+          }, 300);
         }
+
+        // Check for saved theme preference or use system preference
+        if (
+          localStorage.getItem("color-theme") === "dark" ||
+          (!("color-theme" in localStorage) &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          setTheme(true);
+        } else {
+          setTheme(false);
+        }
+
+        // Dark mode toggle click event
+        darkModeToggle.addEventListener("click", function () {
+          const isDark = !document.documentElement.classList.contains("dark");
+          setTheme(isDark);
+        });
       });
 
       // Simple markdown parser for formatting insights
@@ -326,7 +387,7 @@
             // Optionally, redirect to login on network error if deemed appropriate
             // window.location.href = '/login';
           });
-      }, 1000); // Checks every 30 seconds
+      }, 30000); // Checks every 30 seconds
 
       // Initial check on page load:
       // This is the most important check to ensure the user is authenticated when the page first loads.

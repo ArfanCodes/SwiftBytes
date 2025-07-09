@@ -632,7 +632,7 @@
                   id="itemOutOfStock"
                   name="out_of_stock"
                   class="w-4 h-4 text-yellow-600 bg-gray-100 border-gray-300 rounded focus:ring-yellow-500 dark:focus:ring-yellow-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                >
+                />
                 <label
                   for="itemOutOfStock"
                   class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
@@ -907,10 +907,10 @@
         fetch("/menu")
           .then((response) => response.json())
           .then((data) => {
-            inventory = data.map(item => ({
+            inventory = data.map((item) => ({
               ...item,
               // Change from is_out_of_stock to stock
-              stock: item.stock !== undefined ? item.stock : true // Default to true if not set
+              stock: item.stock !== undefined ? item.stock : true, // Default to true if not set
             }));
             renderInventory();
           })
@@ -938,7 +938,11 @@
               <div class="item-image bg-gray-200 dark:bg-slate-600 flex items-center justify-center text-2xl text-gray-400 dark:text-gray-500 transition-colors duration-300" style="display: none;">
                   <img src="${S3_BASE_URL}images/no-image.jpg" alt="No Image" class="h-12 w-12 opacity-50">
               </div>
-              ${!item.stock ? '<span class="out-of-stock-badge">Out of Stock</span>' : ''}
+              ${
+                !item.stock
+                  ? '<span class="out-of-stock-badge">Out of Stock</span>'
+                  : ""
+              }
             </div>`;
       }
 
@@ -957,20 +961,28 @@
         tbody.innerHTML = filteredInventory
           .map(
             (item) => `
-            <tr class="transition-colors duration-200 bg-gray-50 dark:bg-slate-800 ${!item.stock ? 'opacity-70' : ''}">
+            <tr class="transition-colors duration-200 bg-gray-50 dark:bg-slate-800 ${
+              !item.stock ? "opacity-70" : ""
+            }">
                 <td class="px-4 py-5">
                     ${getImageDisplay(item)}
                 </td>
                 <td class="px-4 py-5 font-semibold text-gray-800 dark:text-gray-200 text-lg transition-colors duration-300">
                     ${item.name}
                 </td>
-                <td class="px-4 py-5 text-lg font-bold ${!item.stock ? 'text-gray-500 dark:text-gray-400' : 'text-green-600 dark:text-green-400'} transition-colors duration-300">
+                <td class="px-4 py-5 text-lg font-bold ${
+                  !item.stock
+                    ? "text-gray-500 dark:text-gray-400"
+                    : "text-green-600 dark:text-green-400"
+                } transition-colors duration-300">
                     ₹${item.price}
                 </td>
                 <td class="px-4 py-5">
-                    ${!item.stock ?
-                      '<span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Out of Stock</span>' :
-                      '<span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">In Stock</span>'}
+                    ${
+                      !item.stock
+                        ? '<span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Out of Stock</span>'
+                        : '<span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">In Stock</span>'
+                    }
                 </td>
                 <td class="px-4 py-5">
                     <div class="flex gap-2">
@@ -987,10 +999,12 @@
                             🗑️ Delete
                         </button>
                         <button
-                            class="${!item.stock ? 'bg-green-600' : 'bg-red-600'} text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1"
+                            class="${
+                              !item.stock ? "bg-green-600" : "bg-red-600"
+                            } text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1"
                             onclick="toggleStockStatus(${item.id})"
                         >
-                            ${!item.stock ? '📦 Restock' : '⚠️ Out of Stock'}
+                            ${!item.stock ? "📦 Restock" : "⚠️ Out of Stock"}
                         </button>
                     </div>
                 </td>
@@ -1003,18 +1017,18 @@
       // Toggle stock status
       async function toggleStockStatus(itemId) {
         try {
-          const item = inventory.find(item => item.id === itemId);
+          const item = inventory.find((item) => item.id === itemId);
           if (!item) return;
 
           const response = await fetch(`/menu/${itemId}/stock`, {
-            method: 'PATCH',
+            method: "PATCH",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             body: JSON.stringify({
               // Change from is_out_of_stock to stock
-              stock: !item.stock
-            })
+              stock: !item.stock,
+            }),
           });
 
           if (response.ok) {
@@ -1022,11 +1036,11 @@
             item.stock = !item.stock; // Change from is_out_of_stock to stock
             renderInventory();
           } else {
-            throw new Error('Failed to update stock status');
+            throw new Error("Failed to update stock status");
           }
         } catch (error) {
-          console.error('Error toggling stock status:', error);
-          alert('Failed to update stock status. Please try again.');
+          console.error("Error toggling stock status:", error);
+          alert("Failed to update stock status. Please try again.");
         }
       }
 
@@ -1108,7 +1122,10 @@
           formData.append("price", document.getElementById("itemPrice").value);
           // Change from out_of_stock to stock. Send 'true' for in stock, 'false' for out of stock.
           // Note: If your backend expects '1'/'0' for boolean, ensure it's handled.
-          formData.append("stock", document.getElementById("itemOutOfStock").checked ? "false" : "true"); // Checkbox checked means "out of stock", so send `false` for `stock`
+          formData.append(
+            "stock",
+            document.getElementById("itemOutOfStock").checked ? "false" : "true"
+          ); // Checkbox checked means "out of stock", so send `false` for `stock`
 
           const fileInput = document.getElementById("itemImageFile");
           const clearImageCheckbox =
