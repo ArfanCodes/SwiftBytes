@@ -280,10 +280,23 @@ app.get("/insights", isAuthenticated, (req, res) => {
 
 // --- Menu Item API Routes ---
 
+// Helper function to extract S3 key from a URL (ensure this is defined elsewhere in your code)
+// Example:
+function extractS3Key(imageUrl) {
+    if (!imageUrl) return null;
+    const urlParts = imageUrl.split('amazonaws.com/');
+    if (urlParts.length > 1) {
+        // Decode URI component to handle spaces or special characters in S3 keys
+        return decodeURIComponent(urlParts[1]);
+    }
+    return null;
+}
+
 // Fetch all menu items
 app.get("/menu", async (req, res) => {
   try {
-    const result = await db.query("SELECT * FROM menu_items ORDER BY id");
+    // Include the new 'stock' column in the SELECT statement
+    const result = await db.query("SELECT id, name, price, image, stock FROM menu_items ORDER BY id");
     res.json(result.rows);
   } catch (err) {
     console.error("Error fetching menu items:", err);
@@ -294,7 +307,13 @@ app.get("/menu", async (req, res) => {
 // Add new item with S3 image upload
 // 'imageFile' is the 'name' attribute of your file input in the HTML form
 app.post("/menu", upload.single("imageFile"), (req, res) => {
-  const { name, price } = req.body;
+  const { name, price, stock: stockString } = req.body; // Destructure stock as stockString
+
+  // Convert the string "true" or "false" from formData to a boolean
+  // Remember: Frontend sends "false" if 'Out of Stock' checkbox is CHECKED (meaning actual stock is FALSE)
+  // and "true" if 'Out of Stock' checkbox is UNCHECKED (meaning actual stock is TRUE)
+  const stock = stockString === 'true';
+
   let imageUrl = null; // This will store the S3 URL
 
   if (req.file) {
@@ -302,13 +321,15 @@ app.post("/menu", upload.single("imageFile"), (req, res) => {
     imageUrl = req.file.location;
   } else {
     // As per the screenshot, "Image file is required for new menu item."
+    // You might want to adjust this if images are optional for new items
     return res
       .status(400)
       .json({ error: "Image file is required for new menu item." });
   }
 
-  const sql = `INSERT INTO menu_items (name, price, image) VALUES ($1, $2, $3) RETURNING *`;
-  const values = [name, price, imageUrl]; // Store the S3 URL in the database
+  // Include 'stock' in the INSERT statement
+  const sql = `INSERT INTO menu_items (name, price, image, stock) VALUES ($1, $2, $3, $4) RETURNING *`;
+  const values = [name, price, imageUrl, stock]; // Store the S3 URL and stock in the database
 
   db.query(sql, values, (err, result) => {
     if (err) {
@@ -340,10 +361,14 @@ app.post("/menu", upload.single("imageFile"), (req, res) => {
   });
 });
 
-// ✅ Combined PUT route for updating menu item (with optional image update)
+// ✅ Combined PUT route for updating menu item (with optional image update and stock)
 app.put("/menu/:id", upload.single("imageFile"), async (req, res) => {
-  const { name, price } = req.body;
+  const { name, price, stock: stockString } = req.body; // Destructure stock as stockString
   const { id } = req.params;
+
+  // Convert the string "true" or "false" from formData to a boolean
+  const stock = stockString === 'true';
+
   let imageUrlToSave = null; // This will be the final image URL to save to the DB
 
   try {
@@ -426,8 +451,9 @@ app.put("/menu/:id", upload.single("imageFile"), async (req, res) => {
       imageUrlToSave = currentDbImageUrl; // Retain the existing image URL from the DB
     }
 
-    const sql = `UPDATE menu_items SET name = $1, price = $2, image = $3 WHERE id = $4 RETURNING *`;
-    const values = [name, price, imageUrlToSave, id];
+    // Include 'stock' in the UPDATE statement
+    const sql = `UPDATE menu_items SET name = $1, price = $2, image = $3, stock = $4 WHERE id = $5 RETURNING *`;
+    const values = [name, price, imageUrlToSave, stock, id]; // Add stock to values
 
     const result = await db.query(sql, values);
     if (result.rows.length === 0) {
@@ -445,6 +471,37 @@ app.put("/menu/:id", upload.single("imageFile"), async (req, res) => {
     res.status(500).json({ error: "Failed to update item." });
   }
 });
+
+// New PATCH route to toggle stock status
+app.patch("/menu/:id/stock", async (req, res) => {
+  const { id } = req.params;
+  const { stock } = req.body; // Frontend sends a direct boolean (true/false) here
+
+  // Validate that 'stock' is a boolean
+  if (typeof stock !== 'boolean') {
+      return res.status(400).json({ message: 'Invalid stock value. Must be a boolean.' });
+  }
+
+  try {
+      const query = `
+          UPDATE menu_items
+          SET stock = $1
+          WHERE id = $2
+          RETURNING *;
+      `;
+      const values = [stock, id];
+      const result = await db.query(query, values);
+
+      if (result.rows.length === 0) {
+          return res.status(404).json({ message: 'Menu item not found.' });
+      }
+      res.json(result.rows[0]);
+  } catch (error) {
+      console.error('Error toggling stock status:', error);
+      res.status(500).json({ message: 'Server error updating stock status.' });
+  }
+});
+
 
 // Delete item (with S3 image deletion)
 app.delete("/menu/:id", async (req, res) => {
