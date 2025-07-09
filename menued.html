@@ -15,18 +15,14 @@
       sizes="32x32"
       href="images/favicon-32x32.png"
     />
-
     <link
       rel="apple-touch-icon"
       sizes="180x180"
       href="images/apple-touch-icon.png"
     />
-
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
     <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
-
     <link rel="manifest" href="images/site.webmanifest" />
-
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#ffffff" />
     <title>Restaurant Menu Management</title>
@@ -283,6 +279,20 @@
         background-color: #374151;
         border-color: #4b5563;
       }
+
+      /* Out of stock styling */
+      .out-of-stock-badge {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(239, 68, 68, 0.9);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 12px;
+      }
     </style>
   </head>
   <header>
@@ -497,6 +507,11 @@
               <th
                 class="px-4 py-5 text-left font-semibold text-sm uppercase tracking-wider"
               >
+                Status
+              </th>
+              <th
+                class="px-4 py-5 text-left font-semibold text-sm uppercase tracking-wider"
+              >
                 Actions
               </th>
             </tr>
@@ -609,6 +624,21 @@
                   class="image-preview"
                   alt="Image Preview"
                 />
+              </div>
+
+              <div class="flex items-center">
+                <input
+                  type="checkbox"
+                  id="itemOutOfStock"
+                  name="out_of_stock"
+                  class="w-4 h-4 text-yellow-600 bg-gray-100 border-gray-300 rounded focus:ring-yellow-500 dark:focus:ring-yellow-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                >
+                <label
+                  for="itemOutOfStock"
+                  class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                >
+                  Mark as Out of Stock
+                </label>
               </div>
 
               <div
@@ -877,7 +907,10 @@
         fetch("/menu")
           .then((response) => response.json())
           .then((data) => {
-            inventory = data;
+            inventory = data.map(item => ({
+              ...item,
+              is_out_of_stock: item.is_out_of_stock || false // Default to false if not set
+            }));
             renderInventory();
           })
           .catch((error) => console.error("Error fetching inventory:", error));
@@ -898,10 +931,13 @@
         }
 
         return `
-            <img src="${imageUrl}" alt="${item.name}" class="item-image"
-                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="item-image bg-gray-200 dark:bg-slate-600 flex items-center justify-center text-2xl text-gray-400 dark:text-gray-500 transition-colors duration-300" style="display: none;">
-                <img src="${S3_BASE_URL}images/no-image.jpg" alt="No Image" class="h-12 w-12 opacity-50">
+            <div class="relative">
+              <img src="${imageUrl}" alt="${item.name}" class="item-image"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="item-image bg-gray-200 dark:bg-slate-600 flex items-center justify-center text-2xl text-gray-400 dark:text-gray-500 transition-colors duration-300" style="display: none;">
+                  <img src="${S3_BASE_URL}images/no-image.jpg" alt="No Image" class="h-12 w-12 opacity-50">
+              </div>
+              ${item.is_out_of_stock ? '<span class="out-of-stock-badge">Out of Stock</span>' : ''}
             </div>`;
       }
 
@@ -920,16 +956,21 @@
         tbody.innerHTML = filteredInventory
           .map(
             (item) => `
-            <tr class="transition-colors duration-200 bg-gray-50 dark:bg-slate-800">
+            <tr class="transition-colors duration-200 bg-gray-50 dark:bg-slate-800 ${item.is_out_of_stock ? 'opacity-70' : ''}">
                 <td class="px-4 py-5">
                     ${getImageDisplay(item)}
                 </td>
-                <td class="px-4 py-5 font-semibold text-gray-800 dark:text-gray-200 text-lg transition-colors duration-300">${
-                  item.name
-                }</td>
-                <td class="px-4 py-5 text-lg font-bold text-green-600 dark:text-green-400 transition-colors duration-300">₹${
-                  item.price
-                }</td>
+                <td class="px-4 py-5 font-semibold text-gray-800 dark:text-gray-200 text-lg transition-colors duration-300">
+                    ${item.name}
+                </td>
+                <td class="px-4 py-5 text-lg font-bold ${item.is_out_of_stock ? 'text-gray-500 dark:text-gray-400' : 'text-green-600 dark:text-green-400'} transition-colors duration-300">
+                    ₹${item.price}
+                </td>
+                <td class="px-4 py-5">
+                    ${item.is_out_of_stock ? 
+                      '<span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Out of Stock</span>' : 
+                      '<span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">In Stock</span>'}
+                </td>
                 <td class="px-4 py-5">
                     <div class="flex gap-2">
                         <button
@@ -944,12 +985,47 @@
                         >
                             🗑️ Delete
                         </button>
+                        <button
+                            class="${item.is_out_of_stock ? 'bg-green-600' : 'bg-red-600'} text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1"
+                            onclick="toggleStockStatus(${item.id})"
+                        >
+                            ${item.is_out_of_stock ? '📦 Restock' : '⚠️ Out of Stock'}
+                        </button>
                     </div>
                 </td>
             </tr>
         `
           )
           .join("");
+      }
+
+      // Toggle stock status
+      async function toggleStockStatus(itemId) {
+        try {
+          const item = inventory.find(item => item.id === itemId);
+          if (!item) return;
+
+          const response = await fetch(`/menu/${itemId}/stock`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              is_out_of_stock: !item.is_out_of_stock
+            })
+          });
+
+          if (response.ok) {
+            // Update local inventory state
+            item.is_out_of_stock = !item.is_out_of_stock;
+            renderInventory();
+          } else {
+            throw new Error('Failed to update stock status');
+          }
+        } catch (error) {
+          console.error('Error toggling stock status:', error);
+          alert('Failed to update stock status. Please try again.');
+        }
       }
 
       // Show custom delete confirmation modal
@@ -964,7 +1040,7 @@
         itemToDelete = null;
       }
 
-      // ✅ UPDATED: Delete item from database
+      // Delete item from database
       async function deleteItem() {
         if (itemToDelete) {
           try {
@@ -974,20 +1050,10 @@
             });
 
             if (response.ok) {
-              // Check for 2xx status codes (e.g., 204 No Content)
               closeDeleteModal();
-              // OPTION 1: Reload the entire page (simpler, but less smooth)
               window.location.reload();
-
-              // OPTION 2: Optimistic UI update (more advanced, smoother UX)
-              // // Remove the item from the local inventory array
-              // inventory = inventory.filter(item => item.id !== itemToDelete);
-              // // Re-render the table
-              // renderInventory();
-              // console.log(`Item ${itemToDelete} successfully deleted and UI updated.`);
-              // itemToDelete = null; // Clear itemToDelete after successful deletion and UI update
             } else {
-              const errorText = await response.text(); // Get detailed error
+              const errorText = await response.text();
               throw new Error(
                 `Server responded with status ${response.status}: ${errorText}`
               );
@@ -997,7 +1063,7 @@
             alert(
               `Failed to delete item. Please try again. Error: ${error.message}`
             );
-            closeDeleteModal(); // Close modal even on error
+            closeDeleteModal();
           }
         }
       }
@@ -1006,27 +1072,19 @@
       function openAddModal() {
         editingItemId = null;
         isSubmitting = false;
-        currentImageUrl = ""; // Clear for new item
+        currentImageUrl = "";
         document.getElementById("modalTitle").textContent = "Add New Item";
         document.getElementById("itemForm").reset();
         document.getElementById("selectedFileName").classList.add("hidden");
         document.getElementById("itemImageFile").value = "";
         document.getElementById("imagePreview").style.display = "none";
+        document.getElementById("itemOutOfStock").checked = false;
 
         // Reset photo upload button
         const photoUploadBtn = document.getElementById("photoUploadBtn");
         photoUploadBtn.classList.remove("photo-btn-disabled");
         photoUploadBtn.disabled = false;
         photoUploadBtn.innerHTML = "📸 Select Single Photo";
-
-        // Hide "Clear Image" checkbox for new item
-        const clearImageContainer = document.getElementById(
-          "clearImageContainer"
-        );
-        if (clearImageContainer) {
-          clearImageContainer.classList.add("hidden");
-          document.getElementById("clearImageCheckbox").checked = false;
-        }
 
         setSubmitButtonState(false);
         document.getElementById("itemModal").classList.remove("hidden");
@@ -1045,32 +1103,21 @@
           const formData = new FormData();
           formData.append("name", document.getElementById("itemName").value);
           formData.append("price", document.getElementById("itemPrice").value);
+          formData.append("out_of_stock", document.getElementById("itemOutOfStock").checked ? "1" : "0");
 
           const fileInput = document.getElementById("itemImageFile");
           const clearImageCheckbox =
             document.getElementById("clearImageCheckbox");
 
           if (fileInput.files[0]) {
-            // A new file is selected, append it
             formData.append("imageFile", fileInput.files[0]);
           } else if (editingItemId) {
-            // If editing and no new file is selected
             if (clearImageCheckbox && clearImageCheckbox.checked) {
-              // User explicitly checked "Clear Image"
               formData.append("clearImage", "true");
             } else if (currentImageUrl) {
-              // No new file, no explicit clear, and there was an existing image.
-              // Backend should implicitly retain the image. We don't send anything for the image.
-              // If your backend requires explicit indication to keep, you'd add:
-              // formData.append('keepImage', 'true');
-            } else {
-              // Editing, no new file, no clear checkbox, and no existing image.
-              // This might happen if an item was added without an image initially.
-              // No action needed for image in formData.
+              // No action needed - backend will retain existing image
             }
           }
-          // If it's a new item and no file is selected, the 'imageFile' field will be absent,
-          // which your backend validation for "Image file is required for new menu item." will catch.
 
           const endpoint = editingItemId ? `/menu/${editingItemId}` : "/menu";
           const method = editingItemId ? "PUT" : "POST";
@@ -1078,7 +1125,7 @@
           try {
             const response = await fetch(endpoint, {
               method: method,
-              body: formData, // Send the FormData object directly
+              body: formData,
             });
 
             if (!response.ok) {
@@ -1095,7 +1142,6 @@
               );
             }
 
-            // Handle successful response
             closeModal();
             window.location.reload();
           } catch (error) {
@@ -1113,16 +1159,18 @@
             setSubmitButtonState(false);
           }
         });
+
       // Populate modal with existing item details for editing
       function editItem(id) {
         const item = inventory.find((item) => item.id === id);
         if (item) {
           editingItemId = id;
-          currentImageUrl = item.image || ""; // This will be the full S3 URL from DB
+          currentImageUrl = item.image || "";
           isSubmitting = false;
           document.getElementById("modalTitle").textContent = "Edit Item";
           document.getElementById("itemName").value = item.name;
           document.getElementById("itemPrice").value = item.price;
+          document.getElementById("itemOutOfStock").checked = item.is_out_of_stock;
 
           // Clear file input
           document.getElementById("itemImageFile").value = "";
@@ -1132,11 +1180,6 @@
           const fileName = document.getElementById("fileName");
           const imagePreview = document.getElementById("imagePreview");
           const photoUploadBtn = document.getElementById("photoUploadBtn");
-          const clearImageContainer = document.getElementById(
-            "clearImageContainer"
-          );
-          const clearImageCheckbox =
-            document.getElementById("clearImageCheckbox");
 
           if (item.image) {
             // Show the S3 image directly in the preview (it's already a full URL from DB)
@@ -1147,19 +1190,13 @@
 
             fileName.textContent = "Current: " + displayedFileName;
             fileNameDisplay.classList.remove("hidden");
-            imagePreview.src = item.image; // Use the full URL directly from the item object
+            imagePreview.src = item.image;
             imagePreview.style.display = "block";
 
             // Disable the photo upload button because an image already exists
             photoUploadBtn.classList.add("photo-btn-disabled");
             photoUploadBtn.disabled = true;
             photoUploadBtn.innerHTML = "Photo Selected";
-
-            // Show and uncheck the "Clear Image" checkbox
-            if (clearImageContainer) {
-              clearImageContainer.classList.remove("hidden");
-              clearImageCheckbox.checked = false; // Important: Uncheck by default when editing starts
-            }
           } else {
             fileNameDisplay.classList.add("hidden");
             imagePreview.style.display = "none";
@@ -1168,12 +1205,6 @@
             photoUploadBtn.classList.remove("photo-btn-disabled");
             photoUploadBtn.disabled = false;
             photoUploadBtn.innerHTML = "📸 Select Single Photo";
-
-            // Hide the "Clear Image" checkbox if no image exists
-            if (clearImageContainer) {
-              clearImageContainer.classList.add("hidden");
-              clearImageCheckbox.checked = false;
-            }
           }
 
           setSubmitButtonState(false);
@@ -1187,12 +1218,6 @@
         editingItemId = null;
         isSubmitting = false;
         setSubmitButtonState(false);
-        // Ensure clear image checkbox is reset when modal closes
-        const clearImageCheckbox =
-          document.getElementById("clearImageCheckbox");
-        if (clearImageCheckbox) {
-          clearImageCheckbox.checked = false;
-        }
       }
 
       // Filter inventory on search input
@@ -1218,40 +1243,27 @@
     </script>
     <script>
       // Periodically check server-side authentication status.
-      // This catches session expiry or logout from other tabs/windows.
-      // Adjusted frequency to 30 seconds to reduce unnecessary network traffic.
       setInterval(() => {
         fetch("/check-auth")
           .then((res) => {
             if (res.status === 401) {
-              // Session has expired or user logged out from server
               window.location.href = "/login";
             }
-            // If status is 200, the session is active and 'rolling: true' on server
-            // means its expiration timer is automatically reset.
           })
           .catch((error) => {
             console.error("Error checking authentication:", error);
-            // Optionally, redirect to login on network error if deemed appropriate
-            // window.location.href = '/login';
           });
-      }, 1000); // Checks every 30 seconds
+      }, 30000); // Checks every 30 seconds
 
-      // Initial check on page load:
-      // This is the most important check to ensure the user is authenticated when the page first loads.
-      // Removed all sessionStorage and onpageshow logic as it interfered with server-side session management.
+      // Initial check on page load
       fetch("/check-auth")
         .then((res) => {
           if (res.status === 401) {
-            // Session expired or not authenticated on initial load
             window.location.href = "/login";
           }
-          // If status is 200, no action needed, user is authenticated by the server.
         })
         .catch((error) => {
           console.error("Error on initial authentication check:", error);
-          // Handle network errors or server unavailability gracefully.
-          // Redirecting to login is a common fallback for critical auth errors.
           window.location.href = "/login";
         });
     </script>
