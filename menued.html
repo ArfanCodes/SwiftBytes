@@ -909,7 +909,8 @@
           .then((data) => {
             inventory = data.map(item => ({
               ...item,
-              is_out_of_stock: item.is_out_of_stock || false // Default to false if not set
+              // Change from is_out_of_stock to stock
+              stock: item.stock !== undefined ? item.stock : true // Default to true if not set
             }));
             renderInventory();
           })
@@ -937,7 +938,7 @@
               <div class="item-image bg-gray-200 dark:bg-slate-600 flex items-center justify-center text-2xl text-gray-400 dark:text-gray-500 transition-colors duration-300" style="display: none;">
                   <img src="${S3_BASE_URL}images/no-image.jpg" alt="No Image" class="h-12 w-12 opacity-50">
               </div>
-              ${item.is_out_of_stock ? '<span class="out-of-stock-badge">Out of Stock</span>' : ''}
+              ${!item.stock ? '<span class="out-of-stock-badge">Out of Stock</span>' : ''}
             </div>`;
       }
 
@@ -956,19 +957,19 @@
         tbody.innerHTML = filteredInventory
           .map(
             (item) => `
-            <tr class="transition-colors duration-200 bg-gray-50 dark:bg-slate-800 ${item.is_out_of_stock ? 'opacity-70' : ''}">
+            <tr class="transition-colors duration-200 bg-gray-50 dark:bg-slate-800 ${!item.stock ? 'opacity-70' : ''}">
                 <td class="px-4 py-5">
                     ${getImageDisplay(item)}
                 </td>
                 <td class="px-4 py-5 font-semibold text-gray-800 dark:text-gray-200 text-lg transition-colors duration-300">
                     ${item.name}
                 </td>
-                <td class="px-4 py-5 text-lg font-bold ${item.is_out_of_stock ? 'text-gray-500 dark:text-gray-400' : 'text-green-600 dark:text-green-400'} transition-colors duration-300">
+                <td class="px-4 py-5 text-lg font-bold ${!item.stock ? 'text-gray-500 dark:text-gray-400' : 'text-green-600 dark:text-green-400'} transition-colors duration-300">
                     ₹${item.price}
                 </td>
                 <td class="px-4 py-5">
-                    ${item.is_out_of_stock ? 
-                      '<span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Out of Stock</span>' : 
+                    ${!item.stock ?
+                      '<span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Out of Stock</span>' :
                       '<span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">In Stock</span>'}
                 </td>
                 <td class="px-4 py-5">
@@ -986,10 +987,10 @@
                             🗑️ Delete
                         </button>
                         <button
-                            class="${item.is_out_of_stock ? 'bg-green-600' : 'bg-red-600'} text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1"
+                            class="${!item.stock ? 'bg-green-600' : 'bg-red-600'} text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1"
                             onclick="toggleStockStatus(${item.id})"
                         >
-                            ${item.is_out_of_stock ? '📦 Restock' : '⚠️ Out of Stock'}
+                            ${!item.stock ? '📦 Restock' : '⚠️ Out of Stock'}
                         </button>
                     </div>
                 </td>
@@ -1011,13 +1012,14 @@
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              is_out_of_stock: !item.is_out_of_stock
+              // Change from is_out_of_stock to stock
+              stock: !item.stock
             })
           });
 
           if (response.ok) {
             // Update local inventory state
-            item.is_out_of_stock = !item.is_out_of_stock;
+            item.stock = !item.stock; // Change from is_out_of_stock to stock
             renderInventory();
           } else {
             throw new Error('Failed to update stock status');
@@ -1078,7 +1080,8 @@
         document.getElementById("selectedFileName").classList.add("hidden");
         document.getElementById("itemImageFile").value = "";
         document.getElementById("imagePreview").style.display = "none";
-        document.getElementById("itemOutOfStock").checked = false;
+        // Ensure this checkbox is unchecked for new items
+        document.getElementById("itemOutOfStock").checked = false; // Changed from itemOutOfStock to reflect `stock` column being "in stock"
 
         // Reset photo upload button
         const photoUploadBtn = document.getElementById("photoUploadBtn");
@@ -1103,7 +1106,9 @@
           const formData = new FormData();
           formData.append("name", document.getElementById("itemName").value);
           formData.append("price", document.getElementById("itemPrice").value);
-          formData.append("out_of_stock", document.getElementById("itemOutOfStock").checked ? "1" : "0");
+          // Change from out_of_stock to stock. Send 'true' for in stock, 'false' for out of stock.
+          // Note: If your backend expects '1'/'0' for boolean, ensure it's handled.
+          formData.append("stock", document.getElementById("itemOutOfStock").checked ? "false" : "true"); // Checkbox checked means "out of stock", so send `false` for `stock`
 
           const fileInput = document.getElementById("itemImageFile");
           const clearImageCheckbox =
@@ -1170,7 +1175,8 @@
           document.getElementById("modalTitle").textContent = "Edit Item";
           document.getElementById("itemName").value = item.name;
           document.getElementById("itemPrice").value = item.price;
-          document.getElementById("itemOutOfStock").checked = item.is_out_of_stock;
+          // Change from is_out_of_stock to stock. Checkbox should be checked if `stock` is false (out of stock).
+          document.getElementById("itemOutOfStock").checked = !item.stock;
 
           // Clear file input
           document.getElementById("itemImageFile").value = "";
