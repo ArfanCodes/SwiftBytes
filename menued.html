@@ -961,23 +961,23 @@
         tbody.innerHTML = filteredInventory
           .map(
             (item) => `
-            <tr class="transition-colors duration-200 bg-gray-50 dark:bg-slate-800 ${
-              !item.stock ? "opacity-70" : ""
-            }">
-                <td class="px-4 py-5">
+            <tr class="transition-colors duration-200 bg-gray-50 dark:bg-slate-800">
+                <td class="px-4 py-5 ${!item.stock ? "opacity-70" : ""}">
                     ${getImageDisplay(item)}
                 </td>
-                <td class="px-4 py-5 font-semibold text-gray-800 dark:text-gray-200 text-lg transition-colors duration-300">
+                <td class="px-4 py-5 font-semibold text-gray-800 dark:text-gray-200 text-lg transition-colors duration-300 ${
+                  !item.stock ? "opacity-70" : ""
+                }">
                     ${item.name}
                 </td>
                 <td class="px-4 py-5 text-lg font-bold ${
                   !item.stock
-                    ? "text-gray-500 dark:text-gray-400"
+                    ? "text-gray-500 dark:text-gray-400 opacity-70"
                     : "text-green-600 dark:text-green-400"
                 } transition-colors duration-300">
                     ₹${item.price}
                 </td>
-                <td class="px-4 py-5">
+                <td class="px-4 py-5 ${!item.stock ? "opacity-70" : ""}">
                     ${
                       !item.stock
                         ? '<span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Out of Stock</span>'
@@ -987,13 +987,21 @@
                 <td class="px-4 py-5">
                     <div class="flex gap-2">
                         <button
-                            class="bg-gradient-warning text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1"
+                            class="bg-gradient-warning text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1 ${
+                              !item.stock
+                                ? "opacity-30 pointer-events-none"
+                                : ""
+                            }"
                             onclick="editItem(${item.id})"
                         >
                             ✏️ Edit
                         </button>
                         <button
-                            class="bg-gradient-danger text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1"
+                            class="bg-gradient-danger text-white px-4 py-2 rounded-full text-sm font-semibold hover-lift transition-all duration-300 hover:shadow-lg flex items-center gap-1 ${
+                              !item.stock
+                                ? "opacity-30 pointer-events-none"
+                                : ""
+                            }"
                             onclick="showDeleteModal(${item.id})"
                         >
                             🗑️ Delete
